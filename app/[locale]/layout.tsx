@@ -6,7 +6,7 @@ import { env } from "@/lib/env";
 import { getDictionary, isLocale, locales, ogLocale, type Locale } from "@/lib/i18n";
 import { CookieBanner } from "@/components/cookie-banner";
 import { legalPath } from "@/lib/legal";
-import { absoluteUrl, languageAlternates } from "@/lib/site";
+import { absoluteUrl, pageAlternates } from "@/lib/site";
 
 const display = Bricolage_Grotesque({
   subsets: ["latin", "latin-ext"],
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     metadataBase: new URL(env.siteUrl()),
     title: t.meta.title,
     description: t.meta.description,
-    alternates: { canonical: absoluteUrl(locale), languages: languageAlternates() },
+    alternates: pageAlternates(locale),
     openGraph: {
       type: "website",
       siteName: "Nonnina",

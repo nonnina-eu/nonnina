@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "yearly" as const,
       priority: 0.3,
-      alternates: { languages: Object.fromEntries(locales.map((x) => [x, `${env.siteUrl()}${legalPath(x, doc)}`])) },
+      alternates: { languages: languageAlternates(`/${doc}`) },
     })),
   );
   const home = locales.map((l) => ({

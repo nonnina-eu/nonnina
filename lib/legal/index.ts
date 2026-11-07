@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { env } from "@/lib/env";
-import { localePath, locales, type Locale } from "@/lib/i18n";
+import { localePath, type Locale } from "@/lib/i18n";
+import { pageAlternates } from "@/lib/site";
 import * as de from "./de";
 import * as en from "./en";
 import * as it from "./it";
@@ -29,13 +29,11 @@ export function localizeHref(locale: Locale, href: string): string {
 
 export function legalMetadata(locale: Locale, doc: LegalDocId): Metadata {
   const d = content[locale].docs[doc];
-  const languages: Record<string, string> = {};
-  for (const l of locales) languages[l] = `${env.siteUrl()}${legalPath(l, doc)}`;
-  languages["x-default"] = languages.en;
+  const alternates = pageAlternates(locale, `/${doc}`);
   return {
     title: `${d.title} · Nonnina`,
     description: d.description,
-    alternates: { canonical: languages[locale], languages },
-    openGraph: { title: `${d.title} · Nonnina`, description: d.description, url: languages[locale] },
+    alternates,
+    openGraph: { title: `${d.title} · Nonnina`, description: d.description, url: alternates.canonical },
   };
 }
