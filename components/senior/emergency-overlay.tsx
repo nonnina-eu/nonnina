@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Check, Loader2, Phone, PhoneCall } from "lucide-react";
 import type { EmergencyState } from "@/hooks/use-emergency";
@@ -35,11 +36,13 @@ function BigButton({
   onClick,
   className,
   children,
+  disabled = false,
 }: {
   href?: string;
   onClick?: () => void;
   className?: string;
   children: React.ReactNode;
+  disabled?: boolean;
 }) {
   const classes = cn(
     "flex min-h-[clamp(64px,14vmin,112px)] w-full items-center justify-center gap-[0.5em] rounded-xl px-[1em] text-center text-[length:clamp(20px,4.2vmin,32px)] font-bold leading-tight focus-visible:outline-none focus-visible:ring-8 focus-visible:ring-white/40 [&_svg]:size-[1.25em] [&_svg]:shrink-0",
@@ -53,7 +56,7 @@ function BigButton({
     );
   }
   return (
-    <button type="button" onClick={onClick} className={classes}>
+    <button type="button" onClick={onClick} aria-disabled={disabled || undefined} className={classes}>
       {children}
     </button>
   );
@@ -65,6 +68,18 @@ export function EmergencyOverlay({ t, state, relativeNames, primaryRelative, onC
   const open = state.level === "emergency" && state.phase !== "none" && state.phase !== "countdown";
   const names = t.joinNames(relativeNames);
   const step = escalationStep(state.event);
+
+  // The "I'm fine" button sits where the red Help button was. Ignore it for the first 2 s
+  // so a nervous double tap on Help can never cancel the emergency it just started.
+  const [cancelArmed, setCancelArmed] = useState(false);
+  useEffect(() => {
+    if (!open) {
+      setCancelArmed(false);
+      return;
+    }
+    const timer = setTimeout(() => setCancelArmed(true), 2000);
+    return () => clearTimeout(timer);
+  }, [open]);
 
   // At most one calm line. Never a timer.
   let statusLine: React.ReactNode;
@@ -135,7 +150,7 @@ export function EmergencyOverlay({ t, state, relativeNames, primaryRelative, onC
               ) : (
                 <div />
               )}
-              <BigButton onClick={onCancel} className="bg-white/15 text-white hover:bg-white/25">
+              <BigButton onClick={() => cancelArmed && onCancel()} disabled={!cancelArmed} className={cn("bg-white/15 text-white hover:bg-white/25", !cancelArmed && "opacity-50")}>
                 <Check />
                 {t.imFine}
               </BigButton>

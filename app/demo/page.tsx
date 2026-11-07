@@ -38,7 +38,7 @@ export default function DemoPage() {
             <p className="eyebrow">Live demo</p>
             <h1 className="mt-1 text-[2.25rem] leading-[1.02] sm:text-5xl">Maria’s tablet · Anna’s phone</h1>
             <p className="lede mt-2 max-w-2xl">
-              Say <em>„Ich bin gestürzt und komme nicht hoch“</em> or press the red Help button on the left. The alert appears on Anna’s phone on the right within seconds. Press <strong>I’m on it</strong> on the phone and Maria’s screen says “Anna kümmert sich.”
+              Press the red Help button on the left (with voice on, you can also say <em>„Ich bin gestürzt und komme nicht hoch“</em>). The alert appears on Anna’s phone on the right within seconds. Press <strong>I’m on it</strong> on the phone and Maria’s screen says “Anna kümmert sich.”
             </p>
           </div>
           <div className="flex flex-wrap gap-4 text-sm font-bold">
