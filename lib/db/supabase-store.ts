@@ -1,14 +1,21 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { randomBytes } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { EmergencyEventPatch, HelpRequestPatch, Store } from "./store";
+import { compareHelpers, PUBLIC_HELPER_COLUMNS, toPublicHelper } from "@/lib/marketplace";
+import type { EmergencyEventPatch, HelperPatch, HelperRequestPatch, HelpRequestPatch, Store } from "./store";
 import type {
   EmergencyEvent,
   Family,
   FamilyFeed,
   FamilyOverview,
   HelpRequest,
+  Helper,
+  HelperFilter,
+  HelperRequest,
   NewEmergencyEvent,
+  NewHelper,
+  NewHelperRequest,
+  PublicHelper,
   NewFamily,
   NewHelpRequest,
   NewRelative,
@@ -189,6 +196,7 @@ export class SupabaseStore implements Store {
       this.db.from("emergency_events").delete().in("senior_id", ids),
       this.db.from("help_requests").delete().in("senior_id", ids),
       this.db.from("voice_sessions").delete().in("senior_id", ids),
+      this.db.from("helper_requests").delete().eq("family_id", familyId),
     ]);
   }
 
@@ -274,5 +282,82 @@ export class SupabaseStore implements Store {
 
   async linkRelativeToUser(relativeId: string, userId: string): Promise<Relative | null> {
     return this.updateRelative(relativeId, { user_id: userId });
+  }
+
+  // ---------- marketplace ----------
+
+  /** numeric columns come back as strings from PostgREST. */
+  private helperRow(row: Helper): Helper {
+    return { ...row, hourly_rate_eur: row.hourly_rate_eur === null ? null : Number(row.hourly_rate_eur) };
+  }
+
+  async listHelpers(filter: HelperFilter = {}): Promise<PublicHelper[]> {
+    let q = this.db.from("helpers").select(PUBLIC_HELPER_COLUMNS).eq("active", true);
+    if (filter.service) q = q.contains("services", [filter.service]);
+    if (filter.language) q = q.contains("languages", [filter.language]);
+    if (filter.city) q = q.ilike("city", filter.city.trim().replace(/[%_]/g, ""));
+    if (filter.verifiedOnly) q = q.eq("verified", true);
+    const { data, error } = await q.limit(200);
+    if (error) fail("helpers.list", error);
+    return ((data ?? []) as unknown as PublicHelper[]).map(toPublicHelper).sort(compareHelpers);
+  }
+
+  async getHelper(id: string): Promise<Helper | null> {
+    const { data, error } = await this.db.from("helpers").select("*").eq("id", id).maybeSingle();
+    if (error) fail("helpers.get", error);
+    return data ? this.helperRow(data as Helper) : null;
+  }
+
+  async getHelperByUserId(userId: string): Promise<Helper | null> {
+    const { data, error } = await this.db.from("helpers").select("*").eq("user_id", userId).limit(1).maybeSingle();
+    if (error) fail("helpers.byUser", error);
+    return data ? this.helperRow(data as Helper) : null;
+  }
+
+  async createHelper(input: NewHelper): Promise<Helper> {
+    const { data, error } = await this.db.from("helpers").insert(input).select("*").single();
+    if (error) fail("helpers.insert", error);
+    return this.helperRow(data as Helper);
+  }
+
+  async updateHelper(id: string, patch: HelperPatch): Promise<Helper | null> {
+    const { data, error } = await this.db.from("helpers").update(patch).eq("id", id).select("*").maybeSingle();
+    if (error) fail("helpers.update", error);
+    return data ? this.helperRow(data as Helper) : null;
+  }
+
+  async createHelperRequest(input: NewHelperRequest): Promise<HelperRequest> {
+    const { data, error } = await this.db.from("helper_requests").insert({ ...input, status: "sent", notified: [] }).select("*").single();
+    if (error) fail("helper_requests.insert", error);
+    return data as HelperRequest;
+  }
+
+  async getHelperRequest(id: string): Promise<HelperRequest | null> {
+    const { data, error } = await this.db.from("helper_requests").select("*").eq("id", id).maybeSingle();
+    if (error) fail("helper_requests.get", error);
+    return (data as HelperRequest) ?? null;
+  }
+
+  async updateHelperRequest(id: string, patch: HelperRequestPatch): Promise<HelperRequest | null> {
+    const { data, error } = await this.db
+      .from("helper_requests")
+      .update({ ...patch, updated_at: new Date().toISOString() })
+      .eq("id", id)
+      .select("*")
+      .maybeSingle();
+    if (error) fail("helper_requests.update", error);
+    return (data as HelperRequest) ?? null;
+  }
+
+  async listHelperRequestsForHelper(helperId: string): Promise<HelperRequest[]> {
+    const { data, error } = await this.db.from("helper_requests").select("*").eq("helper_id", helperId).order("created_at", { ascending: false }).limit(100);
+    if (error) fail("helper_requests.byHelper", error);
+    return (data ?? []) as HelperRequest[];
+  }
+
+  async listHelperRequestsForFamily(familyId: string): Promise<HelperRequest[]> {
+    const { data, error } = await this.db.from("helper_requests").select("*").eq("family_id", familyId).order("created_at", { ascending: false }).limit(100);
+    if (error) fail("helper_requests.byFamily", error);
+    return (data ?? []) as HelperRequest[];
   }
 }

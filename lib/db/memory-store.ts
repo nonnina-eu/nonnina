@@ -1,12 +1,18 @@
 import { randomBytes, randomUUID } from "node:crypto";
-import type { EmergencyEventPatch, HelpRequestPatch, Store } from "./store";
+import type { EmergencyEventPatch, HelperPatch, HelperRequestPatch, HelpRequestPatch, Store } from "./store";
 import type {
   EmergencyEvent,
   Family,
   FamilyFeed,
   FamilyOverview,
   HelpRequest,
+  Helper,
+  HelperFilter,
+  HelperRequest,
   NewEmergencyEvent,
+  NewHelper,
+  NewHelperRequest,
+  PublicHelper,
   NewFamily,
   NewHelpRequest,
   NewRelative,
@@ -17,7 +23,8 @@ import type {
   SeniorContext,
   VoiceSession,
 } from "./types";
-import { demoFamily, demoRelatives, demoSeniors } from "./seed";
+import { demoFamily, demoHelpers, demoRelatives, demoSeniors } from "./seed";
+import { compareHelpers, matchesHelperFilter, toPublicHelper } from "@/lib/marketplace";
 
 interface MemoryState {
   families: Family[];
@@ -26,6 +33,8 @@ interface MemoryState {
   events: EmergencyEvent[];
   helpRequests: HelpRequest[];
   sessions: VoiceSession[];
+  helpers: Helper[];
+  helperRequests: HelperRequest[];
 }
 
 const g = globalThis as unknown as { __careCopilotMemory?: MemoryState };
@@ -39,8 +48,13 @@ function state(): MemoryState {
       events: [],
       helpRequests: [],
       sessions: [],
+      helpers: demoHelpers(),
+      helperRequests: [],
     };
   }
+  // State created by an older build during a hot reload has no marketplace tables yet.
+  g.__careCopilotMemory.helpers ??= demoHelpers();
+  g.__careCopilotMemory.helperRequests ??= [];
   return g.__careCopilotMemory;
 }
 
@@ -193,6 +207,7 @@ export class MemoryStore implements Store {
     s.events = s.events.filter((e) => !seniorIds.has(e.senior_id));
     s.helpRequests = s.helpRequests.filter((h) => !seniorIds.has(h.senior_id));
     s.sessions = s.sessions.filter((v) => !seniorIds.has(v.senior_id));
+    s.helperRequests = s.helperRequests.filter((r) => r.family_id !== familyId);
   }
 
   // ---------- family management ----------
@@ -268,5 +283,61 @@ export class MemoryStore implements Store {
     if (!relative) return null;
     relative.user_id = userId;
     return relative;
+  }
+
+  // ---------- marketplace ----------
+
+  async listHelpers(filter: HelperFilter = {}): Promise<PublicHelper[]> {
+    return state()
+      .helpers.filter((h) => matchesHelperFilter(h, filter))
+      .sort(compareHelpers)
+      .map(toPublicHelper);
+  }
+
+  async getHelper(id: string): Promise<Helper | null> {
+    return state().helpers.find((h) => h.id === id) ?? null;
+  }
+
+  async getHelperByUserId(userId: string): Promise<Helper | null> {
+    return state().helpers.find((h) => h.user_id === userId) ?? null;
+  }
+
+  async createHelper(input: NewHelper): Promise<Helper> {
+    const helper: Helper = { id: randomUUID(), ...input, verified: input.verified ?? false, active: input.active ?? true, created_at: now() };
+    state().helpers.push(helper);
+    return helper;
+  }
+
+  async updateHelper(id: string, patch: HelperPatch): Promise<Helper | null> {
+    const helper = state().helpers.find((h) => h.id === id);
+    if (!helper) return null;
+    Object.assign(helper, patch);
+    return helper;
+  }
+
+  async createHelperRequest(input: NewHelperRequest): Promise<HelperRequest> {
+    const ts = now();
+    const req: HelperRequest = { id: randomUUID(), ...input, status: "sent", notified: [], created_at: ts, updated_at: ts };
+    state().helperRequests.unshift(req);
+    return req;
+  }
+
+  async getHelperRequest(id: string): Promise<HelperRequest | null> {
+    return state().helperRequests.find((r) => r.id === id) ?? null;
+  }
+
+  async updateHelperRequest(id: string, patch: HelperRequestPatch): Promise<HelperRequest | null> {
+    const req = state().helperRequests.find((r) => r.id === id);
+    if (!req) return null;
+    Object.assign(req, patch, { updated_at: now() });
+    return req;
+  }
+
+  async listHelperRequestsForHelper(helperId: string): Promise<HelperRequest[]> {
+    return state().helperRequests.filter((r) => r.helper_id === helperId);
+  }
+
+  async listHelperRequestsForFamily(familyId: string): Promise<HelperRequest[]> {
+    return state().helperRequests.filter((r) => r.family_id === familyId);
   }
 }

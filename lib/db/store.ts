@@ -4,7 +4,13 @@ import type {
   FamilyFeed,
   FamilyOverview,
   HelpRequest,
+  Helper,
+  HelperFilter,
+  HelperRequest,
   NewEmergencyEvent,
+  NewHelper,
+  NewHelperRequest,
+  PublicHelper,
   NewFamily,
   NewHelpRequest,
   NewRelative,
@@ -19,6 +25,8 @@ import type {
 export type EmergencyEventPatch = Partial<
   Pick<EmergencyEvent, "status" | "notified" | "escalation_step" | "next_step_at" | "acknowledged_by">
 >;
+export type HelperPatch = Partial<Omit<NewHelper, "user_id">>;
+export type HelperRequestPatch = Partial<Pick<HelperRequest, "status" | "notified">>;
 export type HelpRequestPatch = Partial<Pick<HelpRequest, "status" | "resolved_at" | "acknowledged_by" | "acknowledged_at">>;
 
 /**
@@ -65,4 +73,20 @@ export interface Store {
   getFamilyForUser(userId: string): Promise<FamilyOverview | null>;
   getFamilyOverview(familyId: string): Promise<FamilyOverview | null>;
   linkRelativeToUser(relativeId: string, userId: string): Promise<Relative | null>;
+
+  // ---------- marketplace (Layer 3) ----------
+  /** Active helpers matching the filter, safe columns only (no phone / email / user id). Verified first, then name. */
+  listHelpers(filter?: HelperFilter): Promise<PublicHelper[]>;
+  /** Full row including contact data – server only, never send to a browser as is. */
+  getHelper(id: string): Promise<Helper | null>;
+  getHelperByUserId(userId: string): Promise<Helper | null>;
+  createHelper(input: NewHelper): Promise<Helper>;
+  updateHelper(id: string, patch: HelperPatch): Promise<Helper | null>;
+  createHelperRequest(input: NewHelperRequest): Promise<HelperRequest>;
+  getHelperRequest(id: string): Promise<HelperRequest | null>;
+  updateHelperRequest(id: string, patch: HelperRequestPatch): Promise<HelperRequest | null>;
+  /** Newest first. */
+  listHelperRequestsForHelper(helperId: string): Promise<HelperRequest[]>;
+  /** Newest first. */
+  listHelperRequestsForFamily(familyId: string): Promise<HelperRequest[]>;
 }
