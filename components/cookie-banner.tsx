@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import type { Dictionary } from "@/lib/i18n";
 
 /** Stores the visitor's choice. "all" will gate optional tools if any are ever added. */
@@ -22,6 +23,8 @@ export function readConsent(): Consent | null {
  */
 export function CookieBanner({ t, policyHref }: { t: Dictionary["cookies"]; policyHref: string }) {
   const [open, setOpen] = useState(false);
+  // Never cover the pitch deck while presenting.
+  const onPitch = /\/pitch\/?$/.test(usePathname() ?? "");
 
   useEffect(() => {
     if (!readConsent()) setOpen(true);
@@ -30,7 +33,7 @@ export function CookieBanner({ t, policyHref }: { t: Dictionary["cookies"]; poli
     return () => window.removeEventListener(OPEN_EVENT, reopen);
   }, []);
 
-  if (!open) return null;
+  if (!open || onPitch) return null;
 
   const choose = (value: Consent) => {
     document.cookie = `${CONSENT_COOKIE}=${value}; path=/; max-age=${MAX_AGE}; samesite=lax`;
@@ -40,7 +43,7 @@ export function CookieBanner({ t, policyHref }: { t: Dictionary["cookies"]; poli
   return (
     <section
       aria-labelledby="cookie-title"
-      className="fixed inset-x-3 bottom-3 z-[70] mx-auto max-w-xl rounded-md border border-line bg-white p-5 shadow-float sm:inset-x-6 sm:bottom-6 sm:p-6"
+      className="fixed inset-x-3 bottom-3 z-[70] print:hidden mx-auto max-w-xl rounded-md border border-line bg-white p-5 shadow-float sm:inset-x-6 sm:bottom-6 sm:p-6"
     >
       <h2 id="cookie-title" className="text-xl font-extrabold [font-stretch:75%]">{t.title}</h2>
       <p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
