@@ -4,35 +4,48 @@ import { env } from "./env";
 import type { WaitlistInput } from "./validation";
 
 /**
- * Stores a sign-up in the shared Supabase `waitlist` table (created by the app repo's
- * migration). Without Supabase keys it keeps entries in memory so the form still works.
+ * Stores a sign-up in the shared Supabase `waitlist` table. Without Supabase keys, or when the
+ * insert fails, the entry goes to the fallback: a structured server log line (kept in the Vercel
+ * logs, so a sign-up is never lost) plus an in-memory map. Throws only if nothing could be saved.
  */
 const g = globalThis as unknown as { __waitlistMemory?: Map<string, WaitlistInput> };
 
-export async function addToWaitlist(input: WaitlistInput): Promise<{ created: boolean }> {
-  const email = input.email.toLowerCase();
+export type WaitlistResult = { created: boolean; storage: "supabase" | "fallback" };
 
-  if (!env.supabaseAdmin()) {
-    g.__waitlistMemory ??= new Map();
-    if (g.__waitlistMemory.has(email)) return { created: false };
-    g.__waitlistMemory.set(email, { ...input, email });
-    // No database configured: keep a trace in the server logs so a sign-up is never silently lost.
-    if (process.env.VERCEL) console.info("[waitlist] signup (no database configured)", JSON.stringify({ email, role: input.role, city: input.city }));
-    return { created: true };
-  }
+function saveFallback(entry: WaitlistInput, reason: "no-database" | "insert-failed"): WaitlistResult {
+  g.__waitlistMemory ??= new Map();
+  if (g.__waitlistMemory.has(entry.email)) return { created: false, storage: "fallback" };
+  // One JSON line per sign-up: easy to grep and re-import from the logs.
+  console.info(
+    "[waitlist] fallback signup",
+    JSON.stringify({ reason, email: entry.email, role: entry.role, city: entry.city || null, message: entry.message || null, at: new Date().toISOString() }),
+  );
+  g.__waitlistMemory.set(entry.email, entry);
+  return { created: true, storage: "fallback" };
+}
 
-  const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const { error } = await db.from("waitlist").insert({
-    email,
-    role: input.role,
-    city: input.city || null,
-    message: input.message || null,
-  });
-  if (error) {
-    if (error.code === "23505") return { created: false }; // unique_violation
-    throw new Error(`[supabase] waitlist.insert: ${error.message}`);
+export async function addToWaitlist(input: WaitlistInput): Promise<WaitlistResult> {
+  const entry: WaitlistInput = { ...input, email: input.email.toLowerCase() };
+
+  if (!env.supabaseAdmin()) return saveFallback(entry, "no-database");
+
+  let failure: string;
+  try {
+    const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { error } = await db.from("waitlist").insert({
+      email: entry.email,
+      role: entry.role,
+      city: entry.city || null,
+      message: entry.message || null,
+    });
+    if (!error) return { created: true, storage: "supabase" };
+    if (error.code === "23505") return { created: false, storage: "supabase" }; // unique_violation
+    failure = error.message;
+  } catch (e) {
+    failure = e instanceof Error ? e.message : String(e);
   }
-  return { created: true };
+  console.error(`[waitlist] supabase insert failed: ${failure}`);
+  return saveFallback(entry, "insert-failed");
 }

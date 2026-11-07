@@ -18,11 +18,12 @@ export async function POST(request: Request) {
   // Honeypot filled: pretend success, store nothing.
   if (parsed.data.hp_field) return NextResponse.json({ ok: true, created: true }, { status: 201 });
 
+  // addToWaitlist only resolves once the entry is stored (Supabase or the logged fallback).
   try {
     const result = await addToWaitlist(parsed.data);
     return NextResponse.json({ ok: true, created: result.created }, { status: result.created ? 201 : 200 });
   } catch (e) {
-    console.error("[waitlist]", e);
+    console.error("[waitlist] sign-up not saved:", e instanceof Error ? e.message : e);
     return jsonError(500, "Could not save your sign-up, please try again");
   }
 }

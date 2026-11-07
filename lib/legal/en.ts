@@ -10,7 +10,7 @@ export const chrome: LegalChrome = {
   updated: "Last updated",
   draft: "Draft: the operator's details are not filled in yet. Do not publish this page as it is.",
   back: "Back to the start",
-  nav: { privacy: "Privacy policy", terms: "Terms of use", cookies: "Cookie policy" },
+  nav: { privacy: "Privacy policy", terms: "Terms of use", cookies: "Cookie policy", impressum: "Legal notice" },
 };
 
 export const docs: Record<LegalDocId, LegalDoc> = {
@@ -202,6 +202,18 @@ export const docs: Record<LegalDocId, LegalDoc> = {
           "More about how we handle personal data is in our [privacy policy](/privacy).",
         ],
       },
+    ],
+  },
+  impressum: {
+    title: "Legal notice (Impressum)",
+    description: "Who runs nonnina.eu: provider identification under German law (§ 5 DDG).",
+    intro: "Provider identification for nonnina.eu as required by German law (§ 5 Digitale-Dienste-Gesetz, DDG).",
+    sections: [
+      { heading: "Provider (§ 5 DDG)", body: [{ list: [o.name, ...o.address] }] },
+      ...(o.representative ? [{ heading: "Represented by", body: [o.representative] }] : []),
+      { heading: "Contact", body: [`Email: ${o.email}`] },
+      ...(o.vatId ? [{ heading: "VAT ID", body: [`VAT identification number under § 27a of the German VAT Act (UStG): ${o.vatId}`] }] : []),
+      { heading: "Responsible for content (§ 18(2) MStV)", body: [`${o.contentResponsible}, ${o.address.join(", ")}`] },
     ],
   },
 };

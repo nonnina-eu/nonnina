@@ -10,7 +10,7 @@ export const chrome: LegalChrome = {
   updated: "Stand",
   draft: "Entwurf: Die Angaben zum Betreiber fehlen noch. Diese Seite so nicht veröffentlichen.",
   back: "Zurück zur Startseite",
-  nav: { privacy: "Datenschutzerklärung", terms: "Nutzungsbedingungen", cookies: "Cookie-Richtlinie" },
+  nav: { privacy: "Datenschutzerklärung", terms: "Nutzungsbedingungen", cookies: "Cookie-Richtlinie", impressum: "Impressum" },
 };
 
 export const docs: Record<LegalDocId, LegalDoc> = {
@@ -202,6 +202,18 @@ export const docs: Record<LegalDocId, LegalDoc> = {
           "Mehr zum Umgang mit personenbezogenen Daten steht in unserer [Datenschutzerklärung](/privacy).",
         ],
       },
+    ],
+  },
+  impressum: {
+    title: "Impressum",
+    description: "Anbieterkennzeichnung von nonnina.eu nach § 5 DDG.",
+    intro: "Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG).",
+    sections: [
+      { heading: "Anbieter", body: [{ list: [o.name, ...o.address] }] },
+      ...(o.representative ? [{ heading: "Vertreten durch", body: [o.representative] }] : []),
+      { heading: "Kontakt", body: [`E-Mail: ${o.email}`] },
+      ...(o.vatId ? [{ heading: "Umsatzsteuer-ID", body: [`Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz: ${o.vatId}`] }] : []),
+      { heading: "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV", body: [`${o.contentResponsible}, ${o.address.join(", ")}`] },
     ],
   },
 };

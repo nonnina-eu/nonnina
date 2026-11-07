@@ -10,7 +10,7 @@ export const chrome: LegalChrome = {
   updated: "Ultimo aggiornamento",
   draft: "Bozza: mancano ancora i dati del titolare. Non pubblicare questa pagina così com'è.",
   back: "Torna all'inizio",
-  nav: { privacy: "Informativa privacy", terms: "Condizioni d'uso", cookies: "Cookie policy" },
+  nav: { privacy: "Informativa privacy", terms: "Condizioni d'uso", cookies: "Cookie policy", impressum: "Impressum" },
 };
 
 export const docs: Record<LegalDocId, LegalDoc> = {
@@ -202,6 +202,18 @@ export const docs: Record<LegalDocId, LegalDoc> = {
           "Maggiori informazioni sul trattamento dei dati personali sono nella nostra [informativa sulla privacy](/privacy).",
         ],
       },
+    ],
+  },
+  impressum: {
+    title: "Note legali (Impressum)",
+    description: "Chi gestisce nonnina.eu: dati del fornitore secondo la legge tedesca (§ 5 DDG).",
+    intro: "Dati identificativi del fornitore di nonnina.eu richiesti dalla legge tedesca (§ 5 Digitale-Dienste-Gesetz, DDG).",
+    sections: [
+      { heading: "Fornitore (§ 5 DDG)", body: [{ list: [o.name, ...o.address] }] },
+      ...(o.representative ? [{ heading: "Rappresentato da", body: [o.representative] }] : []),
+      { heading: "Contatti", body: [`Email: ${o.email}`] },
+      ...(o.vatId ? [{ heading: "Partita IVA", body: [`Numero di identificazione IVA ai sensi del § 27a UStG: ${o.vatId}`] }] : []),
+      { heading: "Responsabile dei contenuti (§ 18, comma 2, MStV)", body: [`${o.contentResponsible}, ${o.address.join(", ")}`] },
     ],
   },
 };
