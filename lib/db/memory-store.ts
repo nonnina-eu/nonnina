@@ -102,6 +102,22 @@ export class MemoryStore implements Store {
     return event;
   }
 
+  async claimEmergencyEvent(input: NewEmergencyEvent, since: Date): Promise<{ event: EmergencyEvent; created: boolean }> {
+    // No await between the read and the insert: one Node process cannot open two events for the same tap.
+    const recent =
+      state().events.find(
+        (e) =>
+          e.senior_id === input.senior_id &&
+          e.status !== "cancelled_by_senior" &&
+          new Date(e.created_at).getTime() >= since.getTime(),
+      ) ?? null;
+    if (recent && (recent.level === input.level || recent.level === "emergency")) {
+      return { event: recent, created: false };
+    }
+    const event = await this.createEmergencyEvent(input);
+    return { event, created: true };
+  }
+
   async getEmergencyEvent(id: string): Promise<EmergencyEvent | null> {
     return state().events.find((e) => e.id === id) ?? null;
   }
@@ -166,10 +182,14 @@ export class MemoryStore implements Store {
     );
   }
 
-  async createVoiceSession(input: NewVoiceSession): Promise<VoiceSession> {
+  async createVoiceSession(input: NewVoiceSession): Promise<{ session: VoiceSession; created: boolean }> {
+    if (input.conversation_id) {
+      const existing = state().sessions.find((v) => v.conversation_id === input.conversation_id);
+      if (existing) return { session: existing, created: false };
+    }
     const session: VoiceSession = { id: randomUUID(), ...input, created_at: now() };
     state().sessions.unshift(session);
-    return session;
+    return { session, created: true };
   }
 
   async getFamilyFeed(familyId: string, limit = 50): Promise<FamilyFeed | null> {

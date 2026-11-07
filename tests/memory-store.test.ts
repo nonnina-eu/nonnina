@@ -162,6 +162,43 @@ describe("MemoryStore – escalation and help requests", () => {
     expect((await store.findAcknowledgedHelpRequest(DEMO_IDS.senior, since))?.id).toBe(a.id);
   });
 
+  it("opens one emergency when two claims arrive together", async () => {
+    const since = new Date(Date.now() - 45_000);
+    const input = {
+      senior_id: DEMO_IDS.senior,
+      level: "emergency" as const,
+      reason: "fall",
+      quote: "Ich bin gestürzt",
+      source: "manual_button" as const,
+    };
+    const [a, b] = await Promise.all([store.claimEmergencyEvent(input, since), store.claimEmergencyEvent(input, since)]);
+    expect(a.event.id).toBe(b.event.id);
+    expect([a.created, b.created].filter(Boolean)).toHaveLength(1);
+  });
+
+  it("ignores a second voice session with the same conversation id", async () => {
+    const first = await store.createVoiceSession({
+      senior_id: DEMO_IDS.senior,
+      conversation_id: "conv-1",
+      summary: "first",
+      mood: "ok",
+      problem_category: null,
+      needs_human: false,
+    });
+    const second = await store.createVoiceSession({
+      senior_id: DEMO_IDS.senior,
+      conversation_id: "conv-1",
+      summary: "second",
+      mood: "worried",
+      problem_category: "health",
+      needs_human: true,
+    });
+    expect(first.created).toBe(true);
+    expect(second.created).toBe(false);
+    expect(second.session.id).toBe(first.session.id);
+    expect(second.session.summary).toBe("first");
+  });
+
   it("seeds Giulia (Italian, Stuttgart) in the demo family", async () => {
     const ctx = await store.getSeniorByToken(DEMO_TOKEN_IT);
     expect(ctx?.senior.first_name).toBe("Giulia");

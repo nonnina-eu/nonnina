@@ -33,6 +33,11 @@ export interface Store {
   getSeniorById(id: string): Promise<SeniorContext | null>;
 
   createEmergencyEvent(input: NewEmergencyEvent): Promise<EmergencyEvent>;
+  /**
+   * Insert an event unless this senior already has a non-cancelled one created after `since`
+   * that is the same level, or already an emergency. The check and the insert are atomic.
+   */
+  claimEmergencyEvent(input: NewEmergencyEvent, since: Date): Promise<{ event: EmergencyEvent; created: boolean }>;
   getEmergencyEvent(id: string): Promise<EmergencyEvent | null>;
   /** Latest event for the senior that is still "live" (not cancelled), created after `since`. */
   findRecentEmergency(seniorId: string, since: Date): Promise<EmergencyEvent | null>;
@@ -46,7 +51,8 @@ export interface Store {
   updateHelpRequest(id: string, patch: HelpRequestPatch): Promise<HelpRequest | null>;
   /** Latest help request of the senior that a relative took ("I'm on it") after `since` and nobody marked done yet. */
   findAcknowledgedHelpRequest(seniorId: string, since: Date): Promise<HelpRequest | null>;
-  createVoiceSession(input: NewVoiceSession): Promise<VoiceSession>;
+  /** Insert a session. `created` is false when this conversation_id was already stored. */
+  createVoiceSession(input: NewVoiceSession): Promise<{ session: VoiceSession; created: boolean }>;
 
   getFamilyFeed(familyId: string, limit?: number): Promise<FamilyFeed | null>;
   resetDemoData(familyId: string): Promise<void>;

@@ -67,6 +67,29 @@ export class SupabaseStore implements Store {
     return data as EmergencyEvent;
   }
 
+  async claimEmergencyEvent(input: NewEmergencyEvent, since: Date): Promise<{ event: EmergencyEvent; created: boolean }> {
+    const { data, error } = await this.db.rpc("claim_emergency_event", {
+      p_senior_id: input.senior_id,
+      p_level: input.level,
+      p_reason: input.reason,
+      p_quote: input.quote,
+      p_source: input.source,
+      p_since: since.toISOString(),
+    });
+    const missing = error?.code === "PGRST202" || error?.code === "42883" || /claim_emergency_event/i.test(error?.message ?? "");
+    if (error && !missing) fail("emergency_events.claim", error);
+    if (!error && data && typeof data === "object") {
+      const row = data as { created?: boolean; event?: EmergencyEvent };
+      if (row.event) return { event: row.event, created: Boolean(row.created) };
+    }
+    // Migration 0004 not applied yet: same check, without the database lock.
+    const recent = await this.findRecentEmergency(input.senior_id, since);
+    if (recent && (recent.level === input.level || recent.level === "emergency")) {
+      return { event: recent, created: false };
+    }
+    return { event: await this.createEmergencyEvent(input), created: true };
+  }
+
   async getEmergencyEvent(id: string): Promise<EmergencyEvent | null> {
     const { data, error } = await this.db.from("emergency_events").select("*").eq("id", id).maybeSingle();
     if (error) fail("emergency_events.get", error);
@@ -145,10 +168,21 @@ export class SupabaseStore implements Store {
     return (data as HelpRequest) ?? null;
   }
 
-  async createVoiceSession(input: NewVoiceSession): Promise<VoiceSession> {
+  async createVoiceSession(input: NewVoiceSession): Promise<{ session: VoiceSession; created: boolean }> {
     const { data, error } = await this.db.from("voice_sessions").insert(input).select("*").single();
+    if (error && (error.code === "23505" || /duplicate key|unique/i.test(error.message))) {
+      if (input.conversation_id) {
+        const { data: existing, error: readError } = await this.db
+          .from("voice_sessions")
+          .select("*")
+          .eq("conversation_id", input.conversation_id)
+          .maybeSingle();
+        if (readError) fail("voice_sessions.duplicate", readError);
+        if (existing) return { session: existing as VoiceSession, created: false };
+      }
+    }
     if (error) fail("voice_sessions.insert", error);
-    return data as VoiceSession;
+    return { session: data as VoiceSession, created: true };
   }
 
   async getFamilyFeed(familyId: string, limit = 50): Promise<FamilyFeed | null> {
