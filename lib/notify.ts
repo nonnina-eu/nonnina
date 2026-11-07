@@ -169,7 +169,8 @@ export async function notifyRelatives(input: NotifyInput): Promise<NotificationR
         records.push({ ...base, channel: "demo", status: "demo", detail: body });
       }
 
-      if (smsEnabled && kind === "emergency" && rel.notify_call && rel.priority === 1 && rel.phone) {
+      // Voice call to the priority-1 relative (demo record when Twilio is not configured).
+      if (kind === "emergency" && rel.notify_call && rel.priority === 1 && rel.phone) {
         records.push(
           await callRelativeWithGather({
             to: rel.phone,

@@ -108,7 +108,8 @@ see it in the feed only.
 | --- | --- |
 | Event creation, dedupe, SMS to all, call to priority-1, logging `notified[]` | ✅ built |
 | Tablet emergency mode, 112 button, "I'm fine", warning countdown | ✅ built |
-| Realtime family feed, "I'm on it" (acknowledge), all-clear SMS | ✅ built |
+| Realtime family feed, "I'm on it" (acknowledge, with relative id), all-clear SMS | ✅ built |
+| Family login (magic link / demo cookie), onboarding wizard, QR tablet link, settings, invite, help request "Done" | ✅ built (`/app`) |
 | Escalation ladder (timer, priority-2…n, fallback number, "nobody confirmed") | ✅ built – `lib/escalation-ladder.ts` (pure, tested), `lib/escalation-runner.ts`, `/api/cron/escalate` every minute via `vercel.json`, `CRON_SECRET` |
 | "Press 1 to confirm" in the voice call (Twilio Gather → ack) | ✅ built – `/api/twilio/voice` (TwiML + Gather) and `/api/twilio/gather` (digit 1 → acknowledge), signature-verified |
 | "Anna is on it" message to the other relatives | ✅ built – kind `acknowledged` in `lib/notify.ts`, sent on app ack and on key 1 |

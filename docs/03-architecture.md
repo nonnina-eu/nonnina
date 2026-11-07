@@ -59,6 +59,9 @@ docs/                    this folder
 | `/api/help-request` | POST | Creates a help request from the agent tool, informs family |
 | `/api/family/[familyId]/feed` | GET | Family feed (events, requests, sessions) |
 | `/api/demo/reset` | POST | Clears demo events |
+| `/api/help-request/[id]` | PATCH | `resolve` / `reopen` a help request (family member; demo family without session) |
+| `/login`, `/auth/callback`, `/auth/signout` | pages/GET/POST | Family sign-in: Supabase magic link (`signInWithOtp` → `exchangeCodeForSession`); demo mode uses a signed cookie |
+| `/app`, `/app/setup`, `/app/settings`, `/app/join` | pages + server actions | Family area behind `middleware.ts`: live feed, 5-step onboarding wizard (family → parent → relatives → safety net + consent → tablet QR), settings (edit parent, relatives, invite, fallback number, rotate tablet link), invite landing |
 | `/api/cron/escalate` | GET | Runs the escalation ladder every minute (Vercel Cron, `Authorization: Bearer CRON_SECRET`); logic in `lib/escalation-runner.ts` |
 | `/api/twilio/voice` + `/api/twilio/gather` | POST | TwiML for the relative call (Say + Gather), digit 1 → acknowledge; `X-Twilio-Signature` verified, 403 without Twilio |
 
@@ -83,8 +86,12 @@ waitlist (email, role, city, message)            ← shared with the website rep
   family generates it as a QR code; scanning on the tablet opens `/senior/<token>`. Rotating
   the token = new QR.
 - **Family:** Supabase Auth, magic link (no passwords to forget). `relatives.user_id` links the
-  auth user to a relative; RLS: a user reads only rows of families they belong to. Until the
-  login exists, the alerts page is link-protected (family id = secret) – prototype only.
+  auth user to a relative; RLS (`public.my_family_ids()`, migration 0002): a user reads only rows
+  of families they belong to. `lib/auth.ts` → `getCurrentMember()` is the single entry point.
+  **Demo mode** (no Supabase keys): a signed httpOnly cookie `nonnina_family`
+  (`relativeId:familyId:hmac`, secret `AUTH_SECRET`, dev fallback constant) stands in for the
+  session; `/login` offers "Continue as Anna" or "Create your own family". `/app/join` is the only
+  public `/app` route (invite landing). `/family/[id]/alerts` stays link-protected for `/demo` only.
 - **Server routes** use the service role; the browser never writes except `waitlist`.
 - **Webhook** verified with `ElevenLabs-Signature` HMAC. **Twilio** callbacks to be verified with `X-Twilio-Signature`.
 - Rate limit per senior on `/api/emergency`, but a first emergency always passes.
@@ -100,6 +107,7 @@ notifications are written into the event as `channel: demo`, and the senior scre
 
 | | Where | Notes |
 | --- | --- | --- |
+| `AUTH_SECRET` | env var | HMAC secret for the demo-mode family cookie (any long random string; optional locally) |
 | Production | https://care-copilot-silk.vercel.app (Vercel project `care-copilot`, team `ethernal3`) | `/` → `/demo`. No service keys yet → demo mode |
 | Supabase | to create, **EU (Frankfurt)** | run `0001_init.sql`, `seed.sql` |
 | ElevenLabs | agent "Lina", config in `elevenlabs-agent.md` | enable "Require authentication" |
