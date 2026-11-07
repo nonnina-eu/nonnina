@@ -25,7 +25,7 @@ export function FamilyShell({ children, active = "none", seniorName, signedIn = 
       <header className="border-b border-line bg-white/85 backdrop-blur">
         <div className="container flex min-h-16 flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
           <div className="flex items-center gap-4">
-            <Link href={signedIn ? "/app" : "/login"} aria-label="Nonnina">
+            <Link href="/" aria-label="Nonnina – home">
               <Logo />
             </Link>
             {seniorName ? (

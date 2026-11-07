@@ -28,7 +28,7 @@ export function MarketplaceShell({ children, locale, active = "none", isHelper =
     <div className="flex min-h-dvh flex-col bg-latte">
       <header className="border-b border-line bg-white/85 backdrop-blur">
         <div className="container flex min-h-16 flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
-          <Link href="/helpers" aria-label="Nonnina helpers">
+          <Link href="/" aria-label="Nonnina – home">
             <Logo />
           </Link>
           <nav className="flex flex-wrap items-center gap-1 text-sm font-bold" aria-label="Marketplace">
