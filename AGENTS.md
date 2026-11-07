@@ -1,33 +1,53 @@
-# AGENTS.md – working in `nonnina-eu/website`
+# AGENTS.md – working in `nonnina-eu/website` (the one Nonnina repo)
 
-Marketing site and waitlist for **Nonnina** (nonnina.eu), IT / EN / DE. The product itself is
-in the sibling repo `nonnina-eu/app` (local: `../app`); its specification is in `../app/docs/`
-and the role file for this repo is `../app/docs/agents/agent-website.md`. If you only have
-this repo, the essentials are below.
+Since 7 Nov 2026 this repo holds **everything**: the landing page (nonnina.eu, EN/DE/IT), the
+product (senior screen, voice agent, emergency flow, family area, API) and the helpers
+marketplace. One Next.js app, one Vercel project, one deploy. `nonnina-eu/app` is frozen:
+do not push product work there any more, bring it here.
 
-## What Nonnina is (one paragraph you can paraphrase)
+Specification: `docs/` – read `docs/README.md`, then your role file in `docs/agents/`.
 
-A voice companion for older people living alone. The senior has a tablet with one big button
-and simply talks – company, reminders, asking for help. The family gets a real-time alert
-within seconds when something is wrong (SMS, call, live feed), and every need the senior
-speaks becomes a request the family can act on. Germany first, Italy next. Free for the senior,
-subscription for the family.
+## Where things live
 
-## Copy rules (legal and product)
+| Path | What | Layout |
+| --- | --- | --- |
+| `app/[locale]/*` | Landing page, pitch deck, legal pages. EN at `/`, DE at `/de`, IT at `/it` | own root layout, `app/globals.css`, `tailwind.site.config.ts` |
+| `app/(product)/*` | `/demo`, `/senior/[token]`, `/login`, `/app/*` (family), `/helpers/*` (marketplace), `/family/*` | own root layout, `app/(product)/globals.css`, `tailwind.config.ts` |
+| `app/api/*` | API routes (emergency, help requests, ElevenLabs, Twilio, cron, helpers, waitlist) | – |
+| `components/sections`, `components/pitch`, `components/brand.tsx` | Landing page | |
+| `components/senior`, `components/family`, `components/marketplace`, `components/ui` | Product | |
+| `lib/dictionaries` | Landing copy | |
+| `lib/i18n/*` | Product copy (senior DE/IT, marketplace) | |
+| `supabase/migrations` | Schema, one-to-one with `lib/db/types.ts` | |
 
-- Nonnina is **not an emergency service** and **does not replace 112**. It alerts the family and shows a 112 button; it never dials 112 itself. Keep the disclaimer on the page.
-- "Orientation, not legal or medical advice." No diagnoses, no promises of benefits.
-- Numbers you may use are in `../app/docs/05-market-and-evidence.md` (e.g. 5.52 M people cared for at home in Germany, 2025). Do not invent statistics.
-- Features you may claim are what the app does today: see `../app/docs/06-pitch-and-team.md` → "Demo facts the deck may claim".
-- Tone: warm, calm, plain words. Address the adult child (40–60) who lives far from a parent 70+.
+The two Tailwind configs differ on purpose (radius scale): never import the landing CSS into
+product pages or the other way round. `middleware.ts` routes product roots
+(`app, auth, demo, family, helpers, login, senior`) without locale; everything else is landing.
 
-## Technical
+## Commands
 
 ```bash
-pnpm install && pnpm dev     # http://localhost:3001
-pnpm typecheck && pnpm lint && pnpm build
+pnpm install
+cp .env.example .env.local      # everything optional; empty = demo mode
+pnpm dev                        # http://localhost:3000  (/, /demo, /helpers, /senior/maria-demo)
+pnpm test                       # vitest – must stay green
+pnpm typecheck && pnpm lint     # must stay clean before every push
 ```
-- Waitlist writes to the shared Supabase table `waitlist` (created by the app's migration). Without keys: in-memory.
-- "Live demo" links point to `NEXT_PUBLIC_APP_URL` (`/demo`).
-- Keep Lighthouse accessibility ≥ 95; the audience includes older relatives.
-- Do not copy product code here; link to the app instead.
+
+## Non-negotiables
+
+1. Emergency path never depends on the AI: red button + keyword net + agent tool. Do not remove or weaken any of the three.
+2. Nonnina is **not an emergency service** and **never dials 112**; it runs the relative escalation ladder (`docs/02-…`). Keep the disclaimer on every page that mentions emergencies.
+3. Rules in code with tests: escalation, keyword detection, ladder timing, benefit table.
+4. `lib/db/types.ts` ⇄ SQL migration one-to-one; both store adapters implement every new `Store` method.
+5. Service role only on the server. Never ship a key to the client.
+6. Senior screen: ≥ 24 px text, ≥ 88 px targets, no menus, no scrolling, DE + IT in `lib/i18n/senior.ts`.
+7. Graceful degradation: without env vars everything still runs in demo mode.
+8. No voice recordings stored. Summaries only.
+9. Copy: "orientation, not legal or medical advice". Numbers only from `docs/05-market-and-evidence.md` / `docs/07-pricing.md`. Seeded helper profiles are **demo profiles** and must stay labelled as such.
+
+## How to work
+
+- Small vertical slices: migration → types → store (both adapters) → API route → UI → test → check at `/demo`.
+- Finish with `pnpm typecheck && pnpm lint && pnpm test`, then a conventional commit, small and often.
+- Several agents work in parallel: use a git worktree per agent and never push someone else's half-done work.

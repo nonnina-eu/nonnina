@@ -1,0 +1,358 @@
+     C U R S O R X SA N D B OX H AC K AT H O N · S T U T TGA R T · 7 N OV E M B E R 2 0 2 6
+
+
+     Care Copilot
+     One button for the parent. One clear plan for the family.
+     How the product works, explained for everyone on the team.
+
+
+ Elderly care at home         Germany first, Italy next      Voice AI    Legal and benefits guidance
+ Verified helpers
+
+
+
+
+                                                      Hallo Maria!
+
+
+
+
+             Maria, 82                                    Tap and talk                          Anna, 52
+        lives alone, care level 3                                                         daughter, lives in Munich
+
+
+
+
+Working document for the team · version of 7 November 2026, 10:30 · Benefit amounts checked against public
+sources (see last page). The app gives orientation, not legal advice.
+PA R T 1 · F O R E V E RYO N E
+
+Care Copilot in plain words
+Many older people want to stay in their own home. Their children want to help, but live
+far away, work full time and get lost in paperwork. Care Copilot connects the two with as
+little effort as possible.
+A short story
+ 1      Maria (82) lives alone in Stuttgart. She has a tablet on her kitchen table with only one big
+        button. When she presses it, a friendly voice greets her by name: "Hallo Maria, wie geht es
+        Ihnen heute?"
+ 2      She simply talks. "I can't carry the shopping anymore, and I'm worried because the woman
+        who helps me has no proper contract." No menus, no typing, no passwords.
+ 3      The AI helps where it can. It answers simple questions, reminds her of her medicine and keeps
+        her company. Here it understands that Maria needs real help and that there is a legal problem,
+        so it creates a help request.
+ 4      Her daughter Anna gets a message on her phone with a short summary of the call. She opens
+        her dashboard.
+ 5      The dashboard tells Anna exactly what to do: the current home help setup is risky, the family is
+        missing money it is entitled to, and here are the steps, one by one. It also shows helpers nearby
+        who are verified and can be paid partly by the care insurance.
+ 6      Anna books a helper in two taps. Maria gets help with the shopping. Anna stops worrying about
+        doing something illegal.
+
+The three people the product serves
+     The senior                             The family                             The helpers
+     Uses one button and their              Sees what is going on, gets            Care services, agencies
+     voice. Gets company,                   alerts, and receives a clear           and independent helpers.
+     reminders and a way to ask             plan for legal setup, money            They sign up for free, get
+     for help at any time.                  and services. They are the             verified and receive
+                                            paying customer.                       requests from families
+                                                                                   nearby.
+
+
+     The core idea: every request the senior speaks ends in a solution. Either the AI solves it on the spot, or the
+     state and the care insurance pay for it, or a verified person comes to help.
+PA R T 2 · W H Y T H I S M AT T E R S
+
+The real problems we solve
+We focus on one country and one moment: a family in Germany whose parent needs
+help at home. Three problems hit them at the same time.
+
+  Grey zone                                     Unused                               Alone
+  Home care is often
+  illegal without people
+                                                money                                The parent is alone, the
+                                                                                     family finds out late
+                                                Benefits exist but must
+  knowing                                       be claimed one by one                The children live in another
+  Live-in carers, mostly from                                                        city. Small problems (a fall,
+                                                The care insurance pays at
+  Eastern Europe, usually                                                            no food at home, a
+                                                least seven separate
+  work in breach of working-                                                         confusing letter) are
+                                                benefits. Many are not paid
+  time and minimum-wage                                                              noticed days later, when
+                                                out as cash, need their own
+  law. Since a 2021 federal                                                          they have already become
+                                                application, or expire if not
+  labour court ruling, on-call                                                       big ones.
+                                                used in time. Families don't
+  hours count as working                        know what they are                   From the team's own experience; to
+  time and must be paid at                                                           be confirmed in today's interviews
+                                                missing.
+  minimum wage. A carer
+                                                Sources: gegen-hartz.de;
+  from Eastern Europe hired                     Verbraucherzentrale;
+  privately counts as                           Pflegekompass
+  undeclared work.
+  Sources: Ärzteblatt; Apotheken
+  Umschau; Bundestag research
+  service
+
+
+
+How much money a typical family can claim
+Example: a parent with care level 3 cared for at home by the family. These are the monthly amounts
+the care insurance can cover in 2026, on top of each other. Each one must be requested separately.
+Up to about 799 € per month, plus 3,539 € per year for respite care
+
+                                Care allowance 599 €                                     131 €
+
+
+Paid as cash to the family                                                            Relief amount
+(the others are only reimbursed or paid to approved providers)
+                                                                                        Care supplies 42 €
+
+                                                                                     Emergency button up to 27 €
+
+
+         Care level 3, 2026 amounts. Sources: gegen-hartz.de, Pflegekompass, Verbraucherzentrale (see last page).
+PA R T 3 · H OW I T WO R KS
+
+From one spoken sentence to a solution
+The senior only ever sees one button. Everything the AI cannot solve goes to the family,
+who choose a state service or a verified helper.
+
+
+ SENIOR + AI
+
+
+             Senior                      Says the problem                      AI can             yes             AI helps now
+      taps one big button                in German or Italian                 solve it?                    reminder, answer, chat
+
+
+
+                                                                                     no
+ FAMILY
+
+                         Family dashboard                                  Help request
+                      legal check + money + steps                        relatives get an alert
+
+
+                                     family chooses
+ SOLUTIONS
+
+
+          State services                            Marketplace                            Workers sign up
+      care insurance, advice                    verified local helpers                      free, then verified
+
+
+
+
+                                           The full product flow across the three layers.
+
+When does the AI hand over to a human?
+This rule lives in the code, not in the AI's judgement, so it is predictable:
+  The senior asks for a person, or the AI is not sure it understood.
+  The topic is legal (contracts, carers, letters from authorities) or money (benefits, bills).
+  Something sounds urgent: a fall, pain, confusion, no food at home. The family gets an immediate
+  alert.
+
+  Safety first: the assistant is not an emergency service. If the senior describes an emergency, it tells them to
+  call 112 and alerts the family at the same time.
+PA R T 4 · T H E T H R E E S C R E E N S
+
+What each person actually sees
+Three simple screens, one per layer. These sketches are the target for today's build.
+
+
+                                                Mama · Maria                                Helpers near Maria
+          Hallo Maria!                          Care level 3 · Stuttgart                    Shopping and household · Stuttgart
+          Samstag, 7. November                   New request · 10:12                                Home help service
+                                                 Needs help with shopping.                          1.2 km · German
+                                                 Worried about carer contract.
+                                                                                                Verified      Insurance can pay
+
+                                                     Legal check: risky                      Shopping + cleaning, 2 h/week
+                                                     Carer has no valid contract
+                                                                                                    Katarzyna W.
+                                                                                                    3 km · Polish, German
+                                                 You are missing 173 € / month
+                                                 Relief amount + care supplies                  Verified
+                                                                                             Independent helper, legal contract
+                                                Your next steps
+                                                   Book free care counselling                       Neighbourhood help
+                                                   Apply for care supplies (42 €)                   0.8 km · volunteers
+      Tippen und sprechen                          Use relief amount (131 €)
+                                                                                             Weekly shopping trip
+                                                   Switch carer to a legal model
+               Tap and talk
+
+             Next: pills at 18:00                     Find a verified helper                           Send request
+
+
+
+
+     Left: senior layer · Middle: family layer · Right: marketplace layer. Names and listings are sample data for the demo.
+
+
+  Senior layer                                Family layer                                Marketplace layer
+  One screen, one button,                     Requests, call summaries,                   Verified care services,
+  large text. No login: the                   alerts, the legal check, the                agencies and independent
+  family links the tablet once                money they are missing and                  helpers. Anyone can sign
+  with a QR code.                             a step-by-step plan.                        up for free; we verify before
+                                                                                          listing.
+PA R T 5 · T H E R U L E S B E H I N D T H E A DV I C E
+
+Legal check and benefits: what the app knows
+The family answers a few questions (care level, who helps today, how many hours, what
+kind of contract). The app then shows a traffic light and the benefits that apply.
+
+        Green: looks fine                             Yellow: check it                             Red: risky
+  Licensed home care service                   Carer sent by an EU agency                   Live-in carer arranged privately
+  Family care with care allowance              Unclear hours or on-call time                No contract, cash payments
+  Helper with a proper contract                Self-employed carer, one client              24h presence paid as a few hours
+
+  App shows money still unused                 App lists what to verify                     App shows legal alternatives
+
+
+
+     Example rules for the traffic light. They give orientation only and must be confirmed by a care counsellor or lawyer.
+
+Benefits from the care insurance in 2026 (our rule table)
+ Benefit                                Amount 2026                              What the family must know
+ Care allowance (Pflegegeld)            347 € / 599 € / 800 € / 990 €            Paid in cash to the person cared for at
+                                        per month for care level 2 / 3           home; unchanged in 2026, next increase
+                                        /4/5                                     planned for 2028
+ Home care service                      796 € to 2,299 € per month,              Paid directly to an approved care service
+ (Pflegesachleistungen)                 levels 2 to 5
+ Relief amount                          131 € per month, from level 1            Not cash: reimbursed for recognised
+ (Entlastungsbetrag)                                                             services; 2026 leftovers usable until 30
+                                                                                 June 2027
+ Respite and short-term care            3,539 € per year, levels 2 to 5          Lets the family carer take a break; unused
+ budget                                                                          money expires at year end
+ Care supplies (gloves, bed             Up to 42 € per month, from               Must be applied for; not paid as cash
+ pads)                                  level 1
+ Emergency button                       Up to 27 € per month since               Provider needs a contract with the care
+ (Hausnotruf)                           April 2026                               insurance; some websites still show the
+                                                                                 older 25.50 €
+ Care counselling                       Free                                     Local advice office; the app hands the
+ (Pflegestützpunkt)                                                              family over for anything binding
+
+   First step for every family without a care level: apply for one at the care insurance. Without a care level
+   there are no insurance benefits at all.
+
+   Important: amounts are stored in our code as a fixed table and never invented by the AI. The AI only
+   explains them in plain words and drafts applications. Every screen says "orientation, not legal advice".
+PA R T 6 · F O R T H E T E C H T E A M
+
+How we build it today
+One web app, one database, one voice agent. Everything else is glue.
+
+
+       Senior page
+                                                     Next.js app on Vercel                                 ElevenLabs Agent
+      big button + mic                                                                                        voice DE / IT
+                                                   /api/signed-url · voice session
+
+                                                                                                            Supabase (EU)
+    Family dashboard                              /api/voice-webhook · save + alert
+    wizard, steps, alerts
+
+                                                                                                            Email to family
+                                                  Rule table: benefits + traffic light
+       Marketplace
+      helpers, sign-up
+                                                    /api/guide · AI steps + drafts                         LLM + Exa search
+
+
+
+                                Architecture: three screens, one Next.js app, four outside services.
+
+ Piece                      Tool                                         Job
+ Screens + API              Next.js + Tailwind on Vercel                 All three layers and the server routes
+ Data + login               Supabase, EU region                          Families, seniors, requests, helpers, voice
+                                                                         sessions
+ Voice                      ElevenLabs Agents +                          Talks with the senior; calls our tools; sends a
+                            @elevenlabs/react                            summary after each call
+ Explanations +             LLM (Gemini via Google credits)              Plain-language steps and application drafts
+ drafts
+ Local services             Exa API                                      Finds care services and counselling offices near
+                                                                         the senior
+ Coding                     Cursor                                       Everyone
+
+Connecting ElevenLabs in six steps
+1. Create an agent from the blank template. First message: "Hallo {{senior_name}}, wie geht es Ihnen
+   heute?". Enable German and Italian.
+2. In the app, use useConversation from @elevenlabs/react and ask for microphone access with a
+   clear explanation.
+3. Keep the API key on the server: /api/signed-url fetches a signed URL for the browser.
+4. Add client tools: create_help_request(category, summary) and notify_family(urgency, message) ,
+   set to blocking so the agent waits for the result.
+5. In the agent's Analysis tab add data fields: mood, problem_category, needs_human, summary.
+6. Add a post-call webhook to /api/voice-webhook : save the session, apply the escalation rule, email
+   the family.
+PA R T 7 · DATA , P R I VAC Y A N D TO DAY ' S S P L I T
+
+Data model, privacy and who builds what
+Database tables (minimum)                                   Privacy by design
+    families  : name, email, phone                             Information about care needs is health data
+    seniors : family, first name, care level 0–5,              under GDPR: data stored in the EU, explicit
+   language, city, device token                                consent from the senior.
+    help_requests : senior, category, summary,                 Relatives see data only after the senior's
+   status (open, solved by AI, escalated,                      profile owner invites them.
+   matched)                                                    Voice recordings are not needed; we keep only
+    helpers : name, type, city, languages, verified,           the summary.
+   can be paid by relief amount                                Helpers see only what a family chooses to
+    voice_sessions : senior, summary, mood, alert,             share in a request.
+   time
+                                                               Not a medical or legal service. The app orients
+Linking relatives                                              and connects. Binding advice comes from care
+                                                               counselling offices, lawyers and doctors.
+A family member signs up, creates the senior's
+profile and gets a QR code. Scanning it on the
+senior's tablet links the device, so the senior
+never logs in. Other relatives join through an
+invite link.
+
+Who builds what today
+ Role                     Person Owns                                                Done by 16:15
+ Dev 1: voice +           Ruben     Repo, Supabase schema, ElevenLabs agent,         Senior talks; family gets the
+ integration                        tools, webhook, deploy                           summary
+ Dev 2: family layer                Dashboard, care-level wizard, rule table, AI     "You are missing X € per
+                                    steps, drafts                                    month" + steps
+ Dev 3: marketplace                 Helper listings, worker sign-up, request flow,   Escalated request shows
+ layer                              Exa search                                       matching helpers
+ Research +               David     Interviews with adult children and carers,       5+ interviews written down
+ customers                          real quotes, needs
+ Research + facts                   Checks benefit and legal facts, competitor       Facts confirmed, video
+                                    overview, video recording                        recorded
+
+Starting point
+Fresh public repo at kickoff: npx create-next-app -e with-supabase care-copilot (generic Supabase
+template, allowed by the rules). Commit early and often.
+APPENDIX
+
+Sources
+All amounts are for 2026 and were checked on 7 November 2026. Recheck before any official use.
+ Fact                                   Source
+ Care allowance 347–990 €, home         gegen-hartz.de/news/alle-wichtigen-nderungen-beim-pflegegeld-
+ care service 796–2,299 €, no           ab-1-januar-2026-pflegekasse
+ increase in 2026
+ Relief amount 131 € per month,         pflegekompassmagazin.de/p/entlastungsbetrag-2026
+ carry-over until 30 June of the next
+ year
+ Respite and short-term care budget     verbraucherzentrale.de (Gemeinsamer Jahresbetrag) · gegen-
+ 3,539 € per year                       hartz.de
+ Care supplies up to 42 € per month;    gegen-hartz.de/news/nur-pflegegeld-das-sind-die-oft-vergessenen-
+ emergency button up to 27 € since      pflegeleistungen
+ April 2026
+ No insurance benefits without a care   gegen-hartz.de (Entlastungsbetrag ohne Pflegegrad)
+ level
+ Live-in care mostly breaks working-    aerzteblatt.de/archiv/230088
+ time and minimum-wage law
+ 2021 federal labour court: on-call     apotheken-umschau.de (Die Pflegereform muss die 24-Stunden-
+ time counts as paid working time       Pflege einbeziehen) · BAG 5 AZR 505/20
+ Privately arranged Eastern European    Deutscher Bundestag, Wissenschaftliche Dienste, WD 6-185-10
+ carers count as undeclared work
+ ElevenLabs React SDK, client tools,    elevenlabs.io/docs (Agents Platform: React SDK; post-call webhooks
+ signed URL, post-call webhooks         cookbook)
+

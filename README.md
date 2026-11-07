@@ -1,57 +1,38 @@
-# Nonnina – website
+# Nonnina
 
-Marketing site for **Nonnina** (nonnina.eu), the voice companion for older people at home.
-English at `/`, German at `/de`, Italian at `/it`, with a waitlist.
+Voice companion for older people at home, with real-time family alerts and a marketplace of
+local helpers. Cursor x Sandbox Hackathon, Stuttgart, 7 Nov 2026.
 
-The product (senior screen, emergency flow, family alerts) lives in
-[`nonnina-eu/app`](https://github.com/nonnina-eu/app). Both share one Supabase project.
+This one Next.js app serves:
 
-## Brand
-
-The full brand identity (logo, colour, type, photography, voice, components) is in
-[`public/brand/nonnina-brand-identity.html`](public/brand/nonnina-brand-identity.html), published at `/brand/nonnina-brand-identity.html` (linked in the footer).
-Structural reference: grassfeld.com.
-
-- Headlines: Bricolage Grotesque at 75% width, weight 800. Text: Manrope.
-- Colours: Ink `#202128`, Latte `#FAF6F0`, Sole `#F4B740` (spark only), herb pastels for topics,
-  Allarme `#B42318` for emergency only. Tokens live in `tailwind.config.ts`.
+| URL | What |
+| --- | --- |
+| `/`, `/de`, `/it` | Landing page and waitlist (EN/DE/IT) |
+| `/pitch` | 5-slide pitch deck |
+| `/demo` | Live demo: senior tablet and family view side by side |
+| `/senior/maria-demo`, `/senior/giulia-demo` | Senior screen with the voice agent Lina (DE / IT) |
+| `/login`, `/app` | Family area: onboarding, dashboard, settings |
+| `/helpers`, `/helpers/join`, `/helpers/me` | Helpers marketplace |
+| `/brand/nonnina-brand-identity.html` | Brand identity |
 
 ## Run locally
 
 ```bash
 pnpm install
-cp .env.example .env.local   # everything optional
-pnpm dev                     # http://localhost:3001
-pnpm typecheck && pnpm lint && pnpm build
+cp .env.example .env.local   # everything optional: no keys = demo mode with in-memory data
+pnpm dev                     # http://localhost:3000
+pnpm typecheck && pnpm lint && pnpm test && pnpm build
 ```
 
-## How languages work
+## Environment
 
-- `middleware.ts` serves English at `/` (rewritten to `/en`), redirects `/en/*` to the unprefixed URL,
-  and on the home page sends first-time visitors to `/de` or `/it` based on `Accept-Language`.
-  An explicit choice in the EN · DE · IT switcher is stored in the `nonnina-locale` cookie.
-- All copy is in `lib/dictionaries/{en,de,it}.ts`. German addresses the reader with "Sie",
-  Italian with "tu". The product voice "Lina" always uses Sie / Lei towards the senior.
-- Each locale has canonical and hreflang alternates, and is listed in `sitemap.xml`.
+See `.env.example`. Supabase (data + magic-link login), ElevenLabs (voice), Twilio (SMS + call),
+Resend (email) are all optional. In production set `NEXT_PUBLIC_APP_URL` and
+`NEXT_PUBLIC_SITE_URL` to `https://www.nonnina.eu`.
 
-## Environment variables
+## Docs
 
-| Variable | Needed for |
-| --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Saving sign-ups in the shared `waitlist` table. Without them sign-ups are kept in memory and logged on Vercel. |
-| `NEXT_PUBLIC_SITE_URL` | Canonical URLs, sitemap, Open Graph (e.g. `https://nonnina.eu`). |
-| `NEXT_PUBLIC_APP_URL` | "Live demo" link to the app. |
+`docs/` holds the specification (vision, emergency flow, MVP plan, pricing, ElevenLabs agent)
+and the role files for every agent and teammate. Start with `AGENTS.md`.
 
-## Structure
-
-```
-app/[locale]/        layout (fonts, metadata), page, localized 404
-app/api/waitlist/    sign-up endpoint (zod, rate limit, honeypot)
-components/          brand (logo), header, language switcher, reveal animation
-components/sections/ hero, features, how it works, feature blocks, safety, FAQ, waitlist, footer
-lib/                 i18n, dictionaries, env, validation, waitlist store
-public/photos/       photography
-public/brand/        brand identity document and logo files
-```
-
-> Nonnina is not an emergency service and does not replace 112. Orientation only, not legal or medical advice.
+Nonnina is not an emergency service and never calls 112 by itself.

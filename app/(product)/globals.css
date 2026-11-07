@@ -1,0 +1,136 @@
+@config "../../tailwind.config.ts";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Nonnina design tokens. Source of truth: brand/nonnina-brand-identity.html in the website repo.
+  Ink, warm paper (Latte) and a little sun (Sole). Allarme red is reserved for the emergency feature.
+*/
+@layer base {
+  :root {
+    /* brand, raw */
+    --ink: #202128;
+    --graphite: #343a46;
+    --muted-ink: #5b6474;
+    --line: #e4e7ee;
+    --paper: #ffffff;
+    --latte: #faf6f0;
+    --mist: #f5f7fb;
+    --sole: #f4b740;
+    --sole-deep: #8a5a00;
+    --allarme: #b42318;
+    --allarme-soft: #fef3f2;
+    --bene: #0e7a36;
+    --link: #3b5bd6;
+
+    /* semantic (hsl triplets for the ui primitives) */
+    --background: 36 50% 96%;        /* latte */
+    --foreground: 231 11% 14%;       /* ink */
+    --card: 0 0% 100%;
+    --card-foreground: 231 11% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 231 11% 14%;
+    --primary: 231 11% 14%;          /* ink buttons */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 43% 97%;        /* mist */
+    --secondary-foreground: 231 11% 14%;
+    --muted: 220 43% 97%;
+    --muted-foreground: 218 12% 41%; /* muted ink */
+    --accent: 36 100% 94%;           /* camomilla */
+    --accent-foreground: 38 100% 27%;/* sole deep */
+    --destructive: 4 77% 40%;        /* allarme */
+    --destructive-foreground: 0 0% 100%;
+    --success: 143 79% 27%;          /* bene */
+    --warning: 38 100% 27%;          /* sole deep – text on camomilla */
+    --border: 222 22% 91%;           /* line */
+    --input: 222 22% 88%;
+    --ring: 40 89% 61%;              /* sole focus glow */
+    --radius: 1rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display), "Bricolage Grotesque", "Arial Narrow", sans-serif;
+    font-stretch: 75%;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-optical-sizing: auto;
+  }
+
+  ::selection {
+    background: rgba(244, 183, 64, 0.35);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Primary action: Ink with a Sole glow (the talk button on the tablet, primary buttons elsewhere). */
+  .btn-glossy {
+    background: var(--ink);
+    color: #fff;
+    box-shadow:
+      0 0 0 0 rgba(244, 183, 64, 0.35),
+      0 24px 60px -24px rgba(32, 33, 40, 0.45);
+    transition: box-shadow 0.25s ease, transform 0.2s ease, background-color 0.2s ease;
+  }
+  .btn-glossy:hover {
+    background: #000;
+    box-shadow:
+      0 0 0 10px rgba(244, 183, 64, 0.22),
+      0 28px 70px -24px rgba(32, 33, 40, 0.5);
+  }
+
+  .card-soft {
+    @apply rounded-xl border border-line bg-card;
+    box-shadow: 0 10px 30px -14px rgba(32, 33, 40, 0.14);
+  }
+
+  /* Warm page glow used behind the senior screen and the demo. */
+  .sky-glow {
+    background:
+      radial-gradient(60% 50% at 50% 100%, rgba(244, 183, 64, 0.16) 0%, transparent 70%),
+      radial-gradient(40% 30% at 20% 10%, #fff3e2 0%, transparent 60%),
+      var(--latte);
+  }
+
+  .eyebrow { @apply inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-[0.08em] text-graphite; }
+  .lede { @apply text-lg leading-relaxed text-muted sm:text-[1.1875rem]; }
+  .pill { @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-sm font-bold; }
+
+  /* Wordmark: the spark replaces the dot of the i */
+  .wm { font-family: var(--font-display), "Bricolage Grotesque", sans-serif; font-stretch: 75%; font-weight: 800; letter-spacing: -0.012em; line-height: 1; white-space: nowrap; display: inline-flex; align-items: baseline; }
+  .wm-i { position: relative; display: inline-block; }
+  .wm-spark { position: absolute; left: 50%; top: 0.02em; width: 0.3em; height: 0.3em; transform: translateX(-50%); fill: #f4b740; }
+
+  .text-balance { text-wrap: balance; }
+}

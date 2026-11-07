@@ -12,7 +12,7 @@ const g = globalThis as unknown as { __waitlistMemory?: Map<string, WaitlistInpu
 export async function addToWaitlist(input: WaitlistInput): Promise<{ created: boolean }> {
   const email = input.email.toLowerCase();
 
-  if (!env.supabase()) {
+  if (!env.supabaseAdmin()) {
     g.__waitlistMemory ??= new Map();
     if (g.__waitlistMemory.has(email)) return { created: false };
     g.__waitlistMemory.set(email, { ...input, email });

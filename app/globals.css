@@ -1,3 +1,6 @@
+/* Landing page tokens (radius scale differs from the product UI). */
+@config "../tailwind.site.config.ts";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

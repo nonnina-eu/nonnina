@@ -1,28 +1,43 @@
 {
-  "name": "nonnina-website",
-  "version": "1.0.0",
+  "name": "nonnina",
+  "version": "0.1.0",
   "private": true,
-  "description": "Nonnina marketing site (nonnina.eu): landing page in English, German and Italian, with waitlist.",
+  "description": "Nonnina: landing page (EN/DE/IT), voice companion, family alerts and helpers marketplace in one Next.js app.",
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
+    "@elevenlabs/react": "^0.12.0",
+    "@radix-ui/react-accordion": "^1.2.11",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.58.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.23.0",
+    "lucide-react": "^0.546.0",
     "next": "^15.5.4",
+    "qrcode": "^1.5.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "resend": "^6.1.0",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.3.1",
+    "twilio": "^5.10.0",
     "zod": "^4.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@types/node": "^22.18.0",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "autoprefixer": "^10.4.21",
@@ -30,7 +45,11 @@
     "eslint-config-next": "^15.5.4",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.9.2"
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

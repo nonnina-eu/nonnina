@@ -21,5 +21,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: l === "en" ? 1 : 0.9,
     alternates: { languages: languageAlternates() },
   }));
-  return [...home, ...legal];
+  const helpers = [{ url: `${env.siteUrl()}/helpers`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.8 }];
+  return [...home, ...helpers, ...legal];
 }
