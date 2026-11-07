@@ -10,8 +10,8 @@
 5. **Waitlist count** from the landing page for slide 4.
 
 ## Inputs you can use
-- `../deep-research-report (1).md` (full research, German) and its summary `docs/05-market-and-evidence.md`
-- `docs/reference/care-copilot-how-it-works.txt` (original plan with sources)
+- `docs/research/deep-research-report.md` (full research, German) and its summary `docs/05-market-and-evidence.md`
+- `docs/reference/original-team-plan.txt` (original plan with sources)
 - Live app: https://www.nonnina.eu/demo
 
 ## Guardrails for everything you write

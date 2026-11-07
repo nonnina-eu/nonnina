@@ -1,11 +1,11 @@
-# AGENTS.md – working in `nonnina-eu/website` (the one Nonnina repo)
+# AGENTS.md – working in `nonnina-eu/nonnina` (the one Nonnina repo)
 
 Since 7 Nov 2026 this repo holds **everything**: the landing page (nonnina.eu, EN/DE/IT), the
 product (senior screen, voice agent, emergency flow, family area, API) and the helpers
-marketplace. One Next.js app, one Vercel project, one deploy. `nonnina-eu/app` is frozen:
+marketplace. One Next.js app, one deploy. The former repos `nonnina-eu/app` and `nonnina-eu/website` were merged here with full history; `nonnina-eu/app` is archived:
 do not push product work there any more, bring it here.
 
-Specification: `docs/` – read `docs/README.md`, then your role file in `docs/agents/`.
+Specification: `docs/` – read `README.md`, `docs/README.md`, then your role file in `docs/agents/`. Reviewers start at `docs/judging.md`.
 
 ## Where things live
 

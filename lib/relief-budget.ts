@@ -1,7 +1,7 @@
 /**
  * Relief amount (Entlastungsbetrag) budget – pure rules, no I/O, safe for client components.
  *
- * Facts come from the team's fixed rule table (docs/reference/care-copilot-how-it-works.txt,
+ * Facts come from the team's fixed rule table (docs/reference/original-team-plan.txt,
  * Part 5) and are never invented:
  *  - 131 € per month, from care level 1. Not cash: reimbursed only for recognised services
  *    (in Baden-Württemberg recognised "Angebote zur Unterstützung im Alltag" / approved care services).

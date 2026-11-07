@@ -1,9 +1,9 @@
 # Role · App core – voice, emergency, API, data
 
-**Owner today:** Ruben (Dev 1). **Works in:** `app/`.
+**Owner today:** Ruben (Dev 1). **Works in:** this repo.
 
 ## You own
-- Senior screen (`app/senior/[token]`, `components/senior/*`, `hooks/use-emergency.ts`)
+- Senior screen (`app/(product)/senior/[token]`, `components/senior/*`, `hooks/use-emergency.ts`)
 - ElevenLabs agent config (`docs/elevenlabs-agent.md`) and signed-URL / webhook routes
 - Emergency API, notifications (`lib/notify.ts`), escalation ladder, Twilio voice/gather routes
 - Store port + both adapters, migrations, seed, demo mode

@@ -1,6 +1,6 @@
 # 05 · Market, evidence and what it means for the product
 
-Condensed from `deep-research-report (1).md` ("Silver Society, Instant Care und KI-gestützte
+Condensed from `research/deep-research-report.md` ("Silver Society, Instant Care und KI-gestützte
 Altenpflege", German, Nov 2026, in the workspace root). Numbers are for the pitch and for
 product decisions; recheck sources before official use. Market sizes overlap and must not be
 added up.

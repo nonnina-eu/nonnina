@@ -38,7 +38,7 @@ that a first real family could use.
 
 | Need | Reuse | Notes |
 | --- | --- | --- |
-| Login, session cookies, middleware | **Supabase Auth** + `@supabase/ssr` (already a dependency). Copy the structure of the official `create-next-app -e with-supabase` template (`app/login`, `app/auth/callback`, `middleware.ts`, `utils/supabase/{client,server,middleware}.ts`) and switch the form to `signInWithOtp` (magic link) | https://vercel.com/templates/next.js/supabase-authentication · the PDF's starting point |
+| Login, session cookies, middleware | **Supabase Auth** + `@supabase/ssr` (already a dependency). Copy the structure of the official `create-next-app -e with-supabase` template (`app/(product)/login`, `app/auth/callback`, `middleware.ts`, `utils/supabase/{client,server,middleware}.ts`) and switch the form to `signInWithOtp` (magic link) | https://vercel.com/templates/next.js/supabase-authentication · the PDF's starting point |
 | Inviting other relatives | Supabase `auth.admin.inviteUserByEmail` or a magic link to an invite route that sets `relatives.user_id` | No extra library |
 | Voice agent in the browser | **`@elevenlabs/react`** `useConversation` – already integrated; official reference example `elevenlabs/examples` → `agents/nextjs/quickstart` | https://elevenlabs.io/docs/eleven-agents/guides/quickstarts/next-js |
 | SMS, voice call, "press 1" | **Twilio** SDK already integrated; TwiML `<Say>` + `<Gather numDigits="1">` for the ack | https://www.twilio.com/docs/voice |

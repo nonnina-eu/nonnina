@@ -1,6 +1,6 @@
 # Role · Family layer – login, onboarding, dashboard
 
-**Owner today:** Dev 2 (proposal: Glory). **Works in:** `app/` under `app/app/*`, `app/login`, `app/auth`, `components/family/*`.
+**Owner today:** Dev 2 (proposal: Glory). **Works in:** this repo under `app/(product)/app/*`, `app/(product)/login`, `app/(product)/auth`, `components/family/*`.
 
 ## Goal
 A family member signs up, creates the senior, adds relatives, links the tablet with a QR code,
@@ -12,7 +12,7 @@ legal traffic light, "you are missing X €/month", step-by-step plan.
 `docs/03-architecture.md` (security model, data model), `docs/04-mvp-plan.md` Step 2.
 
 ## MVP tasks (Step 2)
-1. Supabase Auth, **magic link** (`signInWithOtp`), following the structure of the official `create-next-app -e with-supabase` template: `middleware.ts`, `lib/supabase/{client,server,middleware}.ts` (client/server already exist), `app/login`, `app/auth/callback`.
+1. Supabase Auth, **magic link** (`signInWithOtp`), following the structure of the official `create-next-app -e with-supabase` template: `middleware.ts`, `lib/supabase/{client,server,middleware}.ts` (client/server already exist), `app/(product)/login`, `app/auth/callback`.
 2. Migration `0003`: `relatives.user_id uuid references auth.users`, RLS "a user reads rows of families where they are a relative" on all family tables; remove the anon read policies once `/app` works (keep them until then for `/demo`).
 3. Onboarding wizard `/app/setup` (server actions + zod): your name/phone → senior (first name, language, city, care level, medication times) → other relatives (name, phone E.164, relation, priority, notify_sms/notify_call) → fallback number (optional, explained) → consent + "not an emergency service" → **QR code** of `/senior/<device_token>` (npm `qrcode`), with "open this on the tablet, then bookmark it".
 4. `/app` = existing `components/family/alerts-feed.tsx` filtered by the user's family, with "I'm on it", "mark help request done", "call Maria" (`tel:`).

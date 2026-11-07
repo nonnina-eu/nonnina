@@ -1,6 +1,6 @@
 # Role · Website – landing page, waitlist, copy
 
-**Owner today:** the teammate's Grok agent / Arjit. **Works in:** `website/` only. Full rules in `website/AGENTS.md`.
+**Owner today:** Arjit. **Works in:** this repo (`app/[locale]`, `components/sections`, `lib/dictionaries`). Full rules in `AGENTS.md`.
 
 ## Goal
 A landing page at nonnina.eu (IT/EN/DE) that explains Nonnina to an adult child living far

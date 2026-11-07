@@ -1,6 +1,6 @@
 # Role · Marketplace – verified helpers (Layer 3, post-MVP)
 
-**Owner:** Dev 3 (proposal: Arjit). **Works in:** `app/` under `app/helpers/*`, `app/app/helpers/*`. **Status: v1 built (assigned for the hackathon demo)** – see "Built" below.
+**Owner:** Dev 3 (proposal: Arjit). **Works in:** this repo under `app/(product)/helpers/*`, `app/(product)/app/helpers/*`. **Status: v1 built (assigned for the hackathon demo)** – see "Built" below.
 
 ## Goal
 Care services, agencies and independent helpers sign up for free, get verified, and receive
@@ -30,7 +30,7 @@ Code: `supabase/migrations/0005_marketplace.sql`, `lib/db/types.ts` (`Helper`, `
 Store methods in both adapters, `lib/marketplace.ts` (public projection, filters, category →
 service mapping), `lib/validation.ts` (helper profile / request / API query), `lib/helper-auth.ts`,
 `lib/notify-marketplace.ts`, `lib/i18n/marketplace.ts` (EN/DE/IT, cookie `nonnina_lang`),
-`app/helpers/*`, `components/marketplace/*`, `app/api/helpers`, tests in `tests/marketplace.test.ts`.
+`app/(product)/helpers/*`, `components/marketplace/*`, `app/api/helpers`, tests in `tests/marketplace.test.ts`.
 
 - [x] Data: `helpers` (kind independent|service|volunteer, services from a fixed list, `hourly_rate_eur` null = free, `verified`, `active`) and `helper_requests` (family, senior, helper, sending relative, optional help request, service, message, preferred time, status sent|accepted|declined|done, `notified[]`). RLS: public reads active helpers through column grants (no phone / email / user id) or the `helpers_public` view; writes service role only.
 - [x] Public directory `/helpers` (service, city – default Stuttgart, language, verified only) and `/helpers/[id]`. Contact data never rendered.

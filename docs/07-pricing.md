@@ -1,6 +1,6 @@
 # 07 · Pricing strategy
 
-Source: `reference/pricing-report.md` (German market pricing for Hausnotruf, AI elderly care and
+Source: `research/pricing-report.md` (German market pricing for Hausnotruf, AI elderly care and
 DiPA, Nov 2026) plus `05-market-and-evidence.md`. All competitor prices below are copied from
 those two files; recheck before official use. Our own prices are **hypotheses to test in the
 Stuttgart pilot**, not published tariffs.

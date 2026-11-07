@@ -1,6 +1,6 @@
 # 00 · Vision – what we are building
 
-> Source of truth for the product idea. Derived from `reference/care-copilot-how-it-works.txt`
+> Source of truth for the product idea. Derived from `reference/original-team-plan.txt`
 > (team plan of 7 Nov 2026) plus the product owner's brief of the same day. If this file and
 > the code disagree, fix the code or update this file – never leave both.
 

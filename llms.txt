@@ -1,0 +1,32 @@
+# Nonnina
+
+> Voice companion for older people living alone at home, with real-time family alerts, a relief-amount budget for families, and a marketplace of verified local helpers. One Next.js 15 app (landing + product). Built at the Cursor x Sandbox Founders Hackathon, Stuttgart, 7 Nov 2026. Not an emergency service; never dials 112.
+
+Live: https://nonnina-website.vercel.app (demo mode, every page works) · Domain: https://www.nonnina.eu
+
+## Start here
+- [README.md](README.md): what it is, what we built, architecture, how to run
+- [docs/judging.md](docs/judging.md): hackathon criteria mapped to evidence
+- [docs/validation.md](docs/validation.md): customer, interviews on 7 Nov 2026, what we changed
+- [docs/business-model.md](docs/business-model.md): who pays, market, why now, competition
+
+## Specification
+- [docs/00-vision.md](docs/00-vision.md): vision, users, principles, MVP scope
+- [docs/01-assistant-spec.md](docs/01-assistant-spec.md): voice assistant Lina, tools, behaviour
+- [docs/02-emergency-and-family-flow.md](docs/02-emergency-and-family-flow.md): emergency levels, escalation ladder
+- [docs/03-architecture.md](docs/03-architecture.md): stack, routes, data model, security
+- [docs/05-market-and-evidence.md](docs/05-market-and-evidence.md): market numbers and evidence
+- [docs/07-pricing.md](docs/07-pricing.md): pricing and competitors
+- [docs/go-live.md](docs/go-live.md): Supabase + Vercel setup for real accounts
+
+## Code entry points
+- app/[locale]/page.tsx: landing page (EN/DE/IT)
+- app/(product)/senior/[token]/page.tsx + components/senior/senior-screen.tsx: senior voice screen
+- app/(product)/app/page.tsx: family dashboard; components/family/relief-budget-card.tsx
+- app/(product)/helpers/: marketplace; lib/marketplace.ts
+- app/api/emergency/route.ts, lib/escalation-ladder.ts, lib/notify.ts: emergency flow
+- lib/tool-outcomes.ts: what Lina is told after each tool call
+- lib/relief-budget.ts: 131 €/month relief amount logic
+- lib/db/: store port, Supabase + in-memory adapters, seed
+- supabase/migrations/: schema 0001–0007
+- tests/: vitest suite
