@@ -6,9 +6,6 @@
 <title>Nonnina Brand Identity</title>
 <meta name="description" content="Nonnina brand identity: logo, colour, typography, photography, voice, components and the homepage hero. Derived from the Grassfeld design system and adapted for a warm voice companion for older people.">
 <link rel="icon" href="assets/nonnina-mark.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     /* Core */
@@ -34,8 +31,8 @@
     --ok: #0E7A36;
     --link: #3B5BD6;
 
-    --display: "Bricolage Grotesque", "Arial Narrow", Impact, sans-serif;
-    --body: "Manrope", Arial, sans-serif;
+    --display: "Bricolage Grotesque", "Arial Narrow", "Helvetica Neue Condensed", system-ui, sans-serif;
+    --body: Manrope, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --r-xs: .5rem; --r-sm: .75rem; --r-md: 1rem; --r-lg: 1.25rem; --r-xl: 2rem; --r-pill: 333px;
     --gutter: clamp(1rem, 4vw, 4rem);
     --max: 90rem;
@@ -46,7 +43,7 @@
   body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 1.0625rem; line-height: 1.6; letter-spacing: .01em; -webkit-font-smoothing: antialiased; }
   img { display: block; max-width: 100%; }
   a { color: var(--link); }
-  h1, h2, h3, .display { font-family: var(--display); font-stretch: 75%; font-weight: 800; letter-spacing: -.02em; margin: 0; font-optical-sizing: auto; }
+  h1, h2, h3, .display { font-family: var(--display); font-stretch: condensed; font-weight: 800; letter-spacing: -.02em; margin: 0; font-optical-sizing: auto; }
   h1 { font-size: clamp(3rem, 7vw, 5.5rem); line-height: .92; }
   h2 { font-size: clamp(2.25rem, 4.6vw, 3.5rem); line-height: .98; }
   h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.05; }
@@ -56,7 +53,7 @@
   .muted { color: var(--muted); }
   .eyebrow { display: inline-flex; align-items: center; gap: .5rem; font-size: .8125rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--graphite); }
   .eyebrow svg { width: 14px; height: 14px; fill: var(--sole); }
-  .num { font-family: var(--display); font-stretch: 75%; font-weight: 800; color: var(--muted); font-size: 1rem; letter-spacing: .02em; }
+  .num { font-family: var(--display); font-stretch: condensed; font-weight: 800; color: var(--muted); font-size: 1rem; letter-spacing: .02em; }
 
   /* ---------- top bar ---------- */
   .topbar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
@@ -67,7 +64,7 @@
   @media (max-width: 960px) { .toc { display: none; } }
 
   /* ---------- wordmark ---------- */
-  .wm { font-family: var(--display); font-stretch: 75%; font-weight: 800; letter-spacing: -.012em; line-height: 1; color: var(--ink); display: inline-flex; align-items: baseline; white-space: nowrap; }
+  .wm { font-family: var(--display); font-stretch: condensed; font-weight: 800; letter-spacing: -.012em; line-height: 1; color: var(--ink); display: inline-flex; align-items: baseline; white-space: nowrap; }
   .wm .wm-mark { width: .7em; height: .7em; margin-right: .05em; flex: none; align-self: baseline; }
   .wm.on-dark { color: #fff; }
   .wm-row { display: inline-flex; align-items: center; gap: .32em; }
@@ -130,7 +127,7 @@
   .promise .big-spark { position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; fill: var(--sole); opacity: .95; }
   .traits { display: grid; gap: .75rem; }
   .trait { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; background: var(--latte); border-radius: var(--r-lg); padding: 1.25rem 1.5rem; }
-  .trait b { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 1.5rem; line-height: 1; }
+  .trait b { font-family: var(--display); font-stretch: condensed; font-weight: 800; font-size: 1.5rem; line-height: 1; }
   .trait span { color: var(--muted); font-size: .9375rem; }
   .trait .no { display: block; font-size: .8125rem; margin-top: .25rem; color: var(--graphite); font-weight: 700; }
 
@@ -153,7 +150,7 @@
   .swatch { border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); background: #fff; display: grid; }
   .swatch .chip { height: 140px; padding: 1rem; display: flex; align-items: flex-end; justify-content: space-between; font-weight: 800; }
   .swatch .meta { padding: 1rem 1.125rem 1.25rem; display: grid; gap: .25rem; }
-  .swatch .name { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 1.5rem; line-height: 1; }
+  .swatch .name { font-family: var(--display); font-stretch: condensed; font-weight: 800; font-size: 1.5rem; line-height: 1; }
   .swatch .hex { font-family: ui-monospace, Menlo, monospace; font-size: .8125rem; color: var(--muted); }
   .swatch .role { font-size: .875rem; color: var(--graphite); }
   .swatch .cr { font-size: .75rem; color: var(--muted); font-weight: 700; }
@@ -244,7 +241,7 @@
   /* ---------- sitemap ---------- */
   .map { display: grid; gap: .75rem; counter-reset: s; }
   .map li { list-style: none; display: grid; grid-template-columns: 56px 1fr; gap: 1rem; align-items: start; padding: 1.25rem 1.5rem; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); }
-  .map li::before { counter-increment: s; content: counter(s, decimal-leading-zero); font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 1.75rem; line-height: 1; color: var(--ink); }
+  .map li::before { counter-increment: s; content: counter(s, decimal-leading-zero); font-family: var(--display); font-stretch: condensed; font-weight: 800; font-size: 1.75rem; line-height: 1; color: var(--ink); }
   .map li b { display: block; font-size: 1.0625rem; }
   .map li span { color: var(--muted); font-size: .9375rem; }
   .map li .tags { display: flex; flex-wrap: wrap; gap: .375rem; margin-top: .5rem; }
@@ -256,7 +253,7 @@
   .tile { border-radius: var(--r-lg); padding: 1.5rem; display: grid; gap: 2.5rem; min-height: 220px; align-content: space-between; }
   .tile .ic { width: 48px; height: 48px; border-radius: var(--r-sm); background: #fff; display: grid; place-items: center; }
   .tile .ic svg { width: 24px; height: 24px; }
-  .tile h4 { font-family: var(--display); font-stretch: 75%; font-size: 1.75rem; line-height: 1; font-weight: 800; letter-spacing: -.01em; }
+  .tile h4 { font-family: var(--display); font-stretch: condensed; font-size: 1.75rem; line-height: 1; font-weight: 800; letter-spacing: -.01em; }
   .tile p { font-size: .9375rem; color: var(--graphite); margin-top: .5rem; }
   .feature-block { display: grid; gap: 2rem; align-items: center; background: var(--latte); border-radius: var(--r-xl); padding: clamp(1.5rem, 4vw, 3rem); }
   @media (min-width: 900px) { .feature-block { grid-template-columns: 1fr 1fr; } }
