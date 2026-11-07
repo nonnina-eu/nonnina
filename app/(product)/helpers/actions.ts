@@ -11,7 +11,8 @@ import { clearDemoHelperCookie, getHelperSession, setDemoHelperCookie } from "@/
 import { localeForLanguages, marketplaceT } from "@/lib/i18n/marketplace";
 import { notifyMarketplaceContact } from "@/lib/notify-marketplace";
 import { createClient } from "@/lib/supabase/server";
-import { helperProfileSchema, helperRequestFormSchema } from "@/lib/validation";
+import { berlinDate, completionPatch } from "@/lib/relief-budget";
+import { helperProfileSchema, helperRequestFormSchema, parseCompletionForm } from "@/lib/validation";
 
 // ---------- shared ----------
 
@@ -222,6 +223,25 @@ export async function respondToHelperRequest(formData: FormData): Promise<void> 
   }
 
   await store.updateHelperRequest(req.id, { status: next, notified });
+  revalidatePath("/helpers/me");
+  revalidatePath("/app");
+  redirect(`/helpers/me#request-${req.id}`);
+}
+
+// ---------- helper records a finished job ----------
+
+/** Accepted → done with date, hours and amount (empty amount = hours × hourly rate). */
+export async function completeHelperRequest(formData: FormData): Promise<void> {
+  const session = await getHelperSession();
+  if (!session?.helper) redirect("/helpers/join");
+  const parsed = parseCompletionForm(formData, berlinDate(new Date()));
+  if (!parsed.success) redirect("/helpers/me?error=complete");
+
+  const store = getStore();
+  const req = await store.getHelperRequest(parsed.data.request_id);
+  if (!req || req.helper_id !== session.helper.id || (req.status !== "accepted" && req.status !== "done")) redirect("/helpers/me?error=generic");
+
+  await store.updateHelperRequest(req.id, completionPatch(parsed.data, session.helper.hourly_rate_eur));
   revalidatePath("/helpers/me");
   revalidatePath("/app");
   redirect(`/helpers/me#request-${req.id}`);

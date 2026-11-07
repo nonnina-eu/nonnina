@@ -160,6 +160,47 @@ export const helperRequestFormSchema = z.object({
 });
 export type HelperRequestFormInput = z.infer<typeof helperRequestFormSchema>;
 
+/** "2,5" → 2.5; "" / undefined → null; non-numbers → NaN (fails the number check). */
+function decimal(v: unknown): number | null {
+  if (v === undefined || v === null) return null;
+  const str = String(v).trim().replace(",", ".");
+  return str === "" ? null : Number(str);
+}
+
+/**
+ * Recording a finished job (helper on /helpers/me or family on /app). amount_eur empty →
+ * null: the server then uses hours × hourly rate (0 for free helpers). The service date may
+ * not lie in the future (`today` = "YYYY-MM-DD" in Europe/Berlin, passed by the caller).
+ */
+export function completeJobSchema(today: string) {
+  return z.object({
+    request_id: z.string().uuid(),
+    service_date: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD")
+      .refine((d) => !Number.isNaN(new Date(`${d}T00:00:00Z`).getTime()) && new Date(`${d}T00:00:00Z`).toISOString().startsWith(d), "Invalid date")
+      .refine((d) => d <= today, "The date cannot be in the future")
+      .refine((d) => d >= "2024-01-01", "Date too far in the past"),
+    hours: z.preprocess(decimal, z.number().min(0.25).max(24)),
+    amount_eur: z.preprocess(decimal, z.number().min(0).max(5000).nullable()),
+  });
+}
+export type CompleteJobInput = z.infer<ReturnType<typeof completeJobSchema>>;
+
+/** The "Record as done" form (helper on /helpers/me, family on /app). */
+export function parseCompletionForm(formData: FormData, today: string) {
+  const get = (key: string) => {
+    const v = formData.get(key);
+    return typeof v === "string" ? v : undefined;
+  };
+  return completeJobSchema(today).safeParse({
+    request_id: get("request_id"),
+    service_date: get("service_date"),
+    hours: get("hours"),
+    amount_eur: get("amount_eur"),
+  });
+}
+
 /** GET /api/helpers query. */
 export const helperQuerySchema = z.object({
   service: helperServiceSchema.optional(),

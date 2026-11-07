@@ -6,11 +6,15 @@ import { familyT } from "@/lib/i18n/family";
 import { AlertsFeed } from "@/components/family/alerts-feed";
 import { FamilyShell } from "@/components/family/shell";
 import { FamilyHelperRequests } from "@/components/marketplace/family-helper-requests";
+import { ReliefBudgetCard } from "@/components/family/relief-budget-card";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Alerts", robots: { index: false } };
 
-export default async function FamilyHomePage() {
+type Props = { searchParams: Promise<{ budget_month?: string; budget_senior?: string; complete_error?: string }> };
+
+export default async function FamilyHomePage({ searchParams }: Props) {
+  const sp = await searchParams;
   const member = await requireMember();
   const overview = await getMemberOverview(member);
   const senior = overview?.seniors[0];
@@ -52,7 +56,9 @@ export default async function FamilyHomePage() {
         ) : null}
       </div>
 
-      <FamilyHelperRequests familyId={family.id} seniors={overview?.seniors ?? []} />
+      <FamilyHelperRequests familyId={family.id} seniors={overview?.seniors ?? []} completeError={sp.complete_error === "1"} />
+
+      <ReliefBudgetCard familyId={family.id} seniors={overview?.seniors ?? []} month={sp.budget_month} seniorId={sp.budget_senior} />
 
       {feed ? (
         <AlertsFeed familyId={family.id} initial={feed} relativeId={member.relative?.id ?? null} relatives={overview?.relatives ?? []} />

@@ -6,7 +6,8 @@ import type { ZodError } from "zod";
 import { getStore } from "@/lib/db";
 import type { MedicationTime, NewRelative } from "@/lib/db/types";
 import { env } from "@/lib/env";
-import { familySetupSchema, medicationTimeSchema, phoneE164, relativeSchema, seniorSchema } from "@/lib/validation";
+import { familySetupSchema, medicationTimeSchema, parseCompletionForm, phoneE164, relativeSchema, seniorSchema } from "@/lib/validation";
+import { berlinDate, completionPatch } from "@/lib/relief-budget";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentMember, getMemberOverview, ownsRelative, ownsSenior, setDemoMemberCookie } from "@/lib/auth";
 
@@ -219,4 +220,24 @@ export async function rotateTabletLink(formData: FormData): Promise<void> {
   await getStore().rotateDeviceToken(seniorId);
   revalidatePath("/app");
   redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}qr=1`);
+}
+
+// ---------- helper jobs: family records a finished job ----------
+
+/** The family marks an accepted helper request as done (in case the helper does not). */
+export async function completeHelperRequestForFamily(formData: FormData): Promise<void> {
+  const { overview } = await requireFamilyMember();
+  const returnTo = back(str(formData, "return_to"), "/app");
+  const parsed = parseCompletionForm(formData, berlinDate(new Date()));
+  const fail = (): never => redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}complete_error=1#helper-requests`);
+  if (!parsed.success) return fail();
+
+  const store = getStore();
+  const req = await store.getHelperRequest(parsed.data.request_id);
+  if (!req || req.family_id !== overview.family.id || (req.status !== "accepted" && req.status !== "done")) return fail();
+  const helper = await store.getHelper(req.helper_id);
+  await store.updateHelperRequest(req.id, completionPatch(parsed.data, helper?.hourly_rate_eur ?? null));
+  revalidatePath("/app");
+  revalidatePath("/helpers/me");
+  redirect(`${returnTo}#relief-budget`);
 }

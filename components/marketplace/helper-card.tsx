@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Clock, FlaskConical, HeartHandshake, MapPin } from "lucide-react";
+import { BadgeCheck, Clock, FlaskConical, HeartHandshake, MapPin, PiggyBank } from "lucide-react";
 import type { HelperService, PublicHelper } from "@/lib/db/types";
 import { formatRate, marketplaceT, type MarketplaceLocale } from "@/lib/i18n/marketplace";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +26,17 @@ export function DemoProfileBadge({ isDemo, locale }: { isDemo: boolean; locale: 
   return (
     <Badge variant="warning" title={t.demoProfileHint}>
       <FlaskConical className="size-3.5" aria-hidden /> {t.demoProfile}
+    </Badge>
+  );
+}
+
+/** "Payable via relief amount (131 €)" for recognised offers (helpers.relief_eligible). */
+export function ReliefBadge({ eligible, locale }: { eligible: boolean; locale: MarketplaceLocale }) {
+  if (!eligible) return null;
+  const t = marketplaceT(locale).common;
+  return (
+    <Badge variant="default" className="bg-camomilla text-ink" title={t.reliefEligibleHint}>
+      <PiggyBank className="size-3.5" aria-hidden /> {t.reliefEligible}
     </Badge>
   );
 }
@@ -110,6 +121,7 @@ export function HelperCard({ helper, locale, href, highlight }: { helper: Public
           </p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             <VerifiedBadge verified={helper.verified} locale={locale} />
+            <ReliefBadge eligible={helper.relief_eligible} locale={locale} />
             <DemoProfileBadge isDemo={helper.is_demo} locale={locale} />
           </div>
         </div>

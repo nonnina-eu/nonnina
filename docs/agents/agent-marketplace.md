@@ -39,4 +39,5 @@ service mapping), `lib/validation.ts` (helper profile / request / API query), `l
 - [x] Notifications: SMS (Twilio) / email (Resend) to the helper on a new request and to the relative on accept / decline; demo mode records the text and shows it on screen.
 - [x] `GET /api/helpers?service=&city=&language=&verified=` for the voice agent tools (safe fields only).
 - [ ] Admin toggle for `verified` (today: set `helpers.verified = true` in the Supabase table editor).
-- [ ] Distance, relief-amount eligibility flag, Exa suggestions, Lina tool `find_helper` (senior screen untouched on purpose).
+- [x] Relief amount (0007): `helpers.relief_eligible` (badge on card + profile), completion fields on `helper_requests` (hours, amount_eur, service_date, completed_at; helper on /helpers/me or family on /app records "done"), budget card on /app (`lib/relief-budget.ts`, `components/family/relief-budget-card.tsx`): 131 € from care level 1, carry-over within the year, family share. Set `relief_eligible` by hand in the table editor like `verified`.
+- [ ] Distance, Exa suggestions, Lina tool `find_helper` (senior screen untouched on purpose).

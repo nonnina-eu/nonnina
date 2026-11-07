@@ -322,6 +322,19 @@ export class SupabaseStore implements Store {
       hourly_rate_eur: row.hourly_rate_eur === null ? null : Number(row.hourly_rate_eur),
       photo_url: row.photo_url ?? null,
       is_demo: row.is_demo ?? false,
+      relief_eligible: row.relief_eligible ?? false,
+    };
+  }
+
+  /** numeric columns come back as strings; rows from before 0007 have no completion fields. */
+  private requestRow(row: HelperRequest): HelperRequest {
+    const num = (v: unknown) => (v === null || v === undefined ? null : Number(v));
+    return {
+      ...row,
+      hours: num(row.hours),
+      amount_eur: num(row.amount_eur),
+      service_date: row.service_date ?? null,
+      completed_at: row.completed_at ?? null,
     };
   }
 
@@ -363,13 +376,13 @@ export class SupabaseStore implements Store {
   async createHelperRequest(input: NewHelperRequest): Promise<HelperRequest> {
     const { data, error } = await this.db.from("helper_requests").insert({ ...input, status: "sent", notified: [] }).select("*").single();
     if (error) fail("helper_requests.insert", error);
-    return data as HelperRequest;
+    return this.requestRow(data as HelperRequest);
   }
 
   async getHelperRequest(id: string): Promise<HelperRequest | null> {
     const { data, error } = await this.db.from("helper_requests").select("*").eq("id", id).maybeSingle();
     if (error) fail("helper_requests.get", error);
-    return (data as HelperRequest) ?? null;
+    return data ? this.requestRow(data as HelperRequest) : null;
   }
 
   async updateHelperRequest(id: string, patch: HelperRequestPatch): Promise<HelperRequest | null> {
@@ -380,18 +393,18 @@ export class SupabaseStore implements Store {
       .select("*")
       .maybeSingle();
     if (error) fail("helper_requests.update", error);
-    return (data as HelperRequest) ?? null;
+    return data ? this.requestRow(data as HelperRequest) : null;
   }
 
   async listHelperRequestsForHelper(helperId: string): Promise<HelperRequest[]> {
     const { data, error } = await this.db.from("helper_requests").select("*").eq("helper_id", helperId).order("created_at", { ascending: false }).limit(100);
     if (error) fail("helper_requests.byHelper", error);
-    return (data ?? []) as HelperRequest[];
+    return ((data ?? []) as HelperRequest[]).map((r) => this.requestRow(r));
   }
 
   async listHelperRequestsForFamily(familyId: string): Promise<HelperRequest[]> {
     const { data, error } = await this.db.from("helper_requests").select("*").eq("family_id", familyId).order("created_at", { ascending: false }).limit(100);
     if (error) fail("helper_requests.byFamily", error);
-    return (data ?? []) as HelperRequest[];
+    return ((data ?? []) as HelperRequest[]).map((r) => this.requestRow(r));
   }
 }

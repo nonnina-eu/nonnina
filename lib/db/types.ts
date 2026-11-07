@@ -1,6 +1,6 @@
 /**
  * Shared domain types. They mirror the Supabase schema in
- * supabase/migrations/0001_init.sql + 0002_escalation_and_auth.sql + 0003_help_request_acknowledge.sql one to one (snake_case on purpose),
+ * supabase/migrations/0001_init.sql … 0007_relief_budget.sql one to one (snake_case on purpose),
  * so Layer 2 (family dashboard) and Layer 3 (marketplace) can reuse them.
  */
 export type Language = "de" | "it";
@@ -174,6 +174,8 @@ export interface Helper {
   photo_url: string | null;
   /** Seeded showcase profile (0006); the directory labels it "Demo profile". */
   is_demo: boolean;
+  /** Can be paid via the relief amount (Entlastungsbetrag, 131 €/month): a recognised offer / approved service (0007). Set by the team. */
+  relief_eligible: boolean;
   created_at: string;
 }
 
@@ -196,6 +198,11 @@ export interface HelperRequest {
   status: HelperRequestStatus;
   /** SMS / email / demo records of the helper and family notifications. */
   notified: NotificationRecord[];
+  /** Completion (0007), only for status "done": hours worked, amount charged (EUR), day of the service ("YYYY-MM-DD"). */
+  hours: number | null;
+  amount_eur: number | null;
+  service_date: string | null;
+  completed_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -216,10 +223,14 @@ export type NewSenior = Omit<Senior, "id" | "created_at" | "device_token"> & { d
 export type NewRelative = Omit<Relative, "id">;
 export type NewVoiceSession = Omit<VoiceSession, "id" | "created_at">;
 export type NewWaitlistEntry = Omit<WaitlistEntry, "id" | "created_at">;
-export type NewHelper = Omit<Helper, "id" | "created_at" | "verified" | "active" | "photo_url" | "is_demo"> & {
+export type NewHelper = Omit<Helper, "id" | "created_at" | "verified" | "active" | "photo_url" | "is_demo" | "relief_eligible"> & {
   verified?: boolean;
   active?: boolean;
   photo_url?: string | null;
   is_demo?: boolean;
+  relief_eligible?: boolean;
 };
-export type NewHelperRequest = Omit<HelperRequest, "id" | "created_at" | "updated_at" | "status" | "notified">;
+export type NewHelperRequest = Omit<
+  HelperRequest,
+  "id" | "created_at" | "updated_at" | "status" | "notified" | "hours" | "amount_eur" | "service_date" | "completed_at"
+>;

@@ -11,7 +11,7 @@ import { getMarketplaceT } from "@/lib/i18n/marketplace-locale";
 import { isHelperService, toPublicHelper } from "@/lib/marketplace";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/family/shell";
-import { DemoProfileBadge, HelperAvatar, languageList, RateLabel, ServiceChips, VerifiedBadge } from "@/components/marketplace/helper-card";
+import { DemoProfileBadge, HelperAvatar, languageList, RateLabel, ReliefBadge, ServiceChips, VerifiedBadge } from "@/components/marketplace/helper-card";
 import { HelperRequestForm } from "@/components/marketplace/helper-request-form";
 import { NotificationList } from "@/components/marketplace/notification-list";
 import { MarketplaceShell } from "@/components/marketplace/shell";
@@ -83,9 +83,11 @@ export default async function HelperDetailPage({ params, searchParams }: Props) 
               <MapPin className="size-4" aria-hidden /> {helper.city}
             </span>
             <VerifiedBadge verified={helper.verified} locale={locale} />
+            <ReliefBadge eligible={helper.relief_eligible} locale={locale} />
             <DemoProfileBadge isDemo={helper.is_demo} locale={locale} />
             <RateLabel helper={helper} locale={locale} />
           </div>
+          {helper.relief_eligible ? <p className="mt-2 text-xs text-muted">{t.common.reliefEligibleHint}</p> : null}
           {helper.is_demo ? <p className="mt-2 text-xs text-muted">{t.common.demoProfileHint}</p> : null}
         </div>
       </div>
