@@ -1,7 +1,6 @@
 /**
  * Shared domain types. They mirror the Supabase schema in
- * supabase/migrations/0001_init.sql + 0002_escalation_and_auth.sql + 0003_help_request_acknowledge.sql
- * + 0004_marketplace.sql one to one (snake_case on purpose),
+ * supabase/migrations/0001_init.sql + 0002_escalation_and_auth.sql + 0003_help_request_acknowledge.sql one to one (snake_case on purpose),
  * so Layer 2 (family dashboard) and Layer 3 (marketplace) can reuse them.
  */
 export type Language = "de" | "it";
@@ -151,7 +150,7 @@ export interface FamilyOverview {
   relatives: Relative[];
 }
 
-/** A person, service or volunteer offering help (marketplace, Layer 3). */
+/** A person, service or volunteer offering help (marketplace, Layer 3; supabase/migrations/0005_marketplace.sql). */
 export interface Helper {
   id: string;
   /** Supabase Auth user who owns the profile (null for seeded / demo-mode profiles). */

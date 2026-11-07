@@ -1,4 +1,4 @@
--- Nonnina · 0004 marketplace (Layer 3)
+-- Nonnina · 0005 marketplace (Layer 3)
 -- helpers: people, services and volunteers who offer help (shopping, cooking, company …).
 -- helper_requests: a family asks a helper for a service; accept → contacts are shared,
 -- linked help_requests go to status 'matched'.

@@ -2,20 +2,16 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { randomBytes } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { compareHelpers, PUBLIC_HELPER_COLUMNS, toPublicHelper } from "@/lib/marketplace";
-import type { EmergencyEventPatch, HelperPatch, HelperRequestPatch, HelpRequestPatch, Store } from "./store";
+import type { EmergencyEventPatch, HelpRequestPatch, Store } from "./store";
+import type { HelperPatch, HelperRequestPatch } from "./store";
+import type { Helper, HelperFilter, HelperRequest, NewHelper, NewHelperRequest, PublicHelper } from "./types";
 import type {
   EmergencyEvent,
   Family,
   FamilyFeed,
   FamilyOverview,
   HelpRequest,
-  Helper,
-  HelperFilter,
-  HelperRequest,
   NewEmergencyEvent,
-  NewHelper,
-  NewHelperRequest,
-  PublicHelper,
   NewFamily,
   NewHelpRequest,
   NewRelative,
@@ -196,7 +192,6 @@ export class SupabaseStore implements Store {
       this.db.from("emergency_events").delete().in("senior_id", ids),
       this.db.from("help_requests").delete().in("senior_id", ids),
       this.db.from("voice_sessions").delete().in("senior_id", ids),
-      this.db.from("helper_requests").delete().eq("family_id", familyId),
     ]);
   }
 

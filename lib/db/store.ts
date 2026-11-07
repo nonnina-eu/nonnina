@@ -4,13 +4,7 @@ import type {
   FamilyFeed,
   FamilyOverview,
   HelpRequest,
-  Helper,
-  HelperFilter,
-  HelperRequest,
   NewEmergencyEvent,
-  NewHelper,
-  NewHelperRequest,
-  PublicHelper,
   NewFamily,
   NewHelpRequest,
   NewRelative,
@@ -21,12 +15,11 @@ import type {
   SeniorContext,
   VoiceSession,
 } from "./types";
+import type { Helper, HelperFilter, HelperRequest, NewHelper, NewHelperRequest, PublicHelper } from "./types";
 
 export type EmergencyEventPatch = Partial<
   Pick<EmergencyEvent, "status" | "notified" | "escalation_step" | "next_step_at" | "acknowledged_by">
 >;
-export type HelperPatch = Partial<Omit<NewHelper, "user_id">>;
-export type HelperRequestPatch = Partial<Pick<HelperRequest, "status" | "notified">>;
 export type HelpRequestPatch = Partial<Pick<HelpRequest, "status" | "resolved_at" | "acknowledged_by" | "acknowledged_at">>;
 
 /**
@@ -90,3 +83,6 @@ export interface Store {
   /** Newest first. */
   listHelperRequestsForFamily(familyId: string): Promise<HelperRequest[]>;
 }
+
+export type HelperPatch = Partial<Omit<NewHelper, "user_id">>;
+export type HelperRequestPatch = Partial<Pick<HelperRequest, "status" | "notified">>;
