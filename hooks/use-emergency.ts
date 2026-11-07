@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { EmergencyEvent, EmergencyLevel, EmergencySource } from "@/lib/db/types";
+import type { EmergencyTriggerResult } from "@/lib/tool-outcomes";
 
 export const WARNING_COUNTDOWN_SECONDS = 15;
 
@@ -56,6 +57,8 @@ export function useEmergency(token: string) {
   stateRef.current = state;
   const countdownTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** The request currently in flight, so a second trigger (keyword net + agent tool) reports the same outcome. */
+  const inflight = useRef<Promise<EmergencyTriggerResult> | null>(null);
 
   const clearTimers = () => {
     if (countdownTimer.current) clearInterval(countdownTimer.current);
@@ -64,49 +67,57 @@ export function useEmergency(token: string) {
     retryTimer.current = null;
   };
 
+  const sendRef = useRef<(input: TriggerInput) => Promise<EmergencyTriggerResult>>(async () => ({ phase: "failed", notified: [] }));
+
   const send = useCallback(
-    async (input: TriggerInput): Promise<boolean> => {
-      setState((s) => ({ ...s, phase: "notifying", level: input.level, reason: input.reason, quote: input.quote ?? "", source: input.source }));
-      try {
-        const res = await fetch("/api/emergency", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, ...input, quote: input.quote ?? "" }),
-        });
-        const json = (await res.json()) as { ok: boolean; event?: EmergencyEvent; notified?: boolean };
-        if (!res.ok || !json.ok || !json.event) throw new Error("emergency request failed");
-        const event = json.event;
-        setState((s) => ({
-          ...s,
-          event,
-          phase: event.status === "acknowledged" ? "acknowledged" : json.notified ? "notified" : "failed",
-        }));
-        return Boolean(json.notified);
-      } catch {
-        setState((s) => ({ ...s, phase: "failed" }));
-        retryTimer.current = setTimeout(() => {
-          if (stateRef.current.phase === "failed" && !stateRef.current.event) void send(input);
-        }, RETRY_MS);
-        return false;
-      }
+    (input: TriggerInput): Promise<EmergencyTriggerResult> => {
+      const run = async (): Promise<EmergencyTriggerResult> => {
+        setState((s) => ({ ...s, phase: "notifying", level: input.level, reason: input.reason, quote: input.quote ?? "", source: input.source }));
+        try {
+          const res = await fetch("/api/emergency", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token, ...input, quote: input.quote ?? "" }),
+          });
+          const json = (await res.json()) as { ok: boolean; event?: EmergencyEvent; notified?: boolean };
+          if (!res.ok || !json.ok || !json.event) throw new Error("emergency request failed");
+          const event = json.event;
+          const phase: EmergencyPhase = event.status === "acknowledged" ? "acknowledged" : json.notified ? "notified" : "failed";
+          setState((s) => ({ ...s, event, phase }));
+          return { phase, notified: event.notified };
+        } catch {
+          setState((s) => ({ ...s, phase: "failed" }));
+          retryTimer.current = setTimeout(() => {
+            if (stateRef.current.phase === "failed" && !stateRef.current.event) void sendRef.current(input);
+          }, RETRY_MS);
+          return { phase: "failed", notified: [] };
+        }
+      };
+      const p = run().finally(() => {
+        if (inflight.current === p) inflight.current = null;
+      });
+      inflight.current = p;
+      return p;
     },
     [token],
   );
+  sendRef.current = send;
 
   const trigger = useCallback(
-    async (input: TriggerInput): Promise<boolean> => {
+    async (input: TriggerInput): Promise<EmergencyTriggerResult> => {
       const current = stateRef.current;
       const active = current.phase !== "none";
+      const snapshot = (): EmergencyTriggerResult => ({ phase: current.phase, notified: current.event?.notified ?? [] });
 
       if (input.level === "emergency") {
         // An emergency always wins: cancel a running warning countdown and notify immediately.
-        if (active && current.level === "emergency" && current.phase !== "failed") return current.phase === "notified" || current.phase === "acknowledged";
+        if (active && current.level === "emergency" && current.phase !== "failed") return inflight.current ?? snapshot();
         clearTimers();
         return send(input);
       }
 
-      // warning
-      if (active) return current.phase === "notified";
+      // warning: something is already running (countdown, request in flight or a live event) – report that.
+      if (active) return inflight.current ?? snapshot();
       clearTimers();
       setState({ ...initial, phase: "countdown", level: "warning", reason: input.reason, quote: input.quote ?? "", source: input.source });
       countdownTimer.current = setInterval(() => {
@@ -122,7 +133,7 @@ export function useEmergency(token: string) {
           setState((prev) => ({ ...prev, secondsLeft: prev.secondsLeft - 1 }));
         }
       }, 1000);
-      return false;
+      return { phase: "countdown", notified: [] };
     },
     [send],
   );

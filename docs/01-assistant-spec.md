@@ -51,6 +51,18 @@ Highest priority, overrides everything. Two levels, defined in `02-emergency-and
 
 When in doubt between warning and emergency → emergency.
 
+**Tool results are the truth; Lina says what they say** (`lib/tool-outcomes.ts`):
+
+| Tool | Result | What Lina says |
+| --- | --- | --- |
+| `trigger_emergency` | `relatives_notified` | "Ich habe Anna und Thomas benachrichtigt." + press 112 |
+| | `demo_mode_logged_no_sms_sent` | Demo mode: the family sees it in the app, no SMS was sent. Press 112 if it is serious. |
+| | `notification_failed_tell_senior_to_call_112` | Nobody could be reached: "Bitte drücken Sie jetzt den 112-Knopf." |
+| | `warning_countdown_started` | "In ein paar Sekunden sage ich Ihrer Familie Bescheid; Sie können das auf dem Bildschirm abbrechen." |
+| `create_help_request` | `family_informed` | "Ich habe Anna Bescheid gesagt." |
+| | `saved_family_will_see_it_in_the_app` | "Ich habe es notiert, Ihre Familie sieht es in der App." (no SMS promised) |
+| | `failed_tell_senior_to_try_again_or_press_help` | "Das hat nicht geklappt. Bitte später noch einmal, oder den roten Hilfe-Knopf drücken." |
+
 Three independent triggers (so it works even if the AI fails):
 
 1. **Agent tool** – Lina decides and calls `trigger_emergency`.
