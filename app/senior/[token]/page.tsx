@@ -11,7 +11,7 @@ type Params = { params: Promise<{ token: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { token } = await params;
   const ctx = await getStore().getSeniorByToken(token);
-  return { title: ctx ? `${ctx.senior.first_name}` : "Care Copilot", robots: { index: false } };
+  return { title: ctx ? `${ctx.senior.first_name}` : "Nonnina", robots: { index: false } };
 }
 
 export default async function SeniorPage({ params }: Params) {

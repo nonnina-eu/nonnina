@@ -10,7 +10,6 @@ import type {
   NewEmergencyEvent,
   NewHelpRequest,
   NewVoiceSession,
-  NewWaitlistEntry,
   NotificationRecord,
   Relative,
   Senior,
@@ -107,15 +106,6 @@ export class SupabaseStore implements Store {
     const { data, error } = await this.db.from("voice_sessions").insert(input).select("*").single();
     if (error) fail("voice_sessions.insert", error);
     return data as VoiceSession;
-  }
-
-  async addToWaitlist(input: NewWaitlistEntry): Promise<{ created: boolean }> {
-    const { error } = await this.db.from("waitlist").insert({ ...input, email: input.email.toLowerCase() });
-    if (error) {
-      if (error.code === "23505") return { created: false }; // unique_violation
-      fail("waitlist.insert", error);
-    }
-    return { created: true };
   }
 
   async getFamilyFeed(familyId: string, limit = 50): Promise<FamilyFeed | null> {

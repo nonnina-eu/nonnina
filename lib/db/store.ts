@@ -6,7 +6,6 @@ import type {
   NewEmergencyEvent,
   NewHelpRequest,
   NewVoiceSession,
-  NewWaitlistEntry,
   NotificationRecord,
   SeniorContext,
   VoiceSession,
@@ -34,8 +33,6 @@ export interface Store {
 
   createHelpRequest(input: NewHelpRequest): Promise<HelpRequest>;
   createVoiceSession(input: NewVoiceSession): Promise<VoiceSession>;
-
-  addToWaitlist(input: NewWaitlistEntry): Promise<{ created: boolean }>;
 
   getFamilyFeed(familyId: string, limit?: number): Promise<FamilyFeed | null>;
   resetDemoData(familyId: string): Promise<void>;

@@ -9,19 +9,12 @@ const appUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: "Care Copilot – One button for your parent. One clear plan for you.",
-    template: "%s · Care Copilot",
+    default: "Nonnina – app",
+    template: "%s · Nonnina",
   },
   description:
-    "Care Copilot is a voice companion for older people living at home. It helps every day, and alerts the family the moment something is wrong.",
-  openGraph: {
-    title: "Care Copilot",
-    description:
-      "A voice companion for older people living at home. One button for your parent, one clear plan for you.",
-    type: "website",
-    locale: "en_GB",
-    siteName: "Care Copilot",
-  },
+    "Nonnina is a voice companion for older people living at home. One button for your parent, instant alerts for the family.",
+  robots: { index: false },
 };
 
 export const viewport: Viewport = {

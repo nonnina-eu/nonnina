@@ -26,24 +26,24 @@ export function buildMessage(input: NotifyInput): string {
   if (senior.language === "it") {
     switch (kind) {
       case "emergency":
-        return `Care Copilot: EMERGENZA per ${name} (${city}). Ha detto: "${q || reason}". Chiamare subito oppure il 112. ${alertsUrl}`;
+        return `Nonnina: EMERGENZA per ${name} (${city}). Ha detto: "${q || reason}". Chiamare subito oppure il 112. ${alertsUrl}`;
       case "warning":
-        return `Care Copilot: Per favore contatti presto ${name}. Motivo: ${reason}. ${alertsUrl}`;
+        return `Nonnina: Per favore contatti presto ${name}. Motivo: ${reason}. ${alertsUrl}`;
       case "all_clear":
-        return `Care Copilot: ${name} dice che ora sta bene. ${alertsUrl}`;
+        return `Nonnina: ${name} dice che ora sta bene. ${alertsUrl}`;
       case "help_request":
-        return `Care Copilot: ${name} ha bisogno di aiuto (non urgente): ${reason}. ${alertsUrl}`;
+        return `Nonnina: ${name} ha bisogno di aiuto (non urgente): ${reason}. ${alertsUrl}`;
     }
   }
   switch (kind) {
     case "emergency":
-      return `Care Copilot: NOTFALL bei ${name} (${city}). Sie sagte: "${q || reason}". Bitte sofort anrufen oder 112 wählen. ${alertsUrl}`;
+      return `Nonnina: NOTFALL bei ${name} (${city}). Sie sagte: "${q || reason}". Bitte sofort anrufen oder 112 wählen. ${alertsUrl}`;
     case "warning":
-      return `Care Copilot: Bitte melden Sie sich bald bei ${name}. Grund: ${reason}. ${alertsUrl}`;
+      return `Nonnina: Bitte melden Sie sich bald bei ${name}. Grund: ${reason}. ${alertsUrl}`;
     case "all_clear":
-      return `Care Copilot: ${name} sagt, es geht ihr jetzt wieder gut. ${alertsUrl}`;
+      return `Nonnina: ${name} sagt, es geht ihr jetzt wieder gut. ${alertsUrl}`;
     case "help_request":
-      return `Care Copilot: ${name} braucht Hilfe (nicht dringend): ${reason}. ${alertsUrl}`;
+      return `Nonnina: ${name} braucht Hilfe (nicht dringend): ${reason}. ${alertsUrl}`;
   }
 }
 
@@ -69,7 +69,7 @@ async function placeCall(to: string, text: string, language: Senior["language"])
 async function sendEmail(to: string, subject: string, text: string): Promise<string> {
   const { Resend } = await import("resend");
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const from = process.env.RESEND_FROM_EMAIL || "Care Copilot <onboarding@resend.dev>";
+  const from = process.env.RESEND_FROM_EMAIL || "Nonnina <onboarding@resend.dev>";
   const { data, error } = await resend.emails.send({ from, to, subject, text });
   if (error) throw new Error(error.message);
   return data?.id ?? "sent";

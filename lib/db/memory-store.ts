@@ -9,13 +9,11 @@ import type {
   NewEmergencyEvent,
   NewHelpRequest,
   NewVoiceSession,
-  NewWaitlistEntry,
   NotificationRecord,
   Relative,
   Senior,
   SeniorContext,
   VoiceSession,
-  WaitlistEntry,
 } from "./types";
 import { demoFamily, demoRelatives, demoSenior } from "./seed";
 
@@ -26,7 +24,6 @@ interface MemoryState {
   events: EmergencyEvent[];
   helpRequests: HelpRequest[];
   sessions: VoiceSession[];
-  waitlist: WaitlistEntry[];
 }
 
 const g = globalThis as unknown as { __careCopilotMemory?: MemoryState };
@@ -40,7 +37,6 @@ function state(): MemoryState {
       events: [],
       helpRequests: [],
       sessions: [],
-      waitlist: [],
     };
   }
   return g.__careCopilotMemory;
@@ -125,14 +121,6 @@ export class MemoryStore implements Store {
     const session: VoiceSession = { id: randomUUID(), ...input, created_at: now() };
     state().sessions.unshift(session);
     return session;
-  }
-
-  async addToWaitlist(input: NewWaitlistEntry): Promise<{ created: boolean }> {
-    const s = state();
-    const email = input.email.toLowerCase();
-    if (s.waitlist.some((w) => w.email === email)) return { created: false };
-    s.waitlist.push({ id: randomUUID(), ...input, email, created_at: now() });
-    return { created: true };
   }
 
   async getFamilyFeed(familyId: string, limit = 50): Promise<FamilyFeed | null> {

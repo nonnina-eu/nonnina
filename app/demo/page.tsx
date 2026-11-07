@@ -19,7 +19,7 @@ export default function DemoPage() {
     <div className="min-h-dvh bg-background">
       <header className="border-b border-border/70 bg-card/80 backdrop-blur">
         <div className="container flex h-16 items-center justify-between gap-4">
-          <Link href="/" aria-label="Care Copilot home">
+          <Link href="/" aria-label="Nonnina home">
             <Logo />
           </Link>
           <div className="flex items-center gap-2">

@@ -1,4 +1,4 @@
--- Care Copilot · initial schema
+-- Nonnina · initial schema
 -- Server routes use the service role. The browser only inserts into `waitlist`
 -- and reads family data through the anon key for realtime (Layer 2 will add auth).
 

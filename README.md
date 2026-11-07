@@ -1,13 +1,17 @@
-# Care Copilot
+# Nonnina – app
 
 **One button for your parent. One clear plan for you.**
 
-Care Copilot is a voice companion for older people living at home (Germany first, Italy next).
+This repository is the product: the senior screen, the emergency flow, the family alerts and the
+API. The marketing site and waitlist live in [`nonnina-eu/website`](https://github.com/nonnina-eu/website).
+Both share one Supabase project (the `waitlist` table is created by the migration here).
+
+Nonnina is a voice companion for older people living at home (Germany first, Italy next).
 The senior gets one big button to talk to a calm voice assistant. The family gets an alert
 within seconds when something is wrong, and a plan for everything else.
 
 > ⚠️ **Hackathon prototype.** Built in one day at the Cursor x Sandbox Hackathon Stuttgart 2026.
-> Care Copilot is **not** a certified emergency system, **not** an emergency service and does
+> Nonnina is **not** a certified emergency system, **not** an emergency service and does
 > **not** replace 112. It never dials emergency services by itself. It gives orientation, not
 > legal or medical advice.
 
@@ -15,11 +19,11 @@ within seconds when something is wrong, and a plan for everything else.
 
 | Route | What it is |
 | --- | --- |
-| `/` | Landing page (EN/DE) with waitlist |
+| `/` | Redirects to `/demo` (the landing page is in the website repo) |
 | `/senior/[token]` | **Layer 1** – the senior screen: one button, voice conversation, emergency mode |
 | `/family/[familyId]/alerts` | Minimal read-only, realtime list of alerts, help requests and call summaries |
 | `/demo` | Maria's tablet and Anna's phone side by side, with a "reset demo data" button |
-| `/api/*` | Server routes (emergency, help requests, waitlist, ElevenLabs signed URL + webhook, family feed) |
+| `/api/*` | Server routes (emergency, help requests, ElevenLabs signed URL + webhook, family feed, demo reset) |
 
 Demo URLs once deployed: `/demo`, `/senior/maria-demo`, `/family/11111111-1111-4111-8111-111111111111/alerts`.
 
@@ -116,8 +120,7 @@ Maria's screen shows *„Anna kümmert sich.“* Press **"Mir geht es gut"**: th
 ## Project structure
 
 ```
-app/                  routes (landing, senior, family alerts, demo, api/*)
-components/landing/   landing page sections
+app/                  routes (senior, family alerts, demo, api/*)
 components/senior/    senior screen (talk button, captions, emergency overlay, …)
 components/family/    realtime alerts feed
 hooks/                useEmergency (client state machine), useWakeLock

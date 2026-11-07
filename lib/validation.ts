@@ -3,7 +3,6 @@ import { z } from "zod";
 export const emergencyLevelSchema = z.enum(["emergency", "warning"]);
 export const emergencySourceSchema = z.enum(["agent_tool", "keyword_detector", "manual_button", "no_response"]);
 export const helpCategorySchema = z.enum(["daily_help", "legal", "money", "health", "loneliness", "other"]);
-export const waitlistRoleSchema = z.enum(["family", "helper", "care_service", "other"]);
 
 export const emergencyRequestSchema = z.object({
   token: z.string().min(3).max(120),
@@ -24,15 +23,6 @@ export const helpRequestSchema = z.object({
   token: z.string().min(3).max(120),
   category: helpCategorySchema,
   summary: z.string().trim().min(1).max(500),
-});
-
-export const waitlistSchema = z.object({
-  email: z.string().trim().toLowerCase().email().max(200),
-  role: waitlistRoleSchema,
-  city: z.string().trim().max(100).optional().default(""),
-  message: z.string().trim().max(1000).optional().default(""),
-  /** honeypot, must stay empty */
-  website: z.string().max(0).optional(),
 });
 
 export const signedUrlSchema = z.object({

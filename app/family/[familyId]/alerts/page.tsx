@@ -26,7 +26,7 @@ export default async function FamilyAlertsPage({ params, searchParams }: Params)
       {!compact ? (
         <header className="border-b border-border/70 bg-card/80 backdrop-blur">
           <div className="container flex h-16 items-center justify-between">
-            <Link href="/" aria-label="Care Copilot home">
+            <Link href="/" aria-label="Nonnina home">
               <Logo />
             </Link>
             <span className="text-sm text-muted-foreground">Family {feed.family.name}</span>
@@ -51,7 +51,7 @@ export default async function FamilyAlertsPage({ params, searchParams }: Params)
         </div>
         <AlertsFeed familyId={familyId} initial={feed} compact={compact} />
         {!compact ? (
-          <p className="mt-8 text-center text-xs text-muted-foreground">Care Copilot is not an emergency service. In an emergency call 112.</p>
+          <p className="mt-8 text-center text-xs text-muted-foreground">Nonnina is not an emergency service. In an emergency call 112.</p>
         ) : null}
       </main>
     </div>
