@@ -1,0 +1,17 @@
+-- Demo data: family Weber, senior Maria (82, Stuttgart), relatives Anna and Thomas.
+-- Ids are fixed so that /demo links are identical in memory mode and Supabase mode.
+insert into families (id, name, email) values
+  ('11111111-1111-4111-8111-111111111111', 'Weber', 'anna.weber@example.com')
+on conflict (id) do nothing;
+
+insert into seniors (id, family_id, first_name, language, city, address_note, care_level, device_token, medication_times) values
+  ('22222222-2222-4222-8222-222222222222', '11111111-1111-4111-8111-111111111111', 'Maria', 'de', 'Stuttgart',
+   'Schlüssel bei Nachbar Thomas, Wohnung 3', 3, 'maria-demo',
+   '[{"time":"08:00","label":"Tabletten"},{"time":"18:00","label":"Tabletten"}]'::jsonb)
+on conflict (id) do nothing;
+
+-- Replace the placeholder numbers with real E.164 numbers before a live demo.
+insert into relatives (id, family_id, name, relation, phone, email, notify_sms, notify_call, priority) values
+  ('33333333-3333-4333-8333-333333333333', '11111111-1111-4111-8111-111111111111', 'Anna', 'daughter', '+4915200000001', 'anna.weber@example.com', true, true, 1),
+  ('44444444-4444-4444-8444-444444444444', '11111111-1111-4111-8111-111111111111', 'Thomas', 'neighbour', '+4915200000002', null, true, false, 2)
+on conflict (id) do nothing;
