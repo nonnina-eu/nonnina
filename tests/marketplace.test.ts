@@ -1,3 +1,5 @@
+import { existsSync, readFileSync, statSync } from "node:fs";
+import path from "node:path";
 import { beforeEach, describe, expect, it } from "vitest";
 import { MemoryStore } from "@/lib/db/memory-store";
 import { DEMO_HELPER_IDS, DEMO_IDS, demoHelpers } from "@/lib/db/seed";
@@ -35,20 +37,67 @@ describe("MemoryStore – marketplace", () => {
     store = fresh();
   });
 
-  it("seeds 6–8 Stuttgart helpers with a mix of verified, unverified and volunteers", () => {
+  it("seeds ~20 demo helpers, mostly Stuttgart, with a mix of verified, unverified and volunteers", () => {
     const helpers = demoHelpers();
-    expect(helpers.length).toBeGreaterThanOrEqual(6);
-    expect(helpers.length).toBeLessThanOrEqual(8);
-    expect(helpers.every((h) => h.city === "Stuttgart" && h.phone?.startsWith("+49152000001"))).toBe(true);
+    expect(helpers.length).toBeGreaterThanOrEqual(18);
+    expect(helpers.length).toBeLessThanOrEqual(24);
+    expect(new Set(helpers.map((h) => h.id)).size).toBe(helpers.length);
+    expect(helpers.every((h) => h.phone?.startsWith("+49152000001") && h.email?.endsWith("@example.com"))).toBe(true);
+    expect(helpers.filter((h) => h.city === "Stuttgart").length).toBeGreaterThanOrEqual(15);
+    expect(helpers.every((h) => ["Stuttgart", "Esslingen", "Ludwigsburg"].includes(h.city))).toBe(true);
     expect(helpers.some((h) => h.verified)).toBe(true);
     expect(helpers.some((h) => !h.verified)).toBe(true);
     expect(helpers.filter((h) => h.kind === "volunteer").every((h) => h.hourly_rate_eur === null)).toBe(true);
     expect(helpers.flatMap((h) => h.services).every((s) => (HELPER_SERVICES as readonly string[]).includes(s))).toBe(true);
+    for (const h of helpers) {
+      if (h.hourly_rate_eur !== null && h.kind !== "service") {
+        expect(h.hourly_rate_eur).toBeGreaterThanOrEqual(14);
+        expect(h.hourly_rate_eur).toBeLessThanOrEqual(35);
+      }
+    }
+  });
+
+  it("marks every seeded helper as a demo profile; 17 have a photo that exists in /public", () => {
+    const helpers = demoHelpers();
+    expect(helpers.every((h) => h.is_demo)).toBe(true);
+    const withPhoto = helpers.filter((h) => h.photo_url);
+    expect(withPhoto.length).toBe(17);
+    expect(new Set(withPhoto.map((h) => h.photo_url)).size).toBe(17);
+    for (const h of withPhoto) {
+      expect(h.photo_url).toMatch(/^\/helpers\/[a-z0-9-]+\.jpg$/);
+      const file = path.join(process.cwd(), "public", h.photo_url!);
+      expect(existsSync(file)).toBe(true);
+      expect(statSync(file).size).toBeLessThan(120 * 1024);
+    }
+  });
+
+  it("keeps supabase/seed.sql in sync with demoHelpers() (ids, names, photos, demo flag)", () => {
+    const sql = readFileSync(path.join(process.cwd(), "supabase", "seed.sql"), "utf8");
+    for (const h of demoHelpers()) {
+      const row = sql.split("\n  (").find((chunk) => chunk.startsWith(`'${h.id}'`));
+      expect(row, h.name).toBeTruthy();
+      expect(row).toContain(`'${h.name.replace(/'/g, "''")}'`);
+      expect(row).toContain(`${h.photo_url ? `'${h.photo_url}'` : "null"}, true,`);
+    }
+  });
+
+  it("exposes photo_url and is_demo in the directory but never contact data", async () => {
+    const all = await store.listHelpers({});
+    const lucia = all.find((h) => h.id === DEMO_HELPER_IDS.lucia);
+    expect(lucia?.photo_url).toBe("/helpers/lucia-romano.jpg");
+    expect(lucia?.is_demo).toBe(true);
+    expect(all.find((h) => h.id === DEMO_HELPER_IDS.sonnenhof)?.photo_url).toBeNull();
+    for (const h of all) {
+      expect(h).toHaveProperty("photo_url");
+      expect(h).toHaveProperty("is_demo");
+      expect(h).not.toHaveProperty("phone");
+      expect(h).not.toHaveProperty("email");
+    }
   });
 
   it("lists helpers without contact data, verified first, filtered by service, city, language and verified", async () => {
     const all = await store.listHelpers({ city: "stuttgart" });
-    expect(all.length).toBe(demoHelpers().length);
+    expect(all.length).toBe(demoHelpers().filter((h) => h.city === "Stuttgart").length);
     for (const h of all) {
       expect(h).not.toHaveProperty("phone");
       expect(h).not.toHaveProperty("email");
@@ -58,7 +107,12 @@ describe("MemoryStore – marketplace", () => {
     expect(all.slice(firstUnverified).every((h) => !h.verified)).toBe(true);
 
     const shoppingIt = await store.listHelpers({ service: "shopping", language: "it" });
-    expect(shoppingIt.map((h) => h.id)).toEqual([DEMO_HELPER_IDS.lucia]);
+    expect(shoppingIt.map((h) => h.id)).toContain(DEMO_HELPER_IDS.lucia);
+    expect(shoppingIt.every((h) => h.services.includes("shopping") && h.languages.includes("it"))).toBe(true);
+    expect(shoppingIt.some((h) => h.id === DEMO_HELPER_IDS.sofia)).toBe(false);
+
+    const esslingen = await store.listHelpers({ city: "Esslingen" });
+    expect(esslingen.map((h) => h.id).sort()).toEqual([DEMO_HELPER_IDS.kenji, DEMO_HELPER_IDS.alltag].sort());
 
     const verifiedCompany = await store.listHelpers({ service: "company", verifiedOnly: true });
     expect(verifiedCompany.every((h) => h.verified && h.services.includes("company"))).toBe(true);
@@ -89,6 +143,8 @@ describe("MemoryStore – marketplace", () => {
     });
     expect(helper.verified).toBe(false);
     expect(helper.active).toBe(true);
+    expect(helper.is_demo).toBe(false);
+    expect(helper.photo_url).toBeNull();
     expect((await store.getHelperByUserId("user-1"))?.id).toBe(helper.id);
     expect(await store.getHelperByUserId("nobody")).toBeNull();
   });
@@ -137,6 +193,17 @@ describe("toPublicHelper / matchesHelperFilter", () => {
     const pub = toPublicHelper({ ...demoHelpers()[0], user_id: "u" });
     expect(Object.keys(pub)).not.toEqual(expect.arrayContaining(["phone"]));
     expect("email" in pub || "phone" in pub || "user_id" in pub).toBe(false);
+    expect(pub.photo_url).toBe(demoHelpers()[0].photo_url);
+    expect(pub.is_demo).toBe(true);
+  });
+
+  it("defaults photo_url to null and is_demo to false for rows without them", () => {
+    const legacy: Record<string, unknown> = { ...demoHelpers()[0] };
+    delete legacy.photo_url;
+    delete legacy.is_demo;
+    const pub = toPublicHelper(legacy as unknown as Parameters<typeof toPublicHelper>[0]);
+    expect(pub.photo_url).toBeNull();
+    expect(pub.is_demo).toBe(false);
   });
 
   it("never matches inactive helpers", () => {
@@ -237,6 +304,15 @@ describe("marketplace i18n", () => {
   it("has a label for every service in en, de and it", () => {
     for (const locale of ["en", "de", "it"] as const) {
       for (const s of HELPER_SERVICES) expect(marketplaceStrings[locale].services[s]).toBeTruthy();
+    }
+  });
+
+  it("has the demo profile label and a name for every seeded language in en, de and it", () => {
+    const langs = new Set(demoHelpers().flatMap((h) => h.languages));
+    for (const locale of ["en", "de", "it"] as const) {
+      expect(marketplaceStrings[locale].common.demoProfile).toBeTruthy();
+      expect(marketplaceStrings[locale].common.demoProfileHint).toBeTruthy();
+      for (const l of langs) expect(marketplaceStrings[locale].languages[l]).toBeTruthy();
     }
   });
 });
