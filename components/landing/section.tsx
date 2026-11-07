@@ -13,7 +13,7 @@ export function Section({ id, className, children }: { id?: string; className?: 
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-primary/20 bg-secondary px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wide text-primary">
+    <span className="inline-flex items-center rounded-full border border-primary/20 bg-secondary px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
       {children}
     </span>
   );

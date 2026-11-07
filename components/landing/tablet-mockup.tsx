@@ -22,7 +22,7 @@ export function TabletMockup({ className, compact = false }: { className?: strin
             <p className={cn("font-semibold tracking-tight text-foreground", compact ? "text-2xl" : "text-2xl sm:text-3xl md:text-4xl")}>Hallo Maria!</p>
             <p className="mt-1 text-sm text-muted-foreground sm:text-base">Freitag, 7. November · 10:30</p>
           </div>
-          <div className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-primary sm:text-sm">Tabletten um 18:00</div>
+          <div className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground sm:text-sm">Tabletten um 18:00</div>
         </div>
 
         <div className="flex flex-1 items-center justify-center py-2">
