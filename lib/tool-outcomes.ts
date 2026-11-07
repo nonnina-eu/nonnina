@@ -27,6 +27,40 @@ export interface EmergencyTriggerResult {
 const delivered = (records: readonly StatusOnly[]) => records.some((r) => r.status === "sent");
 const demoLogged = (records: readonly StatusOnly[]) => records.some((r) => r.status === "demo");
 
+/** What actually happened to the messages. "demo" is a written record, not a delivery. */
+export type DeliveryMode = "sent" | "demo" | "failed";
+
+export function deliveryMode(records: readonly StatusOnly[]): DeliveryMode {
+  if (delivered(records)) return "sent";
+  if (demoLogged(records)) return "demo";
+  return "failed";
+}
+
+/**
+ * What Lina reads. `notified` is true only when an SMS, call or email left the system.
+ * `mode` is the sentence key. `error` is set whenever she must not reassure the senior.
+ */
+export interface AgentToolResult {
+  ok: boolean;
+  notified: boolean;
+  mode: string;
+  error: string | null;
+}
+
+export function emergencyToolResult(result: EmergencyTriggerResult): AgentToolResult {
+  const mode = emergencyToolOutcome(result);
+  const notified = mode === "relatives_notified";
+  const ok = notified || mode === "demo_mode_logged_no_sms_sent" || mode === "warning_countdown_started";
+  return { ok, notified, mode, error: ok ? null : mode };
+}
+
+export function helpRequestToolResult(result: HelpRequestApiResult): AgentToolResult {
+  const mode = helpRequestToolOutcome(result);
+  const notified = mode === "family_informed";
+  const ok = notified || mode === "saved_family_will_see_it_in_the_app";
+  return { ok, notified, mode, error: ok ? null : mode };
+}
+
 export function emergencyToolOutcome(result: EmergencyTriggerResult): EmergencyToolOutcome {
   if (result.phase === "countdown") return "warning_countdown_started";
   if (result.phase !== "notified" && result.phase !== "acknowledged") return "notification_failed_tell_senior_to_call_112";

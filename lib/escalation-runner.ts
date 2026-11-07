@@ -2,7 +2,7 @@ import "server-only";
 import { getStore } from "@/lib/db";
 import type { EmergencyEvent, NotificationRecord } from "@/lib/db/types";
 import { planNextStep, type LadderAction } from "@/lib/escalation-ladder";
-import { alertsUrlFor, callRelativeWithGather, errorMessage, notifyRelatives } from "@/lib/notify";
+import { alertsUrlFor, callRelativeWithGather, errorMessage, notificationRecorded, notifyRelatives } from "@/lib/notify";
 
 export interface TickResult {
   id: string;
@@ -88,7 +88,7 @@ export async function acknowledgeEvent(event: EmergencyEvent, relativeId: string
 
   const ctx = await store.getSeniorById(event.senior_id);
   let records: NotificationRecord[] = [];
-  const wasNotified = event.notified.some((n) => n.status === "sent" || n.status === "demo");
+  const wasNotified = notificationRecorded(event.notified);
   if (ctx && wasNotified) {
     const actor = relativeId ? ctx.relatives.find((r) => r.id === relativeId) : undefined;
     const others = ctx.relatives.filter((r) => r.id !== relativeId);

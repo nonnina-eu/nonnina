@@ -3,7 +3,8 @@ import { getStore } from "@/lib/db";
 import { jsonError, parseJson } from "@/lib/api";
 import { emergencyRequestSchema } from "@/lib/validation";
 import { rateLimit } from "@/lib/rate-limit";
-import { alertsUrlFor, anyoneNotified, errorMessage, notifyRelatives } from "@/lib/notify";
+import { alertsUrlFor, anyoneNotified, errorMessage, notificationRecorded, notifyRelatives } from "@/lib/notify";
+import { deliveryMode } from "@/lib/tool-outcomes";
 import { initialSchedule } from "@/lib/escalation-ladder";
 
 export const runtime = "nodejs";
@@ -27,10 +28,8 @@ export async function POST(request: Request) {
   if (!ctx) return jsonError(404, "Unknown device token");
   const { senior, relatives, family } = ctx;
 
-  const recent = await store.findRecentEmergency(senior.id, new Date(Date.now() - DEDUPE_WINDOW_MS));
-  if (recent && (recent.level === level || recent.level === "emergency")) {
-    return NextResponse.json({ ok: true, event: recent, deduplicated: true, notified: anyoneNotified(recent.notified) });
-  }
+  const since = new Date(Date.now() - DEDUPE_WINDOW_MS);
+  const recent = await store.findRecentEmergency(senior.id, since);
 
   // Rate limit per senior – but a first emergency (no live event) always passes.
   const limit = rateLimit(`emergency:${senior.id}`, 10, 60_000);
@@ -38,13 +37,22 @@ export async function POST(request: Request) {
     return jsonError(429, "Too many emergency events, please wait a moment", { event: recent });
   }
 
-  const event = await store.createEmergencyEvent({
-    senior_id: senior.id,
-    level,
-    reason,
-    quote: quote || null,
-    source,
-  });
+  // Check and insert under one lock, so two fast taps cannot open two events.
+  const claim = await store.claimEmergencyEvent(
+    { senior_id: senior.id, level, reason, quote: quote || null, source },
+    since,
+  );
+  if (!claim.created) {
+    const mode = deliveryMode(claim.event.notified);
+    return NextResponse.json({
+      ok: true,
+      event: claim.event,
+      deduplicated: true,
+      notified: anyoneNotified(claim.event.notified),
+      mode,
+    });
+  }
+  const event = claim.event;
 
   let notified = event.notified;
   try {
@@ -66,9 +74,12 @@ export async function POST(request: Request) {
   const updated =
     (await store.updateEmergencyEvent(event.id, {
       notified,
-      status: anyoneNotified(notified) ? "relatives_notified" : "open",
+      status: notificationRecorded(notified) ? "relatives_notified" : "open",
       ...schedule,
     })) ?? { ...event, notified, ...schedule };
 
-  return NextResponse.json({ ok: true, event: updated, deduplicated: false, notified: anyoneNotified(notified) }, { status: 201 });
+  return NextResponse.json(
+    { ok: true, event: updated, deduplicated: false, notified: anyoneNotified(notified), mode: deliveryMode(notified) },
+    { status: 201 },
+  );
 }

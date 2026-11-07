@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { emergencyToolOutcome, helpRequestToolOutcome } from "@/lib/tool-outcomes";
+import { deliveryMode, emergencyToolOutcome, emergencyToolResult, helpRequestToolOutcome, helpRequestToolResult } from "@/lib/tool-outcomes";
 
 const sent = { status: "sent" as const };
 const demo = { status: "demo" as const };
@@ -41,6 +41,21 @@ describe("helpRequestToolOutcome", () => {
     expect(helpRequestToolOutcome({ ok: true, notified: [failed] })).toBe("saved_family_will_see_it_in_the_app");
     expect(helpRequestToolOutcome({ ok: true, notified: [] })).toBe("saved_family_will_see_it_in_the_app");
     expect(helpRequestToolOutcome({ ok: true })).toBe("saved_family_will_see_it_in_the_app");
+  });
+
+  it("returns the real outcome, and notified is true only for a real send", () => {
+    expect(deliveryMode([sent, demo])).toBe("sent");
+    expect(deliveryMode([demo])).toBe("demo");
+    expect(deliveryMode([failed])).toBe("failed");
+    expect(emergencyToolResult({ phase: "notified", notified: [demo] })).toEqual({
+      ok: true,
+      notified: false,
+      mode: "demo_mode_logged_no_sms_sent",
+      error: null,
+    });
+    expect(emergencyToolResult({ phase: "failed", notified: [] })).toMatchObject({ ok: false, notified: false });
+    expect(helpRequestToolResult({ ok: true, notified: [sent] })).toMatchObject({ ok: true, notified: true, mode: "family_informed" });
+    expect(helpRequestToolResult({ ok: false })).toMatchObject({ ok: false, notified: false });
   });
 
   it("failed when the request was not stored", () => {

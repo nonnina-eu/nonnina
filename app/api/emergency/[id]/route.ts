@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getStore } from "@/lib/db";
 import { jsonError, parseJson } from "@/lib/api";
 import { emergencyUpdateSchema } from "@/lib/validation";
-import { alertsUrlFor, notifyRelatives } from "@/lib/notify";
+import { alertsUrlFor, notificationRecorded, notifyRelatives } from "@/lib/notify";
 import { acknowledgeEvent } from "@/lib/escalation-runner";
 
 export const runtime = "nodejs";
@@ -48,7 +48,7 @@ export async function PATCH(request: Request, { params }: Params) {
   if (!ctx || !parsed.data.token || ctx.senior.device_token !== parsed.data.token) {
     return jsonError(403, "Only the senior's device can cancel an event");
   }
-  const wasNotified = event.notified.some((n) => n.status === "sent" || n.status === "demo");
+  const wasNotified = notificationRecorded(event.notified);
   let notified = event.notified;
   if (wasNotified) {
     const followUp = await notifyRelatives({

@@ -1,6 +1,7 @@
 import "server-only";
 import { env } from "@/lib/env";
 import type { EmergencyEvent, EmergencyLevel, NotificationRecord, Relative, Senior } from "@/lib/db/types";
+import { deliveryMode } from "@/lib/tool-outcomes";
 
 /**
  * One function hides Twilio / Resend / demo mode: notifyRelatives().
@@ -201,8 +202,14 @@ export function errorMessage(error: unknown): string {
   return "Unexpected error";
 }
 
+/** True only when an SMS, call or email was sent. A demo record is not a delivery. */
 export function anyoneNotified(records: NotificationRecord[]): boolean {
-  return records.some((r) => r.status === "sent" || r.status === "demo");
+  return deliveryMode(records) === "sent";
+}
+
+/** True when there is a record to show: a real send, or a demo line written because no provider is configured. */
+export function notificationRecorded(records: NotificationRecord[]): boolean {
+  return deliveryMode(records) !== "failed";
 }
 
 export function alertsUrlFor(familyId: string): string {

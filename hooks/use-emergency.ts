@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { EmergencyEvent, EmergencyLevel, EmergencySource } from "@/lib/db/types";
-import type { EmergencyTriggerResult } from "@/lib/tool-outcomes";
+import { deliveryMode, type EmergencyTriggerResult } from "@/lib/tool-outcomes";
 
 export const WARNING_COUNTDOWN_SECONDS = 15;
 
@@ -46,6 +46,22 @@ const initial: EmergencyState = {
 const RETRY_MS = 5_000;
 const POLL_MS = 3_000;
 
+/** The other tap may still be writing the notification records. */
+async function waitForNotification(eventId: string): Promise<EmergencyEvent | null> {
+  for (let i = 0; i < 5; i++) {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    try {
+      const res = await fetch(`/api/emergency/${eventId}`, { cache: "no-store" });
+      if (!res.ok) continue;
+      const json = (await res.json()) as { event?: EmergencyEvent };
+      if (json.event && deliveryMode(json.event.notified) !== "failed") return json.event;
+    } catch {
+      /* keep waiting */
+    }
+  }
+  return null;
+}
+
 /**
  * Client-side emergency state machine. Independent from the voice session:
  * works with the manual button alone, keeps retrying when the network fails,
@@ -79,10 +95,18 @@ export function useEmergency(token: string) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token, ...input, quote: input.quote ?? "" }),
           });
-          const json = (await res.json()) as { ok: boolean; event?: EmergencyEvent; notified?: boolean };
+          const json = (await res.json()) as { ok: boolean; event?: EmergencyEvent; mode?: "sent" | "demo" | "failed"; deduplicated?: boolean };
           if (!res.ok || !json.ok || !json.event) throw new Error("emergency request failed");
-          const event = json.event;
-          const phase: EmergencyPhase = event.status === "acknowledged" ? "acknowledged" : json.notified ? "notified" : "failed";
+          let event = json.event;
+          let mode = json.mode ?? deliveryMode(event.notified);
+          if (json.deduplicated && mode === "failed") {
+            const settled = await waitForNotification(event.id);
+            if (settled) {
+              event = settled;
+              mode = deliveryMode(event.notified);
+            }
+          }
+          const phase: EmergencyPhase = event.status === "acknowledged" ? "acknowledged" : mode === "failed" ? "failed" : "notified";
           setState((s) => ({ ...s, event, phase }));
           return { phase, notified: event.notified };
         } catch {
