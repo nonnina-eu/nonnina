@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:bundle": "node scripts/supabase/bundle.mjs"
   },
   "dependencies": {
     "@elevenlabs/react": "^0.12.0",

@@ -12,7 +12,10 @@ create type help_status as enum ('open', 'ai_solved', 'escalated', 'matched');
 create type emergency_level as enum ('emergency', 'warning');
 create type emergency_source as enum ('agent_tool', 'keyword_detector', 'manual_button', 'no_response');
 create type emergency_status as enum ('open', 'relatives_notified', 'acknowledged', 'cancelled_by_senior');
-create type waitlist_role as enum ('family', 'helper', 'care_service', 'other');
+-- waitlist may already exist when the landing page ran first against this project (supabase/waitlist.sql)
+do $$ begin
+  create type waitlist_role as enum ('family', 'helper', 'care_service', 'other');
+exception when duplicate_object then null; end $$;
 
 -- ---------- tables ----------
 create table families (
@@ -86,7 +89,7 @@ create table emergency_events (
 );
 create index emergency_events_senior_idx on emergency_events(senior_id, created_at desc);
 
-create table waitlist (
+create table if not exists waitlist (
   id uuid primary key default gen_random_uuid(),
   email text not null unique,
   role waitlist_role not null default 'other',
@@ -105,6 +108,7 @@ alter table emergency_events enable row level security;
 alter table waitlist enable row level security;
 
 -- Anonymous visitors may join the waitlist (insert only, never read).
+drop policy if exists "waitlist_anon_insert" on waitlist;
 create policy "waitlist_anon_insert" on waitlist for insert to anon with check (true);
 
 -- Prototype: the family alerts page is a link-protected read-only view (the familyId is the secret).
