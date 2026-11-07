@@ -25,8 +25,11 @@ import type {
 
 const newDeviceToken = () => randomBytes(12).toString("hex");
 
-function fail(where: string, error: { message: string } | null): never {
-  throw new Error(`[supabase] ${where}: ${error?.message ?? "unknown error"}`);
+function fail(where: string, error: { message: string; code?: string } | null): never {
+  const message = `[supabase] ${where}: ${error?.message ?? "unknown error"}`;
+  // Logged here so a failing query is visible in the Vercel logs even when the caller only returns a 500.
+  console.error(message, error?.code ? `(code ${error.code})` : "");
+  throw new Error(message);
 }
 
 export class SupabaseStore implements Store {
@@ -85,7 +88,8 @@ export class SupabaseStore implements Store {
       const row = data as { created?: boolean; event?: EmergencyEvent };
       if (row.event) return { event: row.event, created: Boolean(row.created) };
     }
-    // Migration 0004 not applied yet: same check, without the database lock.
+    // Migration 0004 not applied yet: same check, without the database lock (not atomic – apply 0004).
+    if (missing) console.warn("[supabase] claim_emergency_event missing: apply migration 0004 for atomic dedupe");
     const recent = await this.findRecentEmergency(input.senior_id, since);
     if (recent && (recent.level === input.level || recent.level === "emergency")) {
       return { event: recent, created: false };
