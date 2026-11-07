@@ -30,7 +30,9 @@ export interface SeniorScreenProps {
 
 type VoiceError = { title: string; body?: string; retry: boolean } | null;
 
-const MIC_KEY = "care-copilot.mic-granted";
+const MIC_KEY = "nonnina.mic-granted";
+/** Remembered on this tablet so "Open Nonnina" on nonnina.eu (/senior) brings the senior straight back here. */
+const SENIOR_COOKIE = "nonnina_senior";
 
 const HELP_CATEGORIES: readonly HelpCategory[] = ["daily_help", "legal", "money", "health", "loneliness", "other"];
 /** The agent may send an unknown category; the API would reject it (422), so fall back to "other". */
@@ -69,7 +71,8 @@ export function SeniorScreen(props: SeniorScreenProps) {
     } catch {
       setMicGranted(false);
     }
-  }, []);
+    document.cookie = `${SENIOR_COOKIE}=${encodeURIComponent(token)}; path=/; max-age=31536000; samesite=lax${location.protocol === "https:" ? "; secure" : ""}`;
+  }, [token]);
 
   const conversation = useConversation({
     onConnect: () => {

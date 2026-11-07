@@ -43,11 +43,12 @@ export function LogoMark({ className }: { className?: string }) {
   return <Mark className={cn("size-9", className)} />;
 }
 
+/** The logo, same as on nonnina.eu: the symbol takes the place of the "N", followed by "onnina". */
 export function Logo({ className, light = false }: { className?: string; light?: boolean }) {
   return (
-    <span className={cn("inline-flex items-center gap-[0.32em] text-[1.35rem]", className)}>
-      <Mark className="h-[1.05em] w-[1.05em]" light={light} />
-      <Wordmark className={light ? "text-white" : "text-ink"} />
+    <span role="img" aria-label="Nonnina" className={cn("wm inline-flex items-baseline text-[1.6rem]", light ? "text-white" : "text-ink", className)}>
+      <Mark light={light} className="mr-[0.05em] h-[0.7em] w-[0.7em] self-baseline" />
+      <span aria-hidden="true">onnina</span>
     </span>
   );
 }

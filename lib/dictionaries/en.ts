@@ -18,6 +18,9 @@ export const en = {
     language: "Language",
     marketplace: "Find a helper",
     demo: "Live demo",
+    seniors: "For seniors",
+    familyArea: "For families",
+    join: "Become a helper",
   },
   hero: {
     eyebrow: "Voice companion for older people at home",
@@ -32,6 +35,45 @@ export const en = {
     cardAlert: "Anna was notified",
     cardAlertSub: "SMS sent 12 seconds after the call for help",
     imageAlt: "Two older women holding hands",
+  },
+  portals: {
+    eyebrow: "Start here",
+    title: "Where would you like to start?",
+    lede: "Nonnina has a place for everyone in the family. Pick yours.",
+    items: [
+      {
+        key: "senior",
+        title: "I am a senior",
+        body: "Open your Nonnina screen. One big button, and Lina listens.",
+        cta: "Open my Nonnina",
+        href: "/senior",
+      },
+      {
+        key: "family",
+        title: "I am family",
+        body: "Set up your parent, get alerts and see how the 131 € relief amount is used each month.",
+        cta: "Family area",
+        href: "/app",
+      },
+      {
+        key: "find",
+        title: "I need a helper",
+        body: "Shopping, cooking, company, a lift to the doctor. Verified people nearby.",
+        cta: "Find a helper",
+        href: "/helpers",
+      },
+      {
+        key: "offer",
+        title: "I want to help",
+        body: "Create a free profile and get requests from families in your area.",
+        cta: "Become a helper",
+        href: "/helpers/join",
+      },
+    ],
+  },
+  seniorTab: {
+    label: "Open Nonnina",
+    sub: "for seniors",
   },
   strip: ["Made in Stuttgart", "Data stored in the EU", "Speaks German and Italian", "Free during the pilot"],
   features: {

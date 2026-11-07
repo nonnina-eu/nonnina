@@ -20,6 +20,9 @@ export const it: Dictionary = {
     language: "Lingua",
     marketplace: "Trova chi aiuta",
     demo: "Demo dal vivo",
+    seniors: "Per gli anziani",
+    familyArea: "Per le famiglie",
+    join: "Aiutare",
   },
   hero: {
     eyebrow: "Compagna vocale per gli anziani a casa",
@@ -34,6 +37,45 @@ export const it: Dictionary = {
     cardAlert: "Anna è stata avvisata",
     cardAlertSub: "SMS inviato 12 secondi dopo la richiesta di aiuto",
     imageAlt: "Due donne anziane che si tengono per mano",
+  },
+  portals: {
+    eyebrow: "Inizia qui",
+    title: "Da dove vuoi iniziare?",
+    lede: "Nonnina ha un posto per tutti in famiglia. Scegli il tuo.",
+    items: [
+      {
+        key: "senior",
+        title: "Sono un anziano",
+        body: "Apri il tuo schermo Nonnina. Un grande bottone, e Lina ascolta.",
+        cta: "Apri la mia Nonnina",
+        href: "/senior",
+      },
+      {
+        key: "family",
+        title: "Sono un familiare",
+        body: "Configura tutto per i tuoi genitori, ricevi gli avvisi e guarda come vengono usati ogni mese i 131 € del contributo di sgravio.",
+        cta: "Area famiglia",
+        href: "/app",
+      },
+      {
+        key: "find",
+        title: "Cerco un aiuto",
+        body: "Spesa, cucina, compagnia, un passaggio dal medico. Persone verificate vicino a te.",
+        cta: "Trova chi aiuta",
+        href: "/helpers",
+      },
+      {
+        key: "offer",
+        title: "Voglio aiutare",
+        body: "Crea un profilo gratuito e ricevi richieste dalle famiglie della tua zona.",
+        cta: "Diventa aiutante",
+        href: "/helpers/join",
+      },
+    ],
+  },
+  seniorTab: {
+    label: "Apri Nonnina",
+    sub: "per gli anziani",
   },
   strip: ["Sviluppata a Stoccarda", "Dati conservati nell’UE", "Parla tedesco e italiano", "Gratis durante il progetto pilota"],
   features: {

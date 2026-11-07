@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/header";
 import { RevealObserver } from "@/components/reveal-observer";
 import { Hero } from "@/components/sections/hero";
+import { Portals } from "@/components/sections/portals";
+import { SeniorTab } from "@/components/senior-tab";
 import { TrustStrip } from "@/components/sections/strip";
 import { Features } from "@/components/sections/features";
 import { HowItWorks } from "@/components/sections/how";
@@ -27,6 +29,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <Header t={t.nav} locale={locale} />
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero t={t.hero} />
+        <Portals t={t.portals} />
         <TrustStrip items={t.strip} />
         <Features t={t.features} />
         <HowItWorks t={t.how} />
@@ -43,6 +46,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <Waitlist t={t.waitlist} privacyHref={legalPath(locale, "privacy")} />
       </main>
       <Footer t={t.footer} nav={t.nav} locale={locale} cookies={t.cookies} />
+      <SeniorTab t={t.seniorTab} />
       <RevealObserver />
     </>
   );

@@ -12,7 +12,7 @@
 ## Inputs you can use
 - `../deep-research-report (1).md` (full research, German) and its summary `docs/05-market-and-evidence.md`
 - `docs/reference/care-copilot-how-it-works.txt` (original plan with sources)
-- Live app: https://care-copilot-silk.vercel.app/demo
+- Live app: https://www.nonnina.eu/demo
 
 ## Guardrails for everything you write
 - Never claim Nonnina calls 112 or is an emergency service.

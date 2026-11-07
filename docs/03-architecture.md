@@ -119,7 +119,7 @@ notifications are written into the event as `channel: demo`, and the senior scre
 | | Where | Notes |
 | --- | --- | --- |
 | `AUTH_SECRET` | env var | HMAC secret for the demo-mode family cookie (any long random string; optional locally) |
-| Production | https://care-copilot-silk.vercel.app (Vercel project `care-copilot`, team `ethernal3`) | `/` → `/demo`. No service keys yet → demo mode |
+| Production | https://www.nonnina.eu (repo `nonnina-eu/website`, one Next.js app: landing + product + marketplace). The old `care-copilot` deployment is retired | `/` landing, `/demo`, `/senior/*`, `/app`, `/helpers` |
 | Supabase | to create, **EU (Frankfurt)** | run `0001_init.sql`, `seed.sql` |
 | ElevenLabs | agent "Lina", config in `elevenlabs-agent.md` | enable "Require authentication" |
 | Twilio | DE or IT number with SMS + voice | relatives' numbers must be E.164 |

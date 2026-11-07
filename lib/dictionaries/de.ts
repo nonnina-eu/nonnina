@@ -20,6 +20,9 @@ export const de: Dictionary = {
     language: "Sprache",
     marketplace: "Hilfe finden",
     demo: "Live-Demo",
+    seniors: "Für Senioren",
+    familyArea: "Für Familien",
+    join: "Helfen",
   },
   hero: {
     eyebrow: "Sprachbegleiter für ältere Menschen zu Hause",
@@ -34,6 +37,45 @@ export const de: Dictionary = {
     cardAlert: "Anna wurde benachrichtigt",
     cardAlertSub: "SMS 12 Sekunden nach dem Hilferuf gesendet",
     imageAlt: "Zwei ältere Frauen halten sich an den Händen",
+  },
+  portals: {
+    eyebrow: "Hier geht’s los",
+    title: "Wo möchten Sie beginnen?",
+    lede: "Nonnina hat für alle in der Familie einen Platz. Wählen Sie Ihren.",
+    items: [
+      {
+        key: "senior",
+        title: "Ich bin Seniorin oder Senior",
+        body: "Öffnen Sie Ihren Nonnina-Bildschirm. Ein großer Knopf, und Lina hört zu.",
+        cta: "Mein Nonnina öffnen",
+        href: "/senior",
+      },
+      {
+        key: "family",
+        title: "Ich bin Angehörige/r",
+        body: "Richten Sie alles für Ihre Eltern ein, erhalten Sie Meldungen und sehen Sie, wie der Entlastungsbetrag von 131 € genutzt wird.",
+        cta: "Zum Familienbereich",
+        href: "/app",
+      },
+      {
+        key: "find",
+        title: "Ich suche Hilfe",
+        body: "Einkaufen, Kochen, Gesellschaft, Fahrt zum Arzt. Geprüfte Menschen in der Nähe.",
+        cta: "Hilfe finden",
+        href: "/helpers",
+      },
+      {
+        key: "offer",
+        title: "Ich möchte helfen",
+        body: "Legen Sie kostenlos ein Profil an und erhalten Sie Anfragen von Familien in Ihrer Nähe.",
+        cta: "Helfer/in werden",
+        href: "/helpers/join",
+      },
+    ],
+  },
+  seniorTab: {
+    label: "Nonnina öffnen",
+    sub: "für Senioren",
   },
   strip: ["Entwickelt in Stuttgart", "Daten in der EU", "Spricht Deutsch und Italienisch", "Kostenlos im Pilotprojekt"],
   features: {

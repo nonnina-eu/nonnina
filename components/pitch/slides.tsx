@@ -117,7 +117,7 @@ const product = (
             <li key={x} className="flex items-start gap-3"><CheckBadge className="mt-0.5 size-6 shrink-0" />{x}</li>
           ))}
         </ul>
-        <p className="mt-2 rounded-[18px] bg-ink px-5 py-4 text-[20px] font-extrabold text-white">Live demo · care-copilot-silk.vercel.app/demo</p>
+        <p className="mt-2 rounded-[18px] bg-ink px-5 py-4 text-[20px] font-extrabold text-white">Live demo · nonnina.eu/demo</p>
       </div>
     </div>
   </Frame>
@@ -168,7 +168,7 @@ const whyUs = (
         ].map(([n, r]) => (
           <p key={n} className="flex items-baseline gap-4 border-b border-white/15 pb-3"><b className="w-28 font-display text-[28px]">{n}</b><span className="text-white/75">{r}</span></p>
         ))}
-        <p className="mt-6 text-[20px] font-bold text-sole">Demo · care-copilot-silk.vercel.app/demo<br />Waitlist · nonnina.eu</p>
+        <p className="mt-6 text-[20px] font-bold text-sole">Demo · nonnina.eu/demo<br />Marketplace · nonnina.eu/helpers</p>
       </div>
       <div className="grid content-start gap-4">
         {[

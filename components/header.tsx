@@ -28,7 +28,7 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
         btnRef.current?.focus();
       }
     };
-    const mq = window.matchMedia("(min-width: 1024px)");
+    const mq = window.matchMedia("(min-width: 1280px)");
     const onWide = () => mq.matches && setOpen(false);
     window.addEventListener("keydown", onKey);
     mq.addEventListener("change", onWide);
@@ -40,9 +40,10 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
 
   const links = [
     { href: "#how", label: t.how },
-    { href: "#safety", label: t.safety },
-    { href: "#families", label: t.families },
+    { href: "/senior", label: t.seniors },
+    { href: "/app", label: t.familyArea },
     { href: "/helpers", label: t.marketplace },
+    { href: "/helpers/join", label: t.join },
     { href: "#faq", label: t.faq },
   ];
 
@@ -52,10 +53,14 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
         <a href={localePath(locale)} title={t.home} className="text-[2.125rem] leading-none">
           <Logo />
         </a>
-        <nav aria-label="Main" className="hidden items-center gap-7 text-[0.9375rem] font-bold lg:flex">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-ink/80 transition-colors hover:text-ink">{l.label}</a>
-          ))}
+        <nav aria-label="Main" className="hidden items-center gap-5 text-[0.9375rem] font-bold xl:flex">
+          {links.map((l) =>
+            l.href.startsWith("#") ? (
+              <a key={l.href} href={l.href} className="text-ink/80 transition-colors hover:text-ink">{l.label}</a>
+            ) : (
+              <Link key={l.href} href={l.href} className="text-ink/80 transition-colors hover:text-ink">{l.label}</Link>
+            ),
+          )}
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher current={locale} label={t.language} className="hidden sm:inline-flex" />
@@ -64,7 +69,7 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
           <button
             ref={btnRef}
             type="button"
-            className="inline-flex size-11 items-center justify-center rounded-xs border border-[#9AA3B5] lg:hidden"
+            className="inline-flex size-11 items-center justify-center rounded-xs border border-[#9AA3B5] xl:hidden"
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={t.menu}
@@ -74,11 +79,15 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
           </button>
         </div>
       </div>
-      <div id="mobile-menu" hidden={!open} className="border-t border-line bg-white lg:hidden">
+      <div id="mobile-menu" hidden={!open} className="border-t border-line bg-white xl:hidden">
         <nav aria-label="Mobile" className="wrap flex flex-col gap-1 py-4">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="rounded-xs px-2 py-3 text-lg font-bold hover:bg-mist">{l.label}</a>
-          ))}
+          {links.map((l) =>
+            l.href.startsWith("#") ? (
+              <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="rounded-xs px-2 py-3 text-lg font-bold hover:bg-mist">{l.label}</a>
+            ) : (
+              <Link key={l.href} href={l.href} className="rounded-xs px-2 py-3 text-lg font-bold hover:bg-mist">{l.label}</Link>
+            ),
+          )}
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
             <LanguageSwitcher current={locale} label={t.language} />
             <div className="flex gap-2">
