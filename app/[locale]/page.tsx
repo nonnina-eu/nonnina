@@ -11,6 +11,7 @@ import { Faq } from "@/components/sections/faq";
 import { Waitlist } from "@/components/sections/waitlist";
 import { Footer } from "@/components/sections/footer";
 import { getDictionary, isLocale } from "@/lib/i18n";
+import { legalPath } from "@/lib/legal";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -37,9 +38,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
         <PromiseBand t={t.promise} />
         <Faq t={t.faq} />
-        <Waitlist t={t.waitlist} />
+        <Waitlist t={t.waitlist} privacyHref={legalPath(locale, "privacy")} />
       </main>
-      <Footer t={t.footer} nav={t.nav} locale={locale} />
+      <Footer t={t.footer} nav={t.nav} locale={locale} cookies={t.cookies} />
       <RevealObserver />
     </>
   );

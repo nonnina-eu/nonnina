@@ -162,6 +162,7 @@ export const it: Dictionary = {
     error: "Qualcosa non ha funzionato. Riprova.",
     invalidEmail: "Inserisci un indirizzo email valido.",
     privacy: "Usiamo la tua email solo per scriverti di Nonnina.",
+    privacyLink: "Informativa privacy",
   },
   footer: {
     tagline: "La compagna vocale per gli anziani a casa.",
@@ -173,6 +174,14 @@ export const it: Dictionary = {
     demo: "Demo dal vivo",
     brand: "Identità del marchio",
     rights: "Tutti i diritti riservati.",
+  },
+  cookies: {
+    title: "Cookie su nonnina.eu",
+    body: "Non usiamo cookie di tracciamento o pubblicità. Salviamo solo la lingua scelta e questa decisione. Puoi cambiarla in qualsiasi momento da Impostazioni cookie in fondo alla pagina.",
+    policy: "Cookie policy",
+    accept: "Accetta",
+    necessary: "Solo necessari",
+    settings: "Impostazioni cookie",
   },
   notFound: { title: "Questa pagina non esiste.", body: "In caso di emergenza chiama il 112.", back: "Torna all’inizio" },
 };

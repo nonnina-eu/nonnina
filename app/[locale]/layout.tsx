@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import "../globals.css";
 import { env } from "@/lib/env";
 import { getDictionary, isLocale, locales, ogLocale, type Locale } from "@/lib/i18n";
+import { CookieBanner } from "@/components/cookie-banner";
+import { legalPath } from "@/lib/legal";
 import { absoluteUrl, languageAlternates } from "@/lib/site";
 
 const display = Bricolage_Grotesque({
@@ -54,6 +56,7 @@ export default async function LocaleLayout({ children, params }: Props & { child
         {/* Marks JS as available so reveal animations only hide content when they can show it again. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         {children}
+        <CookieBanner t={getDictionary(locale as Locale).cookies} policyHref={legalPath(locale as Locale, "cookies")} />
       </body>
     </html>
   );
