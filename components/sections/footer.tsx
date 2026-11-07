@@ -8,7 +8,7 @@ export function Footer({ t, nav, locale }: { t: Dictionary["footer"]; nav: Dicti
     <footer className="mt-12 border-t border-line">
       <div className="wrap grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr]">
         <div className="grid content-start gap-4">
-          <span className="text-[2rem]"><Logo /></span>
+          <span className="text-[2.5rem] leading-none"><Logo /></span>
           <p className="max-w-xs text-muted">{t.tagline}</p>
           <LanguageSwitcher current={locale} label={nav.language} className="w-fit" />
         </div>
