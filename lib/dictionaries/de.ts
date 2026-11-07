@@ -171,6 +171,7 @@ export const de: Dictionary = {
     emergency: "Kein Notrufdienst. Im Notfall 112 anrufen.",
     advice: "Nur zur Orientierung, keine medizinische oder rechtliche Beratung.",
     demo: "Live-Demo",
+    brand: "Markenidentität",
     rights: "Alle Rechte vorbehalten.",
   },
   notFound: { title: "Diese Seite gibt es nicht.", body: "Im Notfall 112 anrufen.", back: "Zur Startseite" },

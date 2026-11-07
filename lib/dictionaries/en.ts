@@ -169,6 +169,7 @@ export const en = {
     emergency: "Not an emergency service. In an emergency call 112.",
     advice: "Orientation only, not legal or medical advice.",
     demo: "Live demo",
+    brand: "Brand identity",
     rights: "All rights reserved.",
   },
   notFound: { title: "This page does not exist.", body: "In an emergency call 112.", back: "Back to the start" },

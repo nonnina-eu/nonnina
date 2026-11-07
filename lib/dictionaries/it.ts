@@ -171,6 +171,7 @@ export const it: Dictionary = {
     emergency: "Non è un servizio di emergenza. In caso di emergenza chiama il 112.",
     advice: "Solo orientamento, non consulenza legale o medica.",
     demo: "Demo dal vivo",
+    brand: "Identità del marchio",
     rights: "Tutti i diritti riservati.",
   },
   notFound: { title: "Questa pagina non esiste.", body: "In caso di emergenza chiama il 112.", back: "Torna all’inizio" },

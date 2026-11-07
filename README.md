@@ -9,7 +9,7 @@ The product (senior screen, emergency flow, family alerts) lives in
 ## Brand
 
 The full brand identity (logo, colour, type, photography, voice, components) is in
-[`brand/nonnina-brand-identity.html`](brand/nonnina-brand-identity.html). Open it in a browser.
+[`public/brand/nonnina-brand-identity.html`](public/brand/nonnina-brand-identity.html), published at `/brand/nonnina-brand-identity.html` (linked in the footer).
 Structural reference: grassfeld.com.
 
 - Headlines: Bricolage Grotesque at 75% width, weight 800. Text: Manrope.
@@ -51,7 +51,7 @@ components/          brand (logo), header, language switcher, reveal animation
 components/sections/ hero, features, how it works, feature blocks, safety, FAQ, waitlist, footer
 lib/                 i18n, dictionaries, env, validation, waitlist store
 public/photos/       photography
-brand/               brand identity document and logo files
+public/brand/        brand identity document and logo files
 ```
 
 > Nonnina is not an emergency service and does not replace 112. Orientation only, not legal or medical advice.

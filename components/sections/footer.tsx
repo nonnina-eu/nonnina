@@ -32,6 +32,7 @@ export function Footer({ t, nav, locale }: { t: Dictionary["footer"]; nav: Dicti
           <p>© 2026 Nonnina. {t.rights}</p>
           <p className="font-bold text-graphite">{t.emergency}</p>
           <p>{t.advice}</p>
+          <a href="/brand/nonnina-brand-identity.html" className="text-muted underline-offset-4 hover:text-ink hover:underline">{t.brand}</a>
         </div>
       </div>
     </footer>
