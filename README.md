@@ -14,7 +14,7 @@ Built at the **Cursor x Sandbox Founders Hackathon**, Stuttgart, 7 Nov 2026.
 | Live product with the real database (create an account via magic link) | https://www.nonnina.eu |
 | Same app in demo mode (one-click login as "Anna", nothing persisted) | https://nonnina-website.vercel.app |
 | Live demo, senior tablet and family view side by side | https://nonnina-website.vercel.app/demo |
-| Pitch deck (5 slides, in the app) | https://nonnina-website.vercel.app/pitch |
+| **Pitch deck (official, PDF)** | https://www.nonnina.eu/pitch/Nonnina-Pitch-Deck.pdf · [in this repo](public/pitch/Nonnina-Pitch-Deck.pdf) |
 | Brand identity | https://nonnina-website.vercel.app/brand/nonnina-brand-identity.html |
 
 > Nonnina is not an emergency service and never dials 112 itself. Orientation only, no medical or legal advice.

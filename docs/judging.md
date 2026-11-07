@@ -38,7 +38,7 @@ for the paths below.
 
 | Question | Evidence |
 | --- | --- |
-| Deck | https://nonnina-website.vercel.app/pitch (5 slides, arrow keys, Cmd+P for PDF); source `components/pitch/slides.tsx` |
+| Deck | Official PDF: https://www.nonnina.eu/pitch/Nonnina-Pitch-Deck.pdf (`public/pitch/Nonnina-Pitch-Deck.pdf`) |
 | Can the team execute? | Everything in this repo was built on 7 Nov 2026: see `git log` (merged history of the product and landing repos) |
 | Roles | `docs/06-pitch-and-team.md` |
 | Honesty | Claims the deck may and may not make: `docs/06-pitch-and-team.md`; open points listed in `docs/validation.md` → "What we still need to verify" |
