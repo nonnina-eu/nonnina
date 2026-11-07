@@ -8,7 +8,7 @@ import type { HelpCategory, Language, MedicationTime, NotificationRecord } from 
 import { seniorT, type SeniorStrings } from "@/lib/i18n/senior";
 import { detectEmergency } from "@/lib/emergency-keywords";
 import { formatReminder, nextReminder } from "@/lib/time";
-import { emergencyToolOutcome, helpRequestToolOutcome } from "@/lib/tool-outcomes";
+import { emergencyToolResult, helpRequestToolResult } from "@/lib/tool-outcomes";
 import { useEmergency } from "@/hooks/use-emergency";
 import { useSeniorStatus } from "@/hooks/use-senior-status";
 import { useWakeLock } from "@/hooks/use-wake-lock";
@@ -110,7 +110,7 @@ export function SeniorScreen(props: SeniorScreenProps) {
           quote: params.quote?.slice(0, 600) || "",
           source: "agent_tool",
         });
-        return emergencyToolOutcome(result);
+        return JSON.stringify(emergencyToolResult(result));
       },
       create_help_request: async (params: { category?: string; summary?: string }) => {
         try {
@@ -120,10 +120,10 @@ export function SeniorScreen(props: SeniorScreenProps) {
             body: JSON.stringify({ token, category: normalizeCategory(params.category), summary: params.summary?.trim().slice(0, 500) || "Help requested" }),
           });
           const json = (await res.json().catch(() => null)) as { ok?: boolean; notified?: NotificationRecord[] } | null;
-          return helpRequestToolOutcome({ ok: res.ok && Boolean(json?.ok), notified: json?.notified });
+          return JSON.stringify(helpRequestToolResult({ ok: res.ok && Boolean(json?.ok), notified: json?.notified }));
         } catch {
           // Network down: the post-call webhook is a second chance, but Lina must not promise anything.
-          return helpRequestToolOutcome({ ok: false });
+          return JSON.stringify(helpRequestToolResult({ ok: false }));
         }
       },
       get_next_reminder: () => reminderRef.current,
@@ -154,6 +154,8 @@ export function SeniorScreen(props: SeniorScreenProps) {
         signedUrl: json.signedUrl,
         connectionType: "websocket",
         dynamicVariables: json.dynamicVariables,
+        // Start the conversation in the senior's language: picks the Italian preset (first message) for "it".
+        overrides: { agent: { language } },
       });
     } catch (e) {
       console.warn("[voice] start failed", e);
@@ -161,7 +163,7 @@ export function SeniorScreen(props: SeniorScreenProps) {
     } finally {
       setStarting(false);
     }
-  }, [startSession, t, token]);
+  }, [startSession, t, token, language]);
 
   const onPress = useCallback(() => {
     if (status === "connected" || status === "connecting") {

@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   const problemCategory = asString(results.problem_category?.value);
   const needsHuman = asBool(results.needs_human?.value) ?? false;
 
-  await store.createVoiceSession({
+  const saved = await store.createVoiceSession({
     senior_id: ctx.senior.id,
     conversation_id: data.conversation_id,
     summary,
@@ -67,6 +67,7 @@ export async function POST(request: Request) {
     problem_category: problemCategory,
     needs_human: needsHuman,
   });
+  if (!saved.created) return NextResponse.json({ ok: true, duplicate: true });
 
   let escalated = false;
   if (shouldEscalate({ needs_human: needsHuman, problem_category: problemCategory })) {

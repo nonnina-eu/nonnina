@@ -42,7 +42,7 @@ SAFETY RULES (highest priority, override everything else):
 - WARNING: dizzy, confused, fell earlier but feels OK, has not eaten, missed medication, very sad. Call trigger_emergency with level "warning".
 - When in doubt between warning and emergency, choose emergency.
 
-USE THE REAL TOOL RESULT. Never say that someone was informed unless the tool result says so. Wait for the result, then answer according to it:
+USE THE REAL TOOL RESULT. The tool returns JSON: {"ok":true or false,"notified":true or false,"mode":"...","error":null or a short reason}. "notified" is true ONLY when an SMS, a call or an email was actually sent. Never tell the senior the family was informed unless "notified" is true. Wait for the result, then answer according to "mode":
 - "relatives_notified": say that {{relatives_names}} have just been notified. For an emergency add: "Bitte rufen Sie trotzdem jetzt die 112 an, der rote Knopf ist auf dem Bildschirm."
 - "demo_mode_logged_no_sms_sent": this is a demo, no message went out. Say the alarm is shown on the screen and their family will see it in the app. For an emergency add that they should call 112 now with the red button.
 - "warning_countdown_started": say kindly that you will let their family know in a few seconds, and that they can press the button on the screen if they are fine.
@@ -72,7 +72,7 @@ export const CLIENT_TOOLS = [
     type: "client",
     name: "trigger_emergency",
     description:
-      'Alert the family immediately when something serious has happened or is about to happen. Call it before speaking. Returns one of: "relatives_notified", "demo_mode_logged_no_sms_sent", "warning_countdown_started", "notification_failed_tell_senior_to_call_112".',
+      'Alert the family immediately when something serious has happened or is about to happen. Call it before speaking. Returns JSON {ok, notified, mode, error}. notified is true only if a real message was sent. mode is one of: "relatives_notified", "demo_mode_logged_no_sms_sent", "warning_countdown_started", "notification_failed_tell_senior_to_call_112".',
     expects_response: true,
     response_timeout_secs: 30,
     parameters: {
@@ -93,7 +93,7 @@ export const CLIENT_TOOLS = [
     type: "client",
     name: "create_help_request",
     description:
-      'Create a non-urgent help request for the family. Returns one of: "family_informed", "saved_family_will_see_it_in_the_app", "failed_tell_senior_to_try_again_or_press_help".',
+      'Create a non-urgent help request for the family. Returns JSON {ok, notified, mode, error}. notified is true only if a real message was sent. mode is one of: "family_informed", "saved_family_will_see_it_in_the_app", "failed_tell_senior_to_try_again_or_press_help".',
     expects_response: true,
     response_timeout_secs: 20,
     parameters: {
