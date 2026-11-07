@@ -4,7 +4,7 @@
  */
 export const familyStrings = {
   en: {
-    nav: { alerts: "Alerts", settings: "Settings", signOut: "Sign out", login: "Sign in" },
+    nav: { alerts: "Alerts", findHelp: "Find help", settings: "Settings", signOut: "Sign out", login: "Sign in" },
     footer: "Nonnina is not an emergency service. In an emergency call 112.",
     live: "live",
     feed: {
@@ -36,6 +36,7 @@ export const familyStrings = {
       topic: "Topic",
       categories: { daily_help: "Daily help", legal: "Legal", money: "Money", health: "Health", loneliness: "Company", other: "Other" },
       call: (name: string) => `Call ${name}`,
+      findHelper: "Find a helper",
     },
     login: {
       title: "Welcome back",

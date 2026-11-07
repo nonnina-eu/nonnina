@@ -5,6 +5,7 @@ import { getMemberOverview, requireMember } from "@/lib/auth";
 import { familyT } from "@/lib/i18n/family";
 import { AlertsFeed } from "@/components/family/alerts-feed";
 import { FamilyShell } from "@/components/family/shell";
+import { FamilyHelperRequests } from "@/components/marketplace/family-helper-requests";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Alerts", robots: { index: false } };
@@ -50,6 +51,8 @@ export default async function FamilyHomePage() {
           </p>
         ) : null}
       </div>
+
+      <FamilyHelperRequests familyId={family.id} seniors={overview?.seniors ?? []} />
 
       {feed ? (
         <AlertsFeed familyId={family.id} initial={feed} relativeId={member.relative?.id ?? null} relatives={overview?.relatives ?? []} />

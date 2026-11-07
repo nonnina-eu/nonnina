@@ -14,6 +14,13 @@ function hasSupabase(): boolean {
  */
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+
+  // Marketplace (/helpers/*) is public: only keep the Supabase session fresh, never redirect.
+  // The helper pages check the helper session themselves.
+  if (pathname === "/helpers" || pathname.startsWith("/helpers/")) {
+    return hasSupabase() ? (await updateSession(request)).response : NextResponse.next();
+  }
+
   const isJoin = pathname.startsWith("/app/join");
   const loginUrl = new URL(`/login?next=${encodeURIComponent(pathname + search)}`, request.url);
 
@@ -30,5 +37,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/app/:path*"],
+  matcher: ["/app/:path*", "/helpers", "/helpers/:path*"],
 };
