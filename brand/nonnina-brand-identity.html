@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nonnina Brand Identity</title>
+<meta name="description" content="Nonnina brand identity: logo, colour, typography, photography, voice, components and the homepage hero. Derived from the Grassfeld design system and adapted for a warm voice companion for older people.">
+<link rel="icon" href="assets/nonnina-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Core */
+    --ink: #202128;        /* text, primary buttons, dark sections (Grassfeld text-primary) */
+    --graphite: #343A46;   /* secondary headings */
+    --muted: #5B6474;      /* body secondary */
+    --line: #E4E7EE;       /* hairlines */
+    --paper: #FFFFFF;
+    --latte: #FAF6F0;      /* warm page surface */
+    --mist: #F5F7FB;       /* cool surface (Grassfeld surface-secondary) */
+    /* Signature */
+    --sole: #F4B740;       /* sparkle, highlights. Never for text */
+    --sole-deep: #8A5A00;  /* text on sole-tinted surfaces */
+    /* Pastel surfaces (from Grassfeld "colorful" surfaces, renamed) */
+    --camomilla: #FFF3E2;
+    --menta: #DFF1F3;
+    --salvia: #E9F3DF;
+    --glicine: #E7E3FF;
+    --cielo: #DDECFD;
+    /* Functional */
+    --allarme: #B42318;    /* emergency only */
+    --allarme-soft: #FEF3F2;
+    --ok: #0E7A36;
+    --link: #3B5BD6;
+
+    --display: "Bricolage Grotesque", "Arial Narrow", Impact, sans-serif;
+    --body: "Manrope", Arial, sans-serif;
+    --r-xs: .5rem; --r-sm: .75rem; --r-md: 1rem; --r-lg: 1.25rem; --r-xl: 2rem; --r-pill: 333px;
+    --gutter: clamp(1rem, 4vw, 4rem);
+    --max: 90rem;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 1.0625rem; line-height: 1.6; letter-spacing: .01em; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  a { color: var(--link); }
+  h1, h2, h3, .display { font-family: var(--display); font-stretch: 75%; font-weight: 800; letter-spacing: -.02em; margin: 0; font-optical-sizing: auto; }
+  h1 { font-size: clamp(3rem, 7vw, 5.5rem); line-height: .92; }
+  h2 { font-size: clamp(2.25rem, 4.6vw, 3.5rem); line-height: .98; }
+  h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.05; }
+  h4 { font-family: var(--body); font-size: 1.125rem; font-weight: 800; margin: 0; letter-spacing: 0; }
+  p { margin: 0; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+  .muted { color: var(--muted); }
+  .eyebrow { display: inline-flex; align-items: center; gap: .5rem; font-size: .8125rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--graphite); }
+  .eyebrow svg { width: 14px; height: 14px; fill: var(--sole); }
+  .num { font-family: var(--display); font-stretch: 75%; font-weight: 800; color: var(--muted); font-size: 1rem; letter-spacing: .02em; }
+
+  /* ---------- top bar ---------- */
+  .topbar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: 64px; }
+  .toc { display: flex; gap: 1.25rem; font-size: .875rem; font-weight: 700; overflow-x: auto; scrollbar-width: none; }
+  .toc a { color: var(--ink); text-decoration: none; white-space: nowrap; opacity: .7; }
+  .toc a:hover { opacity: 1; }
+  @media (max-width: 960px) { .toc { display: none; } }
+
+  /* ---------- wordmark ---------- */
+  .wm { font-family: var(--display); font-stretch: 75%; font-weight: 800; letter-spacing: -.012em; line-height: 1; color: var(--ink); display: inline-flex; align-items: baseline; white-space: nowrap; }
+  .wm .i { position: relative; display: inline-block; }
+  .wm .spark { position: absolute; left: 50%; top: .02em; width: .3em; height: .3em; transform: translateX(-50%); fill: var(--sole); }
+  .wm.on-dark { color: #fff; }
+  .wm-row { display: inline-flex; align-items: center; gap: .32em; }
+  .mark { width: 1.05em; height: 1.05em; flex: none; }
+
+  /* ---------- language switch ---------- */
+  .lang { display: inline-flex; padding: 3px; border: 1px solid var(--line); border-radius: var(--r-pill); background: #fff; }
+  .lang button { border: 0; background: transparent; font: 800 .75rem/1 var(--body); letter-spacing: .06em; padding: .55rem .75rem; border-radius: var(--r-pill); color: var(--muted); cursor: pointer; }
+  .lang button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .lang button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+  /* ---------- buttons ---------- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 3.25rem; padding: .875rem 1.75rem; border-radius: var(--r-xs); font: 700 1rem/1 var(--body); letter-spacing: .01em; text-decoration: none; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .2s, border-color .2s; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn-ink { background: var(--ink); color: #fff; }
+  .btn-ink:hover { background: #000; transform: translateY(-1px); }
+  .btn-outline { background: #fff; color: var(--ink); border-color: var(--ink); }
+  .btn-outline:hover { background: var(--mist); }
+  .btn-sole { background: var(--sole); color: var(--ink); }
+  .btn-ghost { background: transparent; color: var(--ink); padding-inline: .25rem; border-bottom: 1.5px solid var(--ink); border-radius: 0; min-height: auto; padding-block: .25rem; }
+  .btn-alarm { background: var(--allarme); color: #fff; border-radius: var(--r-pill); }
+  .btn-sm { min-height: 2.5rem; padding: .625rem 1.125rem; font-size: .875rem; }
+
+  /* ---------- section shell ---------- */
+  section.board { padding: clamp(4rem, 9vw, 8rem) 0; border-top: 1px solid var(--line); }
+  .head { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: clamp(2rem, 5vw, 3.5rem); max-width: 56rem; }
+  .head p { font-size: 1.1875rem; color: var(--muted); max-width: 44rem; }
+  .grid { display: grid; gap: 1rem; }
+  @media (min-width: 720px) { .g2 { grid-template-columns: repeat(2, 1fr); } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); } }
+  @media (min-width: 720px) and (max-width: 1080px) { .g4 { grid-template-columns: repeat(2, 1fr); } }
+  .card { background: var(--mist); border-radius: var(--r-lg); padding: 1.75rem; }
+  .card.white { background: #fff; border: 1px solid var(--line); }
+  .card h4 { margin-bottom: .5rem; }
+  .card p { color: var(--muted); font-size: 1rem; }
+  .pill { display: inline-flex; align-items: center; gap: .4rem; padding: .375rem .75rem; border-radius: var(--r-pill); font-size: .8125rem; font-weight: 700; background: #fff; border: 1px solid var(--line); }
+
+  /* ---------- cover ---------- */
+  .cover { padding: 1rem 0 0; }
+  .cover-box { position: relative; border-radius: var(--r-xl); overflow: hidden; min-height: min(86vh, 860px); display: grid; align-items: end; background: var(--latte); }
+  .cover-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 40%; }
+  .cover-box::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(32,33,40,0) 35%, rgba(32,33,40,.72) 100%); }
+  .cover-inner { position: relative; z-index: 1; padding: clamp(1.5rem, 5vw, 4rem); color: #fff; display: grid; gap: 1.25rem; }
+  .cover-inner .wm { font-size: clamp(4.5rem, 15vw, 12rem); color: #fff; }
+  .cover-meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; font-weight: 700; font-size: .9375rem; opacity: .92; }
+
+  /* ---------- reference table ---------- */
+  table.ref { width: 100%; border-collapse: collapse; font-size: .9375rem; }
+  table.ref th, table.ref td { text-align: left; padding: 1rem .75rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.ref th { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 800; }
+  table.ref td:first-child { font-weight: 800; white-space: nowrap; }
+  table.ref code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .8125rem; background: var(--mist); padding: .1rem .35rem; border-radius: 4px; }
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-lg); background: #fff; }
+
+  /* ---------- essence ---------- */
+  .essence { display: grid; gap: 1rem; }
+  @media (min-width: 900px) { .essence { grid-template-columns: 1.25fr 1fr; } }
+  .promise { background: var(--ink); color: #fff; border-radius: var(--r-xl); padding: clamp(2rem, 5vw, 3.5rem); display: grid; gap: 1.5rem; align-content: space-between; min-height: 420px; position: relative; overflow: hidden; }
+  .promise h2 { color: #fff; }
+  .promise p { color: rgba(255,255,255,.78); font-size: 1.125rem; max-width: 34rem; }
+  .promise .big-spark { position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; fill: var(--sole); opacity: .95; }
+  .traits { display: grid; gap: .75rem; }
+  .trait { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; background: var(--latte); border-radius: var(--r-lg); padding: 1.25rem 1.5rem; }
+  .trait b { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 1.5rem; line-height: 1; }
+  .trait span { color: var(--muted); font-size: .9375rem; }
+  .trait .no { display: block; font-size: .8125rem; margin-top: .25rem; color: var(--graphite); font-weight: 700; }
+
+  /* ---------- logo ---------- */
+  .logo-stage { border-radius: var(--r-xl); min-height: 320px; display: grid; place-items: center; padding: 3rem 1.5rem; position: relative; overflow: hidden; }
+  .logo-stage .label { position: absolute; left: 1.25rem; top: 1rem; font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .logo-stage.dark .label { color: rgba(255,255,255,.6); }
+  .logo-stage.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .logo-stage.photo::after { content: ""; position: absolute; inset: 0; background: rgba(32,33,40,.35); }
+  .logo-stage.photo .wm-row { position: relative; z-index: 1; }
+  .clearspace { position: relative; display: inline-block; padding: .55em; outline: 1.5px dashed #9AA3B5; outline-offset: 0; }
+  .clearspace::before { content: "x"; position: absolute; left: .12em; top: .05em; font: 800 .22em/1 var(--body); color: #9AA3B5; }
+  .sizes { display: flex; align-items: flex-end; gap: 1.5rem; flex-wrap: wrap; }
+  .sizes figure { margin: 0; display: grid; gap: .5rem; justify-items: center; font-size: .75rem; font-weight: 700; color: var(--muted); }
+  .dont { position: relative; background: var(--mist); border-radius: var(--r-lg); min-height: 150px; display: grid; place-items: center; padding: 1.5rem; overflow: hidden; }
+  .dont::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top right, transparent calc(50% - 1.5px), var(--allarme) calc(50% - 1.5px), var(--allarme) calc(50% + 1.5px), transparent calc(50% + 1.5px)); opacity: .55; }
+  .dont-cap { font-size: .875rem; font-weight: 700; margin-top: .5rem; }
+
+  /* ---------- colour ---------- */
+  .swatch { border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); background: #fff; display: grid; }
+  .swatch .chip { height: 140px; padding: 1rem; display: flex; align-items: flex-end; justify-content: space-between; font-weight: 800; }
+  .swatch .meta { padding: 1rem 1.125rem 1.25rem; display: grid; gap: .25rem; }
+  .swatch .name { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 1.5rem; line-height: 1; }
+  .swatch .hex { font-family: ui-monospace, Menlo, monospace; font-size: .8125rem; color: var(--muted); }
+  .swatch .role { font-size: .875rem; color: var(--graphite); }
+  .swatch .cr { font-size: .75rem; color: var(--muted); font-weight: 700; }
+  .ratio-bar { display: flex; height: 64px; border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--line); }
+  .ratio-bar div { display: grid; place-items: center; font-size: .75rem; font-weight: 800; }
+
+  /* ---------- type ---------- */
+  .type-spec { display: grid; gap: 0; border: 1px solid var(--line); border-radius: var(--r-xl); overflow: hidden; background: #fff; }
+  .type-row { display: grid; grid-template-columns: 1fr; gap: .5rem; padding: 1.5rem clamp(1.25rem, 3vw, 2.5rem); border-bottom: 1px solid var(--line); align-items: baseline; }
+  .type-row:last-child { border-bottom: 0; }
+  @media (min-width: 900px) { .type-row { grid-template-columns: 220px 1fr; } }
+  .type-row .spec { font-size: .8125rem; color: var(--muted); font-weight: 700; line-height: 1.4; }
+  .type-row .spec b { display: block; color: var(--ink); font-size: .875rem; }
+  .specimen { display: grid; gap: 1rem; }
+  @media (min-width: 900px) { .specimen { grid-template-columns: 1fr 1fr; } }
+  .specimen .card { min-height: 280px; display: grid; align-content: space-between; gap: 1.5rem; }
+  .glyphs { font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1; word-break: break-all; }
+
+  /* ---------- photography ---------- */
+  .photo-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 900px) { .photo-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; } .photo-grid .wide { grid-column: span 2; } .photo-grid .tall { grid-row: span 2; } }
+  .ph { position: relative; border-radius: var(--r-lg); overflow: hidden; margin: 0; min-height: 220px; background: var(--latte); }
+  .ph img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+  .ph figcaption { position: absolute; left: .75rem; bottom: .75rem; right: .75rem; background: rgba(255,255,255,.94); border-radius: var(--r-sm); padding: .625rem .75rem; font-size: .8125rem; line-height: 1.35; }
+  .ph figcaption b { display: block; font-size: .875rem; }
+  .rules { display: grid; gap: .75rem; }
+  .rule { display: grid; grid-template-columns: 28px 1fr; gap: .75rem; align-items: start; font-size: 1rem; }
+  .rule svg { width: 22px; height: 22px; margin-top: 2px; }
+
+  /* ---------- hero (the deliverable) ---------- */
+  .hero { position: relative; border-radius: var(--r-xl); overflow: hidden; min-height: clamp(620px, 82vh, 760px); background: var(--latte); isolation: isolate; }
+  .hero > img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 45%; z-index: -2; }
+  .hero::before { content: ""; position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(250,246,240,.97) 0%, rgba(250,246,240,.92) 30%, rgba(250,246,240,.55) 50%, rgba(250,246,240,0) 66%),
+      linear-gradient(180deg, rgba(250,246,240,.35) 0%, rgba(250,246,240,0) 25%); }
+  .hero-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem clamp(1.25rem, 3.5vw, 3rem); }
+  .hero-nav nav { display: flex; gap: 1.75rem; font-weight: 700; font-size: .9375rem; }
+  .hero-nav nav a { color: var(--ink); text-decoration: none; }
+  .hero-nav .right { display: flex; align-items: center; gap: .75rem; }
+  .hero-body { display: grid; gap: 1.5rem; padding: clamp(1.5rem, 4.5vw, 4rem) clamp(1.25rem, 3.5vw, 3rem) clamp(2rem, 5vw, 4rem); max-width: 42rem; }
+  .hero-body h1 { font-size: clamp(3rem, 6.2vw, 5.5rem); }
+  .hero-body h1 .soft { color: var(--graphite); font-weight: 600; display: block; font-size: .56em; line-height: 1; margin-top: .3em; letter-spacing: -.01em; }
+  .hero-body p.lede { font-size: clamp(1.0625rem, 1.5vw, 1.25rem); color: var(--graphite); max-width: 32rem; line-height: 1.55; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .hero-trust { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .hero-trust .pill { background: rgba(255,255,255,.85); }
+  .float { position: absolute; z-index: 2; background: #fff; border-radius: var(--r-lg); box-shadow: 0 24px 60px -24px rgba(32,33,40,.35); padding: 1rem 1.125rem; display: grid; gap: .5rem; min-width: 250px; }
+  .float .t { font-weight: 800; font-size: .9375rem; display: flex; align-items: center; gap: .5rem; }
+  .float .s { font-size: .8125rem; color: var(--muted); }
+  .float.voice { right: clamp(1rem, 6vw, 6rem); bottom: clamp(9rem, 22vh, 14rem); }
+  .float.alert { right: clamp(5rem, 18vw, 18rem); bottom: clamp(2rem, 6vh, 4rem); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px rgba(14,122,54,.15); }
+  .wave { display: flex; align-items: center; gap: 3px; height: 26px; }
+  .wave i { width: 4px; border-radius: 4px; background: var(--ink); animation: wave 1.1s ease-in-out infinite; }
+  .wave i:nth-child(2) { animation-delay: .1s } .wave i:nth-child(3) { animation-delay: .2s } .wave i:nth-child(4) { animation-delay: .3s } .wave i:nth-child(5) { animation-delay: .4s } .wave i:nth-child(6) { animation-delay: .5s } .wave i:nth-child(7) { animation-delay: .6s }
+  @keyframes wave { 0%, 100% { height: 6px } 50% { height: 24px } }
+  .sparkles svg { position: absolute; fill: var(--sole); z-index: 1; animation: twinkle 3.2s ease-in-out infinite; }
+  @keyframes twinkle { 0%, 100% { transform: scale(1) rotate(0); opacity: 1 } 50% { transform: scale(.82) rotate(12deg); opacity: .75 } }
+  @media (max-width: 900px) {
+    .hero-nav nav { display: none; }
+    .hero > img.bg { object-position: 78% 50%; }
+    .hero::before { background: linear-gradient(180deg, rgba(250,246,240,.97) 0%, rgba(250,246,240,.9) 48%, rgba(250,246,240,.2) 78%, rgba(250,246,240,0) 100%); }
+    .float { position: relative; inset: auto; margin: 0 1.25rem .75rem; min-width: 0; }
+    .float.voice, .float.alert { right: auto; left: auto; bottom: auto; }
+    .float.alert { margin-bottom: 1.5rem; }
+    .hero-nav .right .pill { display: none; }
+    .sparkles { display: none; }
+  }
+  .hero-notes { display: grid; gap: 1rem; margin-top: 1.5rem; }
+  @media (min-width: 640px) { .hero-notes { grid-template-columns: repeat(2, 1fr); } } .hero-notes { margin-top: 0; }
+
+  /* mobile hero preview */
+  .devices { display: grid; gap: 2rem; align-items: start; margin-top: 3rem; }
+  @media (min-width: 1000px) { .devices { grid-template-columns: 340px 1fr; } }
+  .phone { width: 100%; max-width: 340px; margin: 0 auto; border: 10px solid var(--ink); border-radius: 44px; overflow: hidden; background: var(--ink); box-shadow: 0 30px 70px -30px rgba(32,33,40,.5); }
+  .phone-screen { position: relative; aspect-ratio: 9 / 19.5; border-radius: 34px; overflow: hidden; background: var(--latte); display: flex; flex-direction: column; justify-content: space-between; color: #fff; }
+  .phone-screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 60%; }
+  .phone-screen::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(32,33,40,.55) 0%, rgba(32,33,40,0) 22%, rgba(32,33,40,0) 40%, rgba(32,33,40,.6) 64%, rgba(32,33,40,.9) 100%); }
+  .phone-top, .phone-bottom { position: relative; z-index: 1; padding: 1.25rem; }
+  .phone-top { display: flex; justify-content: space-between; align-items: center; }
+  .phone-top .wm { color: #fff; font-size: 1.75rem; }
+  .phone-bottom { display: grid; gap: .875rem; }
+  .phone-bottom h3 { font-size: 2.35rem; line-height: .92; color: #fff; }
+  .phone-bottom p { font-size: .875rem; color: rgba(255,255,255,.85); line-height: 1.45; }
+  .phone-bottom .btn { width: 100%; }
+
+  /* ---------- sitemap ---------- */
+  .map { display: grid; gap: .75rem; counter-reset: s; }
+  .map li { list-style: none; display: grid; grid-template-columns: 56px 1fr; gap: 1rem; align-items: start; padding: 1.25rem 1.5rem; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); }
+  .map li::before { counter-increment: s; content: counter(s, decimal-leading-zero); font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 1.75rem; line-height: 1; color: var(--ink); }
+  .map li b { display: block; font-size: 1.0625rem; }
+  .map li span { color: var(--muted); font-size: .9375rem; }
+  .map li .tags { display: flex; flex-wrap: wrap; gap: .375rem; margin-top: .5rem; }
+  .map ul { padding: 0; margin: 0; }
+
+  /* ---------- components ---------- */
+  .comp { display: grid; gap: 1rem; }
+  @media (min-width: 900px) { .comp { grid-template-columns: repeat(3, 1fr); } }
+  .tile { border-radius: var(--r-lg); padding: 1.5rem; display: grid; gap: 2.5rem; min-height: 220px; align-content: space-between; }
+  .tile .ic { width: 48px; height: 48px; border-radius: var(--r-sm); background: #fff; display: grid; place-items: center; }
+  .tile .ic svg { width: 24px; height: 24px; }
+  .tile h4 { font-family: var(--display); font-stretch: 75%; font-size: 1.75rem; line-height: 1; font-weight: 800; letter-spacing: -.01em; }
+  .tile p { font-size: .9375rem; color: var(--graphite); margin-top: .5rem; }
+  .feature-block { display: grid; gap: 2rem; align-items: center; background: var(--latte); border-radius: var(--r-xl); padding: clamp(1.5rem, 4vw, 3rem); }
+  @media (min-width: 900px) { .feature-block { grid-template-columns: 1fr 1fr; } }
+  .feature-block ul { padding: 0; margin: 1.25rem 0 1.75rem; display: grid; gap: .625rem; list-style: none; }
+  .feature-block li { display: flex; gap: .625rem; align-items: start; font-size: 1rem; }
+  .feature-block li svg { width: 20px; height: 20px; flex: none; margin-top: 3px; }
+  .layer { position: relative; border-radius: var(--r-lg); overflow: hidden; aspect-ratio: 4 / 4.2; }
+  .layer img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .layer .fg { position: absolute; left: 1rem; right: 1rem; bottom: 1rem; background: #fff; border-radius: var(--r-md); padding: 1rem; box-shadow: 0 20px 50px -20px rgba(32,33,40,.4); display: grid; gap: .75rem; }
+  .remind { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .75rem; border-radius: var(--r-sm); background: var(--salvia); font-weight: 700; font-size: .9375rem; }
+  .remind.done { background: var(--mist); color: var(--muted); text-decoration: line-through; }
+  .ink-section { background: var(--ink); color: #fff; border-radius: var(--r-xl); padding: clamp(2rem, 5vw, 4rem); display: grid; gap: 2rem; }
+  @media (min-width: 900px) { .ink-section { grid-template-columns: 1.1fr 1fr; align-items: center; } }
+  .ink-section h3 { color: #fff; font-size: clamp(2rem, 4vw, 3rem); line-height: .95; }
+  .ink-section p { color: rgba(255,255,255,.78); }
+  .alarm-screen { background: #7F1D1D; border-radius: var(--r-lg); padding: 1.5rem; display: grid; gap: 1rem; }
+  .alarm-screen .display { font-size: 2.25rem; line-height: .95; }
+  .alarm-screen .row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .alarm-screen .b { border-radius: var(--r-pill); padding: .9rem; text-align: center; font-weight: 800; }
+
+  /* ---------- voice ---------- */
+  .voice-grid { display: grid; gap: 1rem; }
+  @media (min-width: 900px) { .voice-grid { grid-template-columns: repeat(3, 1fr); } }
+  .lang-card { border-radius: var(--r-xl); padding: 2rem; display: grid; gap: 1.25rem; align-content: start; }
+  .lang-card .flag { font-size: .75rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .lang-card .display { font-size: clamp(1.75rem, 2.8vw, 2.5rem); line-height: .98; }
+  .lang-card dl { margin: 0; display: grid; gap: .875rem; font-size: .9375rem; }
+  .lang-card dt { font-size: .75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .lang-card dd { margin: .125rem 0 0; }
+  .dodont { display: grid; gap: 1rem; margin-top: 1rem; }
+  @media (min-width: 900px) { .dodont { grid-template-columns: 1fr 1fr; } }
+  .dodont .card ul { margin: .75rem 0 0; padding-left: 1.125rem; display: grid; gap: .375rem; color: var(--graphite); font-size: .9375rem; }
+
+  /* ---------- senior app ---------- */
+  .tablet { max-width: 900px; margin: 0 auto; border: 14px solid var(--ink); border-radius: 36px; background: var(--ink); box-shadow: 0 30px 80px -30px rgba(32,33,40,.5); }
+  .tablet-screen { aspect-ratio: 4 / 3; border-radius: 22px; overflow: hidden; background: var(--latte); display: flex; flex-direction: column; justify-content: space-between; padding: clamp(1rem, 3.5vw, 2.25rem); }
+  .ts-top { display: flex; justify-content: space-between; align-items: start; gap: 1rem; }
+  .ts-top .display { font-size: clamp(1.75rem, 5vw, 3.5rem); line-height: .95; }
+  .ts-top .date { color: var(--graphite); font-size: clamp(.875rem, 1.9vw, 1.375rem); font-weight: 600; margin-top: .375rem; }
+  .ts-chip { background: var(--camomilla); color: var(--sole-deep); font-weight: 800; border-radius: var(--r-pill); padding: .5em 1em; font-size: clamp(.75rem, 1.7vw, 1.125rem); white-space: nowrap; }
+  .talk { align-self: center; width: clamp(150px, 34%, 300px); aspect-ratio: 1; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; text-align: center; position: relative; }
+  .talk::before { content: ""; position: absolute; inset: -9%; border-radius: 50%; border: 3px solid rgba(32,33,40,.12); }
+  .talk::after { content: ""; position: absolute; inset: -20%; border-radius: 50%; background: radial-gradient(circle, rgba(244,183,64,.35), rgba(244,183,64,0) 65%); z-index: -1; }
+  .talk-inner { display: grid; gap: .5rem; justify-items: center; font-weight: 800; font-size: clamp(.8rem, 1.9vw, 1.35rem); line-height: 1.15; padding: 0 16%; }
+  .talk-inner svg { width: 34%; height: auto; }
+  .ts-bottom { display: flex; justify-content: space-between; align-items: end; gap: 1rem; }
+  .ts-bottom .ok { color: var(--ok); font-weight: 800; font-size: clamp(.8rem, 1.8vw, 1.25rem); }
+  .help { background: var(--allarme); color: #fff; font-weight: 800; border-radius: var(--r-pill); padding: .7em 1.4em; font-size: clamp(1rem, 2.6vw, 1.75rem); display: inline-flex; gap: .5rem; align-items: center; }
+
+  footer.end { padding: 3rem 0 4rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer.end .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2rem; justify-content: space-between; align-items: center; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<!-- reusable symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="spark" viewBox="0 0 20 20"><path d="M10 0c.9 6.4 3.1 8.6 10 10-6.9 1.4-9.1 3.6-10 10-.9-6.4-3.1-8.6-10-10 6.9-1.4 9.1-3.6 10-10z"/></symbol>
+    <symbol id="mark" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="#202128"/><path d="M32 74V46a18 18 0 0 1 36 0v28" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M79 13c1.1 7.4 3.6 9.9 11 11-7.4 1.1-9.9 3.6-11 11-1.1-7.4-3.6-9.9-11-11 7.4-1.1 9.9-3.6 11-11z" fill="#F4B740"/></symbol>
+    <symbol id="mark-light" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="#FAF6F0"/><path d="M32 74V46a18 18 0 0 1 36 0v28" fill="none" stroke="#202128" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M79 13c1.1 7.4 3.6 9.9 11 11-7.4 1.1-9.9 3.6-11 11-1.1-7.4-3.6-9.9-11-11 7.4-1.1 9.9-3.6 11-11z" fill="#F4B740"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#E9F3DF"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#0E7A36" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="cross" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#FEF3F2"/><path d="M8.5 8.5l7 7m0-7l-7 7" fill="none" stroke="#B42318" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l2 2H4l2-2zM10 21h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="doc" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="hand" viewBox="0 0 24 24"><path d="M3 13h3l3 3h4a2 2 0 0 0 0-4h-3M6 13V20M13 12l5-3a2 2 0 0 1 2 3l-6 6H9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="#top" aria-label="Nonnina brand identity, top" style="text-decoration:none">
+      <span class="wm-row" style="font-size:1.6rem"><svg class="mark"><use href="#mark"/></svg><span class="wm">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></span>
+    </a>
+    <nav class="toc" aria-label="Sections">
+      <a href="#reference">Reference</a><a href="#essence">Essence</a><a href="#logo">Logo</a><a href="#colour">Colour</a><a href="#type">Type</a><a href="#photo">Photography</a><a href="#hero">Hero</a><a href="#site">Site map</a><a href="#components">Components</a><a href="#voice">Voice</a><a href="#app">App</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language of examples">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="de" aria-pressed="false">DE</button>
+      <button type="button" data-lang="it" aria-pressed="false">IT</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ COVER ============ -->
+<section class="cover">
+  <div class="wrap">
+    <div class="cover-box">
+      <img src="assets/hands.jpg" alt="Two older women holding hands, one wearing a gold watch" fetchpriority="high">
+      <div class="cover-inner">
+        <span class="eyebrow" style="color:#fff"><svg><use href="#spark"/></svg>Brand identity · v1.0 · November 2026</span>
+        <span class="wm">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span>
+        <div class="cover-meta"><span data-i18n="tagline">One button for Nonna. Peace of mind for the whole family.</span><span>nonnina.eu</span><span>EN · DE · IT</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 REFERENCE ============ -->
+<section class="board" id="reference">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">01 · Reference</span>
+      <h2>What we took from Grassfeld, and what we changed.</h2>
+      <p>Grassfeld’s site is the structural reference: confident condensed headlines, an ink-and-white base, soft pastel surfaces, a rounded hero container and one simple CTA repeated everywhere. Values below were read from their live CSS. Nonnina keeps the system and swaps the cool fintech mood for warmth.</p>
+    </div>
+    <div class="table-scroll">
+      <table class="ref">
+        <thead><tr><th>Element</th><th>Grassfeld (measured)</th><th>Nonnina (decision)</th></tr></thead>
+        <tbody>
+          <tr><td>Headline font</td><td>Right Grotesk, weight 900, h1 4rem, line-height .92 to 1.04</td><td><b>Bricolage Grotesque</b> at 75% width, weight 800, line-height .92. Free on Google Fonts, same condensed punch, softer and friendlier curves.</td></tr>
+          <tr><td>Body font</td><td>Manrope, 1rem, line-height 1.5, letter-spacing .03em</td><td><b>Manrope</b>, kept. 1.0625rem, line-height 1.6, letter-spacing .01em for older readers.</td></tr>
+          <tr><td>Text colour</td><td><code>#202128</code></td><td><b>Ink</b> <code>#202128</code>, kept as the brand’s anchor colour.</td></tr>
+          <tr><td>Surfaces</td><td><code>#f5f7fb</code> grey, pastels <code>#fff3e2</code> <code>#dff1f3</code> <code>#e9f3df</code> <code>#e7e3ff</code> <code>#ddecfd</code></td><td>Kept and renamed after Italian kitchen herbs: Camomilla, Menta, Salvia, Glicine, Cielo. Added a warm page tone, <b>Latte</b> <code>#FAF6F0</code>.</td></tr>
+          <tr><td>Accent</td><td>Turquoise sparkle stars around the product</td><td>One signature accent, <b>Sole</b> <code>#F4B740</code>: a warm sparkle that marks the voice and the dot on the “i”.</td></tr>
+          <tr><td>Buttons</td><td>Ink fill or ink outline, radius about .5rem, Manrope 700, “Get Started” everywhere</td><td>Same shapes. One CTA everywhere: “Join the waitlist”. Pills are reserved for the senior app and the emergency button.</td></tr>
+          <tr><td>Hero</td><td>Full-width container with 2rem radius, soft gradient, product on the right with floating cards</td><td>Same container, filled with a real photograph. A warm gradient carries the headline on the left, and two floating cards show the product.</td></tr>
+          <tr><td>Photography</td><td>Lifestyle photo background with a UI screenshot layered in front (<code>-bg</code> / <code>-fg</code>)</td><td>Kept as the main storytelling device: real moments at home, with one small UI card on top.</td></tr>
+          <tr><td>Page order</td><td>Hero, awards, feature grid, alternating feature blocks, security, testimonials, CTA, FAQ, footer</td><td>Hero, trust strip, feature grid, alternating blocks, safety (ink section), helpers, FAQ, waitlist, footer. No invented testimonials or stats.</td></tr>
+          <tr><td>Languages</td><td>English and Dutch switcher in the header</td><td>English first, then German and Italian, with an EN · DE · IT switcher in the header.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 ESSENCE ============ -->
+<section class="board" id="essence">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">02 · Essence</span>
+      <h2>A grandmother’s warmth, a family’s peace of mind.</h2>
+      <p>“Nonnina” is Italian for “little grandma”: the voice everyone trusts, at the centre of the family table. The product talks with older people who live alone, keeps them company, and tells the family the moment something is wrong.</p>
+    </div>
+    <div class="essence">
+      <div class="promise">
+        <svg class="big-spark" aria-hidden="true"><use href="#spark"/></svg>
+        <span class="eyebrow" style="color:rgba(255,255,255,.7)">Brand promise</span>
+        <h2 data-i18n="promise">Never alone at home. Never in the dark for the family.</h2>
+        <p data-i18n="mission">Our mission: help older people live safely and happily in their own home for longer, with one button, a warm voice and a family that always knows what is going on.</p>
+      </div>
+      <div class="traits">
+        <div class="trait"><b>Warm</b><span>Speaks like someone who loves you: slow, kind, patient.<i class="no">Not: sugary, childish, clinical.</i></span></div>
+        <div class="trait"><b>Clear</b><span>One idea per sentence. Large type. One button.<i class="no">Not: technical, clever, crowded.</i></span></div>
+        <div class="trait"><b>Calm</b><span>In an emergency we stay steady and act fast.<i class="no">Not: alarming, dramatic, fearful.</i></span></div>
+        <div class="trait"><b>Honest</b><span>We say what we are and what we are not.<i class="no">Not: a doctor, a lawyer, or 112.</i></span></div>
+        <div class="trait"><b>European</b><span>Made in Stuttgart, at home in Germany and Italy, data in the EU.<i class="no">Not: generic Silicon Valley.</i></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 LOGO ============ -->
+<section class="board" id="logo">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">03 · Logo</span>
+      <h2>A doorway and a spark.</h2>
+      <p>The symbol is a lowercase <b>n</b> drawn as the arch of a front door, because Nonnina lives at home. The warm spark is the voice: it lights up when Nonnina listens. The same spark replaces the dot of the “i” in the wordmark.</p>
+    </div>
+
+    <div class="grid g2">
+      <div class="logo-stage" style="background:var(--latte)"><span class="label">Primary · on Latte</span>
+        <span class="wm-row" style="font-size:clamp(3rem,7vw,5.5rem)"><svg class="mark"><use href="#mark"/></svg><span class="wm">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></span>
+      </div>
+      <div class="logo-stage dark" style="background:var(--ink)"><span class="label">Reversed · on Ink</span>
+        <span class="wm-row" style="font-size:clamp(3rem,7vw,5.5rem)"><svg class="mark"><use href="#mark-light"/></svg><span class="wm on-dark">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></span>
+      </div>
+      <div class="logo-stage" style="background:#fff;border:1px solid var(--line)"><span class="label">Wordmark only · clear space = x</span>
+        <span class="clearspace" style="font-size:clamp(2.5rem,6vw,4.5rem)"><span class="wm">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></span>
+      </div>
+      <div class="logo-stage photo"><span class="label" style="color:#fff;z-index:2">On photography · white wordmark</span>
+        <img src="assets/park.jpg" alt="" loading="lazy" style="object-position:50% 70%">
+        <span class="wm-row" style="font-size:clamp(3rem,7vw,5.5rem)"><span class="wm on-dark">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></span>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:1rem">
+      <div class="card white">
+        <h4>Symbol sizes</h4>
+        <p style="margin-bottom:1.25rem">App icon, favicon and the senior tablet launcher. Minimum 16 px on screen; below 24 px drop the spark only if it blurs.</p>
+        <div class="sizes">
+          <figure><svg width="128" height="128"><use href="#mark"/></svg>128</figure>
+          <figure><svg width="64" height="64"><use href="#mark"/></svg>64</figure>
+          <figure><svg width="32" height="32"><use href="#mark"/></svg>32</figure>
+          <figure><svg width="16" height="16"><use href="#mark"/></svg>16</figure>
+          <figure><svg width="64" height="64"><use href="#mark-light"/></svg>Light</figure>
+        </div>
+      </div>
+      <div class="card white">
+        <h4>Rules</h4>
+        <div class="rules" style="margin-top:.75rem">
+          <div class="rule"><svg><use href="#check"/></svg><span>Wordmark is Bricolage Grotesque ExtraBold at 75% width, tracking −1.2%. The spark is always Sole yellow.</span></div>
+          <div class="rule"><svg><use href="#check"/></svg><span>Clear space on every side equals the height of the lowercase x.</span></div>
+          <div class="rule"><svg><use href="#check"/></svg><span>Use Ink on light backgrounds, white on Ink or on photographs darker than 40% grey.</span></div>
+          <div class="rule"><svg><use href="#check"/></svg><span>Files: <code>assets/nonnina-mark.svg</code> and <code>assets/nonnina-mark-light.svg</code>.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin:3rem 0 1rem">Don’t</h3>
+    <div class="grid g4">
+      <div><div class="dont"><span class="wm" style="font-size:2.5rem;transform:scaleX(1.5)">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></div><p class="dont-cap">Stretch or squash it</p></div>
+      <div><div class="dont"><span class="wm" style="font-size:2.5rem">Nonn<span class="i">ı<svg class="spark" style="fill:var(--allarme)"><use href="#spark"/></svg></span>na</span></div><p class="dont-cap">Recolour the spark (red means emergency)</p></div>
+      <div><div class="dont"><span class="wm" style="font-size:2.5rem;color:transparent;-webkit-text-stroke:1.5px var(--ink)">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></div><p class="dont-cap">Outline or add effects</p></div>
+      <div><div class="dont" style="background:var(--cielo)"><span class="wm" style="font-size:2.5rem;color:#9AB8E6">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></div><p class="dont-cap">Use low-contrast colours</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 COLOUR ============ -->
+<section class="board" id="colour">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">04 · Colour</span>
+      <h2>Ink, warm paper and a little sun.</h2>
+      <p>The palette is mostly white and Latte, anchored by Ink. Pastels give each topic its own surface. Sole is a spark, never a background for long text. Allarme red is reserved for the emergency feature, nowhere else.</p>
+    </div>
+
+    <div class="ratio-bar" aria-label="Recommended colour proportions">
+      <div style="flex:45;background:#fff">Paper 45%</div>
+      <div style="flex:22;background:var(--latte)">Latte 22%</div>
+      <div style="flex:15;background:var(--ink);color:#fff">Ink 15%</div>
+      <div style="flex:12;background:linear-gradient(90deg,var(--camomilla),var(--menta),var(--salvia),var(--glicine),var(--cielo))">Pastels 12%</div>
+      <div style="flex:4;background:var(--sole)">4%</div>
+      <div style="flex:2;background:var(--allarme)" title="Allarme, emergency only"></div>
+    </div>
+
+    <h3 style="margin:2.5rem 0 1rem">Core</h3>
+    <div class="grid g4" data-swatches>
+      <div class="swatch" data-hex="#202128"><div class="chip" style="background:#202128;color:#fff">Aa</div><div class="meta"><span class="name">Ink</span><span class="hex">#202128 · rgb 32 33 40</span><span class="role">Text, primary buttons, dark sections</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#FAF6F0"><div class="chip" style="background:#FAF6F0">Aa</div><div class="meta"><span class="name">Latte</span><span class="hex">#FAF6F0 · rgb 250 246 240</span><span class="role">Warm page surface, hero, senior app</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#F4B740"><div class="chip" style="background:#F4B740">Aa</div><div class="meta"><span class="name">Sole</span><span class="hex">#F4B740 · rgb 244 183 64</span><span class="role">Signature spark, highlights, focus glow</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#5B6474"><div class="chip" style="background:#5B6474;color:#fff">Aa</div><div class="meta"><span class="name">Muted</span><span class="hex">#5B6474 · rgb 91 100 116</span><span class="role">Secondary body text, captions</span><span class="cr"></span></div></div>
+    </div>
+
+    <h3 style="margin:2.5rem 0 1rem">Pastel surfaces</h3>
+    <div class="grid g4" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+      <div class="swatch" data-hex="#FFF3E2"><div class="chip" style="background:#FFF3E2">Aa</div><div class="meta"><span class="name">Camomilla</span><span class="hex">#FFF3E2</span><span class="role">Reminders, daily routines</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#DFF1F3"><div class="chip" style="background:#DFF1F3">Aa</div><div class="meta"><span class="name">Menta</span><span class="hex">#DFF1F3</span><span class="role">Voice and conversation</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#E9F3DF"><div class="chip" style="background:#E9F3DF">Aa</div><div class="meta"><span class="name">Salvia</span><span class="hex">#E9F3DF</span><span class="role">Health, “all good” states</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#E7E3FF"><div class="chip" style="background:#E7E3FF">Aa</div><div class="meta"><span class="name">Glicine</span><span class="hex">#E7E3FF</span><span class="role">Family and helpers</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#DDECFD"><div class="chip" style="background:#DDECFD">Aa</div><div class="meta"><span class="name">Cielo</span><span class="hex">#DDECFD</span><span class="role">Paperwork, money, legal</span><span class="cr"></span></div></div>
+    </div>
+
+    <h3 style="margin:2.5rem 0 1rem">Functional</h3>
+    <div class="grid g4">
+      <div class="swatch" data-hex="#B42318"><div class="chip" style="background:#B42318;color:#fff">Aa</div><div class="meta"><span class="name">Allarme</span><span class="hex">#B42318</span><span class="role">Emergency only: the Help button and emergency mode</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#0E7A36"><div class="chip" style="background:#0E7A36;color:#fff">Aa</div><div class="meta"><span class="name">Bene</span><span class="hex">#0E7A36</span><span class="role">Connected, confirmed, all clear</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#3B5BD6"><div class="chip" style="background:#3B5BD6;color:#fff">Aa</div><div class="meta"><span class="name">Link</span><span class="hex">#3B5BD6</span><span class="role">Inline links, focus rings</span><span class="cr"></span></div></div>
+      <div class="swatch" data-hex="#F5F7FB"><div class="chip" style="background:#F5F7FB">Aa</div><div class="meta"><span class="name">Mist</span><span class="hex">#F5F7FB</span><span class="role">Neutral cards, inputs, tables</span><span class="cr"></span></div></div>
+    </div>
+    <p class="muted" style="margin-top:1rem;font-size:.875rem">Contrast ratios are calculated live in this page against white and Ink. Body text must reach 4.5:1 (AA) on the website and 7:1 (AAA) in the senior app.</p>
+  </div>
+</section>
+
+<!-- ============ 05 TYPE ============ -->
+<section class="board" id="type">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">05 · Typography</span>
+      <h2>Big, condensed headlines. Calm, readable text.</h2>
+      <p>Two Google Fonts, both free and with full Latin Extended for German umlauts and Italian accents. Headlines borrow Grassfeld’s compressed rhythm; body text stays open and generous for older eyes.</p>
+    </div>
+
+    <div class="specimen">
+      <div class="card" style="background:var(--ink);color:#fff">
+        <span class="eyebrow" style="color:rgba(255,255,255,.7)">Display · Bricolage Grotesque</span>
+        <div class="display glyphs">Aa Ää Èè 112</div>
+        <p style="color:rgba(255,255,255,.75)">Width 75%, weight 800 (headlines) and 600 (soft second line). Line-height .92 to 1. Tracking −2%. Sentence case, never all caps.</p>
+      </div>
+      <div class="card" style="background:var(--latte)">
+        <span class="eyebrow">Text · Manrope</span>
+        <div class="glyphs" style="font-family:var(--body);font-weight:700">Aa Ää Èè 112</div>
+        <p>Weights 400, 600, 800. Line-height 1.6. Tracking +1%. Minimum 16 px on the website, 24 px in the senior app.</p>
+      </div>
+    </div>
+
+    <div class="type-spec" style="margin-top:1rem">
+      <div class="type-row"><div class="spec"><b>Display XL</b>Bricolage 800 · 100/92 · hero only</div><div class="display" style="font-size:clamp(3rem,7vw,6.25rem);line-height:.92" data-i18n="typeXL">One button for Nonna.</div></div>
+      <div class="type-row"><div class="spec"><b>H1</b>Bricolage 800 · 64/60</div><div class="display" style="font-size:clamp(2.5rem,5vw,4rem);line-height:.94" data-i18n="typeH1">Never alone at home.</div></div>
+      <div class="type-row"><div class="spec"><b>H2</b>Bricolage 800 · 56/55</div><div class="display" style="font-size:clamp(2.1rem,4.4vw,3.5rem);line-height:.98" data-i18n="typeH2">When something is wrong, the family knows in seconds.</div></div>
+      <div class="type-row"><div class="spec"><b>H3</b>Bricolage 800 · 32/34</div><div class="display" style="font-size:2rem;line-height:1.05" data-i18n="typeH3">Reminders that sound like family</div></div>
+      <div class="type-row"><div class="spec"><b>Lead</b>Manrope 500 · 20/31</div><p style="font-size:1.25rem;font-weight:500;color:var(--graphite)" data-i18n="lede">Nonnina is a voice companion for older people who live at home. She talks, reminds and listens every day, and tells the family the moment something is wrong.</p></div>
+      <div class="type-row"><div class="spec"><b>Body</b>Manrope 400 · 17/27</div><p>Care insurance benefits must be claimed one by one, and many families miss support they are entitled to. Nonnina turns a worried phone call into a clear list of next steps.</p></div>
+      <div class="type-row"><div class="spec"><b>Label</b>Manrope 800 · 13 · +8% · caps</div><span class="eyebrow"><svg><use href="#spark"/></svg>Safety first</span></div>
+      <div class="type-row"><div class="spec"><b>Senior app</b>Bricolage 800 · 56 / Manrope 700 · 26</div><div><div class="display" style="font-size:3.5rem;line-height:.95">Guten Morgen, Maria!</div><p style="font-size:1.625rem;font-weight:700;margin-top:.5rem">Tippen und sprechen</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 PHOTOGRAPHY ============ -->
+<section class="board" id="photo">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">06 · Photography</span>
+      <h2>Real homes, real hands, warm light.</h2>
+      <p>Photography carries the emotion; the interface stays in small cards on top. Every image shows a real moment of care at home: hands, tea, a walk, a check-up. Each photo has one job on the site.</p>
+    </div>
+    <div class="photo-grid">
+      <figure class="ph wide tall"><img src="assets/hands.jpg" alt="Two older women holding hands" loading="lazy" style="object-position:60% 45%"><figcaption><b>Hands · Hero (desktop), cover</b>The brand in one image: closeness, age, trust.</figcaption></figure>
+      <figure class="ph tall"><img src="assets/park.jpg" alt="Older woman in a wheelchair in a park at sunset, with a younger woman sitting beside her" loading="lazy" style="object-position:40% 65%"><figcaption><b>Park · Hero (mobile), Family</b>Vertical, sky for text at the top.</figcaption></figure>
+      <figure class="ph tall"><img src="assets/walker.jpg" alt="Older woman walking with a rollator through a bright hallway" loading="lazy"><figcaption><b>Walker · Safety</b>Independence at home, fall prevention.</figcaption></figure>
+      <figure class="ph wide"><img src="assets/tea.jpg" alt="Carer bringing tea to an older woman in bed" loading="lazy" style="object-position:50% 50%"><figcaption><b>Tea · Everyday companion</b>Routine, kindness, the daily visit.</figcaption></figure>
+      <figure class="ph"><img src="assets/pressure.jpg" alt="Carer measuring an older man’s blood pressure at home" loading="lazy" style="object-position:40% 35%"><figcaption><b>Pressure · Health routines</b>Check-ups and visits.</figcaption></figure>
+      <figure class="ph"><img src="assets/oximeter.jpg" alt="Older woman using a pulse oximeter at a table" loading="lazy"><figcaption><b>Oximeter · Detail</b>Background for a small UI card.</figcaption></figure>
+      <figure class="ph"><img src="assets/nurse.jpg" alt="Smiling male nurse in a white coat with a stethoscope" loading="lazy" style="object-position:50% 25%"><figcaption><b>Nurse · For helpers</b>Crop or retouch the “SUS” sleeve badge before use.</figcaption></figure>
+    </div>
+    <div class="grid g2" style="margin-top:1.5rem">
+      <div class="card white"><h4>Do</h4><div class="rules" style="margin-top:.75rem">
+        <div class="rule"><svg><use href="#check"/></svg><span>Natural daylight, warm tones, real interiors.</span></div>
+        <div class="rule"><svg><use href="#check"/></svg><span>Crop close: hands, gestures, a cup, a doorway.</span></div>
+        <div class="rule"><svg><use href="#check"/></svg><span>Leave calm space for text; lay a Latte gradient under headlines.</span></div>
+        <div class="rule"><svg><use href="#check"/></svg><span>Corner radius 2rem for full-width images, 1.25rem for cards.</span></div>
+      </div></div>
+      <div class="card white"><h4>Don’t</h4><div class="rules" style="margin-top:.75rem">
+        <div class="rule"><svg><use href="#cross"/></svg><span>Hospitals, sirens, people in distress, fake smiles at the camera.</span></div>
+        <div class="rule"><svg><use href="#cross"/></svg><span>Third-party logos or uniforms visible (crop the SUS badge).</span></div>
+        <div class="rule"><svg><use href="#cross"/></svg><span>Cold blue filters or heavy colour grading.</span></div>
+        <div class="rule"><svg><use href="#cross"/></svg><span>Text directly on busy parts of an image without a gradient.</span></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 HERO ============ -->
+<section class="board" id="hero">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">07 · Homepage hero</span>
+      <h2>The first ten seconds.</h2>
+      <p>The hero follows Grassfeld’s container: rounded, full width, headline left, product right. The photograph does the emotional work and two floating cards explain the product. Switch EN · DE · IT in the top bar to see every language.</p>
+    </div>
+  </div>
+  <div class="wrap hero-wrap">
+    <div class="hero">
+      <img class="bg" src="assets/hands.jpg" alt="" fetchpriority="low">
+      <div class="hero-nav">
+        <span class="wm-row" style="font-size:1.75rem"><svg class="mark"><use href="#mark"/></svg><span class="wm">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></span>
+        <nav aria-label="Example navigation"><a href="#hero" data-i18n="navHow">How it works</a><a href="#hero" data-i18n="navSafety">Safety</a><a href="#hero" data-i18n="navFamily">For families</a><a href="#hero" data-i18n="navHelpers">For helpers</a></nav>
+        <div class="right"><span class="pill" style="font-weight:800" data-lang-label>EN</span><a class="btn btn-outline btn-sm" href="#hero" data-i18n="ctaShort">Join the waitlist</a></div>
+      </div>
+      <div class="hero-body">
+        <span class="eyebrow"><svg><use href="#spark"/></svg><span data-i18n="heroEyebrow">Voice companion for older people at home</span></span>
+        <h1><span data-i18n="heroH1a">One button for Nonna.</span><span class="soft" data-i18n="heroH1b">Peace of mind for the whole family.</span></h1>
+        <p class="lede" data-i18n="lede">Nonnina is a voice companion for older people who live at home. She talks, reminds and listens every day, and tells the family the moment something is wrong.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-ink" href="#hero"><span data-i18n="cta">Join the waitlist</span><svg><use href="#arrow"/></svg></a>
+          <a class="btn btn-outline" href="#hero" data-i18n="cta2">See how it works</a>
+        </div>
+        <div class="hero-trust">
+          <span class="pill"><svg width="14" height="14"><use href="#check"/></svg><span data-i18n="trust1">No smartphone needed</span></span>
+          <span class="pill"><svg width="14" height="14"><use href="#check"/></svg><span data-i18n="trust2">German &amp; Italian</span></span>
+          <span class="pill"><svg width="14" height="14"><use href="#check"/></svg><span data-i18n="trust3">Data stored in the EU</span></span>
+        </div>
+      </div>
+      <div class="float voice" aria-hidden="true">
+        <span class="t"><span class="dot"></span><span data-i18n="cardVoice">Lina is listening</span></span>
+        <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <span class="s" data-i18n="cardVoiceSub">“Have you taken your tablets, Maria?”</span>
+      </div>
+      <div class="float alert" aria-hidden="true">
+        <span class="t"><svg width="18" height="18" style="color:var(--ink)"><use href="#bell"/></svg><span data-i18n="cardAlert">Anna was notified</span></span>
+        <span class="s" data-i18n="cardAlertSub">SMS sent 12 seconds after the call for help</span>
+      </div>
+      <div class="sparkles" aria-hidden="true">
+        <svg style="right:30%;top:22%;width:34px;height:34px"><use href="#spark"/></svg>
+        <svg style="right:12%;top:30%;width:20px;height:20px;animation-delay:.8s"><use href="#spark"/></svg>
+        <svg style="right:38%;bottom:34%;width:16px;height:16px;animation-delay:1.6s"><use href="#spark"/></svg>
+      </div>
+    </div>
+
+    <div class="devices">
+      <div class="phone" aria-label="Mobile hero preview">
+        <div class="phone-screen">
+          <img src="assets/park.jpg" alt="" loading="lazy">
+          <div class="phone-top"><span class="wm on-dark">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span><span class="pill" style="background:rgba(255,255,255,.92);color:var(--ink);font-weight:800" data-lang-label>EN</span></div>
+          <div class="phone-bottom">
+            <h3><span data-i18n="heroH1a">One button for Nonna.</span></h3>
+            <p data-i18n="heroH1b">Peace of mind for the whole family.</p>
+            <a class="btn btn-sole" href="#hero"><span data-i18n="cta">Join the waitlist</span><svg><use href="#arrow"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="hero-notes">
+        <div class="card"><h4>Desktop</h4><p>Hands photo, focal point right of centre. Latte gradient from the left keeps the headline at AAA contrast. Floating cards sit on the dark sleeve area, away from the hands.</p></div>
+        <div class="card"><h4>Mobile</h4><p>Swap to the vertical park photo. Headline at the bottom in white on an Ink gradient, a single Sole button, the language pill top right.</p></div>
+        <div class="card"><h4>Motion</h4><p>Cards fade up 16 px with a 120 ms stagger, the voice bars move, the sparks twinkle. All of it stops with reduced motion.</p></div>
+        <div class="card" style="background:var(--camomilla)"><h4>Headline rules</h4><p style="color:var(--graphite)">Two lines: the promise to the senior, then the promise to the family. Second line lighter (weight 600, Graphite).</p></div>
+        <div class="card" style="background:var(--menta)"><h4>CTA</h4><p style="color:var(--graphite)">Primary is always “Join the waitlist” in Ink. Secondary is outlined and scrolls to “How it works”.</p></div>
+        <div class="card" style="background:var(--salvia)"><h4>Language</h4><p style="color:var(--graphite)">English by default; DE and IT from the browser language or the EN · DE · IT switcher, remembered locally.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 SITE MAP ============ -->
+<section class="board" id="site">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">08 · Homepage structure</span>
+      <h2>Grassfeld’s rhythm, Nonnina’s story.</h2>
+      <p>Same sequence of big hero, quick proof, grid of features, then alternating deep dives. Every section ends with the one CTA. Photo assignments follow section 06.</p>
+    </div>
+    <ul class="map">
+      <li><div><b>Header</b><span>Logo · How it works · Safety · For families · For helpers · About · EN/DE/IT · “Join the waitlist” (outline).</span></div></li>
+      <li><div><b>Hero</b><span>Rounded container, hands photo, two-line headline, two CTAs, three trust pills, two floating product cards.</span><div class="tags"><span class="pill">hands.jpg</span><span class="pill">park.jpg (mobile)</span></div></div></li>
+      <li><div><b>Trust strip</b><span>Replaces Grassfeld’s awards: “Made in Stuttgart · Data in the EU · German &amp; Italian · Free during the pilot”. No invented logos or numbers.</span></div></li>
+      <li><div><b>Feature grid</b><span>Six pastel tiles: Talk · Reminders · Emergency · Family alerts · Paperwork · Helpers.</span></div></li>
+      <li><div><b>Everyday companion</b><span>Alternating block. Photo background with a reminder card in front.</span><div class="tags"><span class="pill">tea.jpg</span><span class="pill">Menta</span></div></div></li>
+      <li><div><b>Health routines</b><span>Medication, visits, check-ups, all spoken aloud.</span><div class="tags"><span class="pill">pressure.jpg</span><span class="pill">oximeter.jpg</span><span class="pill">Salvia</span></div></div></li>
+      <li><div><b>Safety</b><span>Ink section. Fall, chest pain, cannot breathe: family alerted in seconds, 112 one tap away. Note: not an emergency service.</span><div class="tags"><span class="pill">walker.jpg</span><span class="pill">Allarme</span></div></div></li>
+      <li><div><b>For families</b><span>Alerts in real time, paperwork and money step by step.</span><div class="tags"><span class="pill">park.jpg</span><span class="pill">Glicine</span><span class="pill">Cielo</span></div></div></li>
+      <li><div><b>For helpers</b><span>Sign up free, get verified, get matched with families nearby.</span><div class="tags"><span class="pill">nurse.jpg</span></div></div></li>
+      <li><div><b>FAQ</b><span>Smartphone? Languages? Emergency? Who sees the data? Cost?</span></div></li>
+      <li><div><b>Waitlist</b><span>Email, “I am a…”, city, message. Latte card, Ink button.</span></div></li>
+      <li><div><b>Footer</b><span>Logo + language · Product / Company / Legal columns · “Not an emergency service. In an emergency call 112.” · © 2026 Nonnina.</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 09 COMPONENTS ============ -->
+<section class="board" id="components">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">09 · Components</span>
+      <h2>A small kit, used everywhere.</h2>
+      <p>Buttons, tiles, layered feature blocks and the Ink safety section. Radii: .5rem buttons, 1rem inputs, 1.25rem cards, 2rem sections, pills only for chips and the senior app.</p>
+    </div>
+
+    <div class="card white" style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:center">
+      <a class="btn btn-ink" href="#components">Join the waitlist<svg><use href="#arrow"/></svg></a>
+      <a class="btn btn-outline" href="#components">See how it works</a>
+      <a class="btn btn-sole" href="#components">Try the demo</a>
+      <a class="btn btn-ghost" href="#components">Learn more</a>
+      <span class="btn btn-alarm"><svg><use href="#phone"/></svg>Help</span>
+      <span class="pill"><span class="dot"></span>Anna is connected</span>
+      <span class="lang" role="group" aria-label="Language switcher example"><button type="button" aria-pressed="true">EN</button><button type="button" aria-pressed="false">DE</button><button type="button" aria-pressed="false">IT</button></span>
+    </div>
+
+    <div class="comp" style="margin-top:1rem">
+      <div class="tile" style="background:var(--menta)"><span class="ic"><svg><use href="#mic"/></svg></span><div><h4>Talk</h4><p>One button. A warm voice that answers in German or Italian.</p></div></div>
+      <div class="tile" style="background:var(--camomilla)"><span class="ic"><svg><use href="#clock"/></svg></span><div><h4>Reminders</h4><p>Tablets, water, appointments, spoken aloud.</p></div></div>
+      <div class="tile" style="background:var(--allarme-soft)"><span class="ic"><svg style="color:var(--allarme)"><use href="#phone"/></svg></span><div><h4>Emergency</h4><p>Family alerted in seconds. 112 one tap away.</p></div></div>
+      <div class="tile" style="background:var(--glicine)"><span class="ic"><svg><use href="#bell"/></svg></span><div><h4>Family alerts</h4><p>Real-time updates and a short daily summary.</p></div></div>
+      <div class="tile" style="background:var(--cielo)"><span class="ic"><svg><use href="#doc"/></svg></span><div><h4>Paperwork</h4><p>Care insurance, contracts, money: step by step.</p></div></div>
+      <div class="tile" style="background:var(--salvia)"><span class="ic"><svg><use href="#hand"/></svg></span><div><h4>Helpers</h4><p>Verified local helpers when the family is far away.</p></div></div>
+    </div>
+
+    <div class="feature-block" style="margin-top:1rem">
+      <div>
+        <span class="eyebrow"><svg><use href="#spark"/></svg>Everyday companion</span>
+        <h3 style="margin-top:1rem;font-size:clamp(2rem,4vw,3rem);line-height:.95">Reminders that sound like family.</h3>
+        <ul>
+          <li><svg><use href="#check"/></svg>“Maria, it is six o’clock. Time for your tablets.”</li>
+          <li><svg><use href="#check"/></svg>Confirms out loud, and tells Anna if a dose is missed.</li>
+          <li><svg><use href="#check"/></svg>Large captions of everything Lina says.</li>
+        </ul>
+        <a class="btn btn-ink" href="#components">Join the waitlist<svg><use href="#arrow"/></svg></a>
+      </div>
+      <div class="layer">
+        <img src="assets/tea.jpg" alt="Carer bringing tea to an older woman" loading="lazy" style="object-position:55% 50%">
+        <div class="fg">
+          <span class="eyebrow" style="font-size:.6875rem">Today</span>
+          <div class="remind done"><span>08:00 · Tablets</span><svg width="18" height="18"><use href="#check"/></svg></div>
+          <div class="remind"><span>18:00 · Tablets</span><span style="font-size:.8125rem">in 2 h</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ink-section" style="margin-top:1rem">
+      <div>
+        <span class="eyebrow" style="color:rgba(255,255,255,.7)"><svg><use href="#spark"/></svg>Safety</span>
+        <h3 style="margin:1rem 0">When something is wrong, the family knows in seconds.</h3>
+        <p>Three independent triggers: the voice assistant, a keyword safety net in code, and a red Help button that always works. Nonnina never calls 112 by itself; it makes 112 one tap away.</p>
+        <p style="margin-top:1rem;font-size:.875rem;color:rgba(255,255,255,.6)">Nonnina is not an emergency service and does not replace 112.</p>
+      </div>
+      <div class="alarm-screen">
+        <span class="display" style="color:#fff">Help is on the way.</span>
+        <span style="color:#FDE2DF">I have notified Anna and Thomas.</span>
+        <span class="b" style="background:#fff;color:var(--allarme)">Call 112</span>
+        <div class="row"><span class="b" style="border:2px solid rgba(255,255,255,.7);color:#fff">Call Anna</span><span class="b" style="background:rgba(255,255,255,.15);color:#fff">I am fine</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 VOICE ============ -->
+<section class="board" id="voice">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">10 · Voice and language</span>
+      <h2>Short sentences. Formal and kind.</h2>
+      <p>English leads the website, German and Italian are equal citizens. In the senior app we always use the formal form (Sie, Lei), one idea per sentence, and we never use technical words.</p>
+    </div>
+    <div class="voice-grid">
+      <div class="lang-card" style="background:var(--latte)">
+        <span class="flag">EN · Website default</span>
+        <span class="display">One button for Nonna. Peace of mind for the whole family.</span>
+        <dl>
+          <div><dt>Tagline</dt><dd>Never alone at home.</dd></div>
+          <div><dt>CTA</dt><dd>Join the waitlist</dd></div>
+          <div><dt>Safety line</dt><dd>When something is wrong, the family knows in seconds.</dd></div>
+          <div><dt>Disclaimer</dt><dd>Not an emergency service. In an emergency call 112.</dd></div>
+        </dl>
+      </div>
+      <div class="lang-card" style="background:var(--menta)">
+        <span class="flag">DE · Germany</span>
+        <span class="display">Ein Knopf für Oma. Ruhe für die ganze Familie.</span>
+        <dl>
+          <div><dt>Tagline</dt><dd>Nie allein zu Hause.</dd></div>
+          <div><dt>CTA</dt><dd>Auf die Warteliste</dd></div>
+          <div><dt>Senior app</dt><dd>Guten Morgen, Maria! · Tippen und sprechen · Hilfe</dd></div>
+          <div><dt>Disclaimer</dt><dd>Kein Notdienst. Im Notfall 112 anrufen.</dd></div>
+        </dl>
+      </div>
+      <div class="lang-card" style="background:var(--camomilla)">
+        <span class="flag">IT · Italy</span>
+        <span class="display">Un bottone per la nonna. Serenità per tutta la famiglia.</span>
+        <dl>
+          <div><dt>Tagline</dt><dd>Mai soli a casa.</dd></div>
+          <div><dt>CTA</dt><dd>Iscriviti alla lista d’attesa</dd></div>
+          <div><dt>Senior app</dt><dd>Buongiorno, Maria! · Tocca e parla · Aiuto</dd></div>
+          <div><dt>Disclaimer</dt><dd>Non è un servizio di emergenza. In caso di emergenza chiama il 112.</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="dodont">
+      <div class="card white"><h4>We say</h4><ul><li>“Anna has been notified.”</li><li>“Please do not stand up. Help is coming.”</li><li>“Your family will take care of it.”</li><li>“Orientation, not legal or medical advice.”</li></ul></div>
+      <div class="card white"><h4>We never say</h4><ul><li>“AI-powered smart elderly monitoring solution.”</li><li>“Don’t worry, no need to call 112.”</li><li>Statistics without a source.</li><li>Diminutives that talk down to older people.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 APP ============ -->
+<section class="board" id="app">
+  <div class="wrap">
+    <div class="head">
+      <span class="num">11 · Senior app</span>
+      <h2>The brand at 82 years old.</h2>
+      <p>On the tablet the brand becomes quieter: Latte background, Ink button, one Sole glow, red only for Help. 24 px minimum text, 88 px minimum touch targets, AAA contrast.</p>
+    </div>
+    <div class="tablet" aria-label="Senior tablet screen in the Nonnina brand">
+      <div class="tablet-screen">
+        <div class="ts-top">
+          <div><div class="display">Guten Morgen, Maria!</div><div class="date">Samstag, 7. November · <b>10:30</b></div></div>
+          <span class="ts-chip">Tabletten um 18:00</span>
+        </div>
+        <div class="talk"><div class="talk-inner"><svg><use href="#mic"/></svg>Tippen und sprechen</div></div>
+        <div class="ts-bottom"><span class="ok">✓ Anna ist verbunden</span><span class="help"><svg width="1em" height="1em"><use href="#phone"/></svg>Hilfe</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="end">
+  <div class="wrap">
+    <span class="wm-row" style="font-size:1.5rem"><svg class="mark"><use href="#mark"/></svg><span class="wm">Nonn<span class="i">ı<svg class="spark"><use href="#spark"/></svg></span>na</span></span>
+    <span>Brand identity v1.0 · Cursor x Sandbox Hackathon Stuttgart 2026 · Structural reference: grassfeld.com</span>
+    <span>Not an emergency service. In an emergency call 112.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // ---------- i18n for the examples ----------
+  var dict = {
+    en: {
+      tagline: "One button for Nonna. Peace of mind for the whole family.",
+      promise: "Never alone at home. Never in the dark for the family.",
+      mission: "Our mission: help older people live safely and happily in their own home for longer, with one button, a warm voice and a family that always knows what is going on.",
+      typeXL: "One button for Nonna.", typeH1: "Never alone at home.", typeH2: "When something is wrong, the family knows in seconds.", typeH3: "Reminders that sound like family",
+      lede: "Nonnina is a voice companion for older people who live at home. She talks, reminds and listens every day, and tells the family the moment something is wrong.",
+      navHow: "How it works", navSafety: "Safety", navFamily: "For families", navHelpers: "For helpers",
+      ctaShort: "Join the waitlist", cta: "Join the waitlist", cta2: "See how it works",
+      heroEyebrow: "Voice companion for older people at home",
+      heroH1a: "One button for Nonna.", heroH1b: "Peace of mind for the whole family.",
+      trust1: "No smartphone needed", trust2: "German & Italian", trust3: "Data stored in the EU",
+      cardVoice: "Lina is listening", cardVoiceSub: "“Have you taken your tablets, Maria?”",
+      cardAlert: "Anna was notified", cardAlertSub: "SMS sent 12 seconds after the call for help"
+    },
+    de: {
+      tagline: "Ein Knopf für Oma. Ruhe für die ganze Familie.",
+      promise: "Nie allein zu Hause. Nie im Ungewissen für die Familie.",
+      mission: "Unsere Mission: älteren Menschen helfen, länger sicher und glücklich zu Hause zu leben, mit einem Knopf, einer warmen Stimme und einer Familie, die immer weiß, was los ist.",
+      typeXL: "Ein Knopf für Oma.", typeH1: "Nie allein zu Hause.", typeH2: "Wenn etwas nicht stimmt, weiß es die Familie in Sekunden.", typeH3: "Erinnerungen, die nach Familie klingen",
+      lede: "Nonnina ist ein Sprachbegleiter für ältere Menschen, die zu Hause leben. Sie spricht, erinnert und hört jeden Tag zu und sagt der Familie sofort Bescheid, wenn etwas nicht stimmt.",
+      navHow: "So funktioniert’s", navSafety: "Sicherheit", navFamily: "Für Familien", navHelpers: "Für Helfer",
+      ctaShort: "Warteliste", cta: "Auf die Warteliste", cta2: "So funktioniert’s",
+      heroEyebrow: "Sprachbegleiter für ältere Menschen zu Hause",
+      heroH1a: "Ein Knopf für Oma.", heroH1b: "Ruhe für die ganze Familie.",
+      trust1: "Kein Smartphone nötig", trust2: "Deutsch & Italienisch", trust3: "Daten in der EU",
+      cardVoice: "Lina hört zu", cardVoiceSub: "„Haben Sie Ihre Tabletten genommen, Maria?“",
+      cardAlert: "Anna wurde benachrichtigt", cardAlertSub: "SMS 12 Sekunden nach dem Hilferuf gesendet"
+    },
+    it: {
+      tagline: "Un bottone per la nonna. Serenità per tutta la famiglia.",
+      promise: "Mai soli a casa. Mai all’oscuro per la famiglia.",
+      mission: "La nostra missione: aiutare le persone anziane a vivere più a lungo, sicure e serene, a casa loro, con un bottone, una voce calda e una famiglia che sa sempre cosa succede.",
+      typeXL: "Un bottone per la nonna.", typeH1: "Mai soli a casa.", typeH2: "Quando qualcosa non va, la famiglia lo sa in pochi secondi.", typeH3: "Promemoria con la voce di casa",
+      lede: "Nonnina è una compagna vocale per le persone anziane che vivono a casa. Parla, ricorda e ascolta ogni giorno, e avvisa la famiglia nel momento in cui qualcosa non va.",
+      navHow: "Come funziona", navSafety: "Sicurezza", navFamily: "Per le famiglie", navHelpers: "Per chi aiuta",
+      ctaShort: "Lista d’attesa", cta: "Iscriviti alla lista d’attesa", cta2: "Scopri come funziona",
+      heroEyebrow: "Compagna vocale per gli anziani a casa",
+      heroH1a: "Un bottone per la nonna.", heroH1b: "Serenità per tutta la famiglia.",
+      trust1: "Nessuno smartphone", trust2: "Tedesco e italiano", trust3: "Dati nell’UE",
+      cardVoice: "Lina sta ascoltando", cardVoiceSub: "«Ha preso le pastiglie, Maria?»",
+      cardAlert: "Anna è stata avvisata", cardAlertSub: "SMS inviato 12 secondi dopo la richiesta di aiuto"
+    }
+  };
+  function setLang(lang) {
+    var d = dict[lang] || dict.en;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n");
+      if (d[k]) el.textContent = d[k];
+    });
+    document.querySelectorAll("[data-lang-label]").forEach(function (el) { el.textContent = lang.toUpperCase(); });
+    document.querySelectorAll(".topbar .lang button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
+    document.documentElement.lang = lang;
+    try { localStorage.setItem("nonnina.brand.lang", lang); } catch (e) {}
+  }
+  document.querySelectorAll(".topbar .lang button").forEach(function (b) {
+    b.addEventListener("click", function () { setLang(b.dataset.lang); });
+  });
+  try { var saved = localStorage.getItem("nonnina.brand.lang"); if (saved && dict[saved]) setLang(saved); } catch (e) {}
+
+  // ---------- live contrast ratios ----------
+  function lum(hex) {
+    var c = hex.replace("#", "").match(/.{2}/g).map(function (x) {
+      var v = parseInt(x, 16) / 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+  function ratio(a, b) { var l1 = lum(a), l2 = lum(b); return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05); }
+  function grade(r) { return r >= 7 ? "AAA" : r >= 4.5 ? "AA" : r >= 3 ? "AA large" : "decorative"; }
+  document.querySelectorAll(".swatch[data-hex]").forEach(function (s) {
+    var hex = s.getAttribute("data-hex");
+    var w = ratio(hex, "#FFFFFF"), k = ratio(hex, "#202128");
+    s.querySelector(".cr").textContent = "vs white " + w.toFixed(1) + ":1 " + grade(w) + " · vs Ink " + k.toFixed(1) + ":1 " + grade(k);
+  });
+})();
+</script>
+</body>
+</html>

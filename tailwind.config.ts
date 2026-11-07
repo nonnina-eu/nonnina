@@ -1,97 +1,44 @@
 import type { Config } from "tailwindcss";
-import animate from "tailwindcss-animate";
 
+/** Nonnina brand tokens – see brand/nonnina-brand-identity.html */
 export default {
-  darkMode: ["class"],
-  content: [
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
-    container: {
-      center: true,
-      padding: "1.25rem",
-      screens: { "2xl": "1200px" },
-    },
     extend: {
-      fontFamily: {
-        sans: ["var(--font-manrope)", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "var(--font-manrope)", "ui-sans-serif", "sans-serif"],
-      },
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        success: "hsl(var(--success))",
-        warning: "hsl(var(--warning))",
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        ink: "#202128",
+        graphite: "#343A46",
+        muted: "#5B6474",
+        line: "#E4E7EE",
+        latte: "#FAF6F0",
+        mist: "#F5F7FB",
+        sole: { DEFAULT: "#F4B740", deep: "#8A5A00" },
+        camomilla: "#FFF3E2",
+        menta: "#DFF1F3",
+        salvia: "#E9F3DF",
+        glicine: "#E7E3FF",
+        cielo: "#DDECFD",
+        allarme: { DEFAULT: "#B42318", soft: "#FEF3F2" },
+        bene: "#0E7A36",
+        link: "#3B5BD6",
+      },
+      fontFamily: {
+        display: ["var(--font-display)", "Arial Narrow", "sans-serif"],
+        sans: ["var(--font-sans)", "Arial", "sans-serif"],
       },
       borderRadius: {
-        "3xl": "1.75rem",
-        "2xl": "1.5rem",
-        xl: "var(--radius)",
-        lg: "calc(var(--radius) - 4px)",
-        md: "calc(var(--radius) - 8px)",
-        sm: "calc(var(--radius) - 12px)",
+        xs: "0.5rem",
+        sm: "0.75rem",
+        md: "1rem",
+        lg: "1.25rem",
+        xl: "2rem",
       },
+      maxWidth: { site: "90rem" },
       boxShadow: {
-        soft: "0 10px 30px -14px hsl(222 47% 11% / 0.14)",
-        glow: "0 10px 24px -8px hsl(218 92% 57% / 0.55)",
-      },
-      keyframes: {
-        breathe: {
-          "0%, 100%": { transform: "scale(1)", opacity: "0.55" },
-          "50%": { transform: "scale(1.08)", opacity: "0.9" },
-        },
-        "fade-up": {
-          from: { opacity: "0", transform: "translateY(12px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-      },
-      animation: {
-        breathe: "breathe 4s ease-in-out infinite",
-        "fade-up": "fade-up 0.6s ease-out both",
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        float: "0 24px 60px -24px rgba(32,33,40,.35)",
+        device: "0 30px 70px -30px rgba(32,33,40,.5)",
       },
     },
   },
-  plugins: [animate],
+  plugins: [],
 } satisfies Config;

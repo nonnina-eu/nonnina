@@ -2,121 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-  Design tokens – derived from the UI reference (ADA health landing):
-  airy white canvas, a soft sky-blue glow, one saturated brand blue,
-  glossy pill buttons, generous radii and very soft shadows.
-*/
 @layer base {
-  :root {
-    --background: 210 60% 99%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 218 92% 52%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 214 100% 96%;
-    --secondary-foreground: 218 92% 40%;
-    --muted: 214 40% 96%;
-    --muted-foreground: 215 16% 40%;
-    --accent: 214 100% 94%;
-    --accent-foreground: 218 92% 40%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-    --success: 142 72% 35%;
-    --warning: 32 95% 44%;
-    --border: 214 32% 90%;
-    --input: 214 32% 88%;
-    --ring: 218 92% 57%;
-    --radius: 1.25rem;
-
-    /* brand gradient / glow */
-    --brand-glow: 218 92% 57%;
-    --sky-glow: 212 100% 92%;
-  }
-
-  * {
-    @apply border-border;
-  }
-
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
   }
-
   body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    @apply bg-white font-sans text-ink antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
   }
-
-  ::selection {
-    background: hsl(var(--primary) / 0.18);
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display), "Arial Narrow", sans-serif;
+    font-stretch: 75%;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-optical-sizing: auto;
   }
-
+  ::selection { background: rgba(244, 183, 64, 0.35); }
+  :focus-visible { outline: 2px solid #3B5BD6; outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 }
 
 @layer components {
-  /* The glossy pill button from the reference image */
-  .btn-glossy {
-    background-image: linear-gradient(
-      180deg,
-      hsl(214 100% 72%) 0%,
-      hsl(218 92% 57%) 55%,
-      hsl(220 90% 50%) 100%
-    );
-    box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.45),
-      0 10px 24px -8px hsl(var(--brand-glow) / 0.55);
-  }
-  .btn-glossy:hover {
-    box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.45),
-      0 14px 30px -8px hsl(var(--brand-glow) / 0.65);
-  }
+  .wrap { @apply mx-auto w-full max-w-site px-4 sm:px-6 lg:px-16; }
+  .eyebrow { @apply inline-flex items-center gap-2 text-[0.8125rem] font-extrabold uppercase tracking-[0.08em] text-graphite; }
+  .h-section { @apply text-[2.25rem] leading-[0.98] sm:text-5xl lg:text-[3.5rem]; }
+  .lede { @apply text-lg leading-relaxed text-muted sm:text-[1.1875rem]; }
+  .btn { @apply inline-flex min-h-[3.25rem] items-center justify-center gap-2 rounded-xs border-[1.5px] border-transparent px-7 py-3.5 text-base font-bold leading-none tracking-[0.01em] transition duration-200; }
+  .btn-ink { @apply bg-ink text-white hover:-translate-y-px hover:bg-black; }
+  .btn-outline { @apply border-ink bg-white text-ink hover:bg-mist; }
+  .btn-sole { @apply bg-sole text-ink hover:brightness-95; }
+  .btn-sm { @apply min-h-[2.5rem] px-4 py-2.5 text-sm; }
+  .pill { @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-[0.8125rem] font-bold; }
+  .card-float { @apply rounded-lg bg-white p-4 shadow-float; }
 
-  .card-soft {
-    @apply rounded-[var(--radius)] border border-border/70 bg-card;
-    box-shadow: 0 10px 30px -14px hsl(222 47% 11% / 0.14);
-  }
+  /* Wordmark: the spark replaces the dot of the i */
+  .wm { font-family: var(--font-display), sans-serif; font-stretch: 75%; font-weight: 800; letter-spacing: -0.012em; line-height: 1; white-space: nowrap; display: inline-flex; align-items: baseline; }
+  .wm-i { position: relative; display: inline-block; }
+  .wm-spark { position: absolute; left: 50%; top: 0.02em; width: 0.3em; height: 0.3em; transform: translateX(-50%); fill: #F4B740; }
 
-  .sky-glow {
-    background:
-      radial-gradient(60% 50% at 50% 100%, hsl(var(--sky-glow)) 0%, transparent 70%),
-      radial-gradient(40% 30% at 20% 10%, hsl(214 100% 96%) 0%, transparent 60%);
-  }
+  /* Reveal on scroll (progressive enhancement: visible without JS) */
+  .js .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
+  .js .reveal.is-in { opacity: 1; transform: none; }
+  .reveal-d1 { transition-delay: .08s !important; }
+  .reveal-d2 { transition-delay: .16s !important; }
+  .reveal-d3 { transition-delay: .24s !important; }
 
-  .text-balance {
-    text-wrap: balance;
-  }
+  .wave i { width: 4px; border-radius: 4px; background: #202128; animation: wave 1.1s ease-in-out infinite; }
+  .wave i:nth-child(2) { animation-delay: .1s } .wave i:nth-child(3) { animation-delay: .2s } .wave i:nth-child(4) { animation-delay: .3s }
+  .wave i:nth-child(5) { animation-delay: .4s } .wave i:nth-child(6) { animation-delay: .5s } .wave i:nth-child(7) { animation-delay: .6s }
+  .twinkle { animation: twinkle 3.2s ease-in-out infinite; }
 
-  /* Marketing shell derived from the Grassfeld layout. Senior screens keep the tokens above. */
-  .site {
-    --foreground: 230 10% 14%;
-    --muted-foreground: 220 9% 42%;
-    --border: 200 10% 90%;
-    --secondary: 220 33% 97%;
-    background: #fff;
-    color: #202128;
-  }
-
-  .site :is(h1, h2) {
-    font-family: var(--font-display), var(--font-manrope), sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 0.92;
-  }
+  details.faq > summary { list-style: none; }
+  details.faq > summary::-webkit-details-marker { display: none; }
+  details.faq[open] .faq-icon { transform: rotate(45deg); }
 }
+
+@keyframes wave { 0%, 100% { height: 6px } 50% { height: 24px } }
+@keyframes twinkle { 0%, 100% { transform: scale(1) rotate(0); opacity: 1 } 50% { transform: scale(.82) rotate(12deg); opacity: .75 } }
