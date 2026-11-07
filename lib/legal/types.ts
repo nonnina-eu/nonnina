@@ -17,7 +17,7 @@ export interface LegalDoc {
   sections: LegalSection[];
 }
 
-export const LEGAL_DOCS = ["privacy", "terms", "cookies"] as const;
+export const LEGAL_DOCS = ["privacy", "terms", "cookies", "impressum"] as const;
 export type LegalDocId = (typeof LEGAL_DOCS)[number];
 
 /** Labels shared by every legal page in one language. */

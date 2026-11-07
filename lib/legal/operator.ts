@@ -14,6 +14,12 @@ export const operator = {
   email: "TODO: privacy@nonnina.eu",
   /** Data protection officer, if one has been appointed (null if not required). */
   dpoEmail: null as string | null,
+  /** Legal representative(s), e.g. the managing director of a UG/GmbH (null if not applicable). Impressum, § 5 DDG. */
+  representative: null as string | null,
+  /** VAT identification number under § 27a UStG (null if none). Impressum, § 5 DDG. */
+  vatId: null as string | null,
+  /** Person responsible for editorial content under § 18(2) MStV: a natural person, with address. */
+  contentResponsible: "TODO: full name of the person responsible for content",
   /** Supervisory authority for the operator's seat (e.g. LfDI Baden-Württemberg for Stuttgart). */
   supervisoryAuthority: "TODO: data protection authority of the federal state where the operator is based",
   /** How long waitlist sign-ups are kept at most. */
