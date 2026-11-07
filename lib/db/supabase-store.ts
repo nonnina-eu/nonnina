@@ -317,7 +317,12 @@ export class SupabaseStore implements Store {
 
   /** numeric columns come back as strings from PostgREST. */
   private helperRow(row: Helper): Helper {
-    return { ...row, hourly_rate_eur: row.hourly_rate_eur === null ? null : Number(row.hourly_rate_eur) };
+    return {
+      ...row,
+      hourly_rate_eur: row.hourly_rate_eur === null ? null : Number(row.hourly_rate_eur),
+      photo_url: row.photo_url ?? null,
+      is_demo: row.is_demo ?? false,
+    };
   }
 
   async listHelpers(filter: HelperFilter = {}): Promise<PublicHelper[]> {

@@ -170,6 +170,10 @@ export interface Helper {
   /** Set by a human on the Nonnina team, never automatically. */
   verified: boolean;
   active: boolean;
+  /** Public profile photo: a path under /public (e.g. "/helpers/lucia-romano.jpg") or an absolute URL. null = initials. */
+  photo_url: string | null;
+  /** Seeded showcase profile (0006); the directory labels it "Demo profile". */
+  is_demo: boolean;
   created_at: string;
 }
 
@@ -212,5 +216,10 @@ export type NewSenior = Omit<Senior, "id" | "created_at" | "device_token"> & { d
 export type NewRelative = Omit<Relative, "id">;
 export type NewVoiceSession = Omit<VoiceSession, "id" | "created_at">;
 export type NewWaitlistEntry = Omit<WaitlistEntry, "id" | "created_at">;
-export type NewHelper = Omit<Helper, "id" | "created_at" | "verified" | "active"> & { verified?: boolean; active?: boolean };
+export type NewHelper = Omit<Helper, "id" | "created_at" | "verified" | "active" | "photo_url" | "is_demo"> & {
+  verified?: boolean;
+  active?: boolean;
+  photo_url?: string | null;
+  is_demo?: boolean;
+};
 export type NewHelperRequest = Omit<HelperRequest, "id" | "created_at" | "updated_at" | "status" | "notified">;

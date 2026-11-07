@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Clock, HeartHandshake, MapPin } from "lucide-react";
+import { BadgeCheck, Clock, FlaskConical, HeartHandshake, MapPin } from "lucide-react";
 import type { HelperService, PublicHelper } from "@/lib/db/types";
 import { formatRate, marketplaceT, type MarketplaceLocale } from "@/lib/i18n/marketplace";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,49 @@ export function VerifiedBadge({ verified, locale }: { verified: boolean; locale:
     <Badge variant="outline">
       <Clock className="size-3.5" aria-hidden /> {t.notVerified}
     </Badge>
+  );
+}
+
+/** Small "Demo profile" label for seeded showcase profiles (helpers.is_demo). */
+export function DemoProfileBadge({ isDemo, locale }: { isDemo: boolean; locale: MarketplaceLocale }) {
+  if (!isDemo) return null;
+  const t = marketplaceT(locale).common;
+  return (
+    <Badge variant="warning" title={t.demoProfileHint}>
+      <FlaskConical className="size-3.5" aria-hidden /> {t.demoProfile}
+    </Badge>
+  );
+}
+
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  const letters = parts.length > 1 ? [parts[0][0], parts[parts.length - 1][0]] : [parts[0]?.[0] ?? "?"];
+  return letters.join("").toUpperCase();
+}
+
+/** Round profile photo, or the helper's initials when there is no photo. */
+export function HelperAvatar({ helper, size = 64, className }: { helper: Pick<PublicHelper, "name" | "photo_url">; size?: number; className?: string }) {
+  if (helper.photo_url) {
+    return (
+      <Image
+        src={helper.photo_url}
+        alt={helper.name}
+        width={size}
+        height={size}
+        sizes={`${size}px`}
+        className={cn("shrink-0 rounded-full border border-line object-cover", className)}
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  return (
+    <span
+      aria-hidden
+      className={cn("inline-flex shrink-0 select-none items-center justify-center rounded-full bg-glicine font-display text-ink", className)}
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.38) }}
+    >
+      {initials(helper.name)}
+    </span>
   );
 }
 
@@ -53,8 +97,9 @@ export function HelperCard({ helper, locale, href, highlight }: { helper: Public
   const t = marketplaceT(locale);
   return (
     <article className="relative flex h-full flex-col rounded-xl border border-line bg-white p-5 shadow-soft">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
+      <div className="flex items-start gap-4">
+        <HelperAvatar helper={helper} size={64} />
+        <div className="min-w-0 flex-1">
           <h2 className="font-display text-2xl leading-tight text-ink">
             <Link href={href} className="after:absolute after:inset-0 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sole">
               {helper.name}
@@ -63,8 +108,11 @@ export function HelperCard({ helper, locale, href, highlight }: { helper: Public
           <p className="mt-1 text-sm text-muted">
             {t.kinds[helper.kind]} · <MapPin className="inline size-3.5 align-[-2px]" aria-hidden /> {helper.city}
           </p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <VerifiedBadge verified={helper.verified} locale={locale} />
+            <DemoProfileBadge isDemo={helper.is_demo} locale={locale} />
+          </div>
         </div>
-        <VerifiedBadge verified={helper.verified} locale={locale} />
       </div>
       <p className="mt-3 line-clamp-3 text-sm text-ink">{helper.bio}</p>
       <div className="mt-4">

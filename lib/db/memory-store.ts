@@ -314,7 +314,15 @@ export class MemoryStore implements Store {
   }
 
   async createHelper(input: NewHelper): Promise<Helper> {
-    const helper: Helper = { id: randomUUID(), ...input, verified: input.verified ?? false, active: input.active ?? true, created_at: now() };
+    const helper: Helper = {
+      id: randomUUID(),
+      ...input,
+      verified: input.verified ?? false,
+      active: input.active ?? true,
+      photo_url: input.photo_url ?? null,
+      is_demo: input.is_demo ?? false,
+      created_at: now(),
+    };
     market().helpers.push(helper);
     return helper;
   }
