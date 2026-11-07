@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FastForward, Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { escalateDemoAction, resetDemoAction } from "@/app/(product)/demo/actions";
 
 function reloadFrames() {
   document.querySelectorAll<HTMLIFrameElement>("iframe[data-demo-frame]").forEach((f) => {
@@ -15,7 +16,7 @@ export function ResetDemoButton() {
   async function reset() {
     setBusy(true);
     try {
-      await fetch("/api/demo/reset", { method: "POST" });
+      await resetDemoAction();
       reloadFrames();
     } finally {
       setBusy(false);
@@ -36,9 +37,7 @@ export function AdvanceLadderButton() {
   async function advance() {
     setBusy(true);
     try {
-      const res = await fetch("/api/demo/escalate", { method: "POST" });
-      const json = (await res.json()) as { ok: boolean; processed?: { action: string }[] };
-      const action = json.processed?.[0]?.action;
+      const { action } = await escalateDemoAction();
       setLast(action ? action.replace(/_/g, " ") : "nothing due");
     } finally {
       setBusy(false);
