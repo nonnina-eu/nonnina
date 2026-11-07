@@ -111,8 +111,8 @@ const product = (
             "Lina’s tools create real events: emergency, help request, reminder",
             "Post-call summary, mood and “needs a person” saved via webhook",
             "SMS and call with “press 1 to confirm” (Twilio), escalation every 90 s",
-            "Family login, onboarding, QR code to link the tablet",
-            "EU data storage, summaries only, no voice recordings kept",
+            "Family dashboard: login, QR code for the tablet, 131 € relief-budget tracker",
+            "Marketplace of verified local helpers · EU data, no recordings kept",
           ].map((x) => (
             <li key={x} className="flex items-start gap-3"><CheckBadge className="mt-0.5 size-6 shrink-0" />{x}</li>
           ))}
@@ -146,8 +146,8 @@ const gtm = (
       </div>
     </div>
     <div className="mt-8 flex items-center gap-6 rounded-[22px] border-2 border-dashed border-ink/20 px-8 py-6">
-      <p className="w-[220px] shrink-0 font-display text-[28px] leading-none">What we ask families today</p>
-      <p className="text-[21px] leading-snug text-graphite">“The last time you were not sure your parent was OK, what did you do?” · “Would you pay €19 a month for this?”</p>
+      <p className="w-[220px] shrink-0 font-display text-[28px] leading-none">What care providers told us, 7 Nov</p>
+      <p className="text-[20px] leading-snug text-graphite">3 conversations in Stuttgart (assisted living, 2 home-care services): every day carers get asked about the TV, a letter, shopping. Strangers are the blocker, so relatives have to organise. → help requests, verified helpers, relief-budget tracker.</p>
     </div>
     <Source>Price comparison in docs/07-pricing.md: call-centre Hausnotruf €27–45/month, family-response systems from €19.95/month. No reimbursement is claimed.</Source>
   </Frame>
@@ -172,9 +172,9 @@ const whyUs = (
       </div>
       <div className="grid content-start gap-4">
         {[
-          ["Today", "Voice companion, emergency loop, escalation ladder, family login"],
+          ["Today", "Voice companion, emergency loop, family dashboard, helpers marketplace, relief budget"],
           ["Pilot", "First Stuttgart families; we measure time from alert to “I’m on it”"],
-          ["Next", "Care-insurance paperwork step by step, verified local helpers, Italy"],
+          ["Next", "Care-insurance paperwork step by step, provider subscriptions, Italy"],
         ].map(([k, v]) => (
           <div key={k} className="flex items-center gap-5 rounded-[20px] bg-white/[0.07] p-5 ring-1 ring-white/10">
             <span className="w-28 shrink-0 font-display text-[28px] leading-none text-sole">{k}</span>
