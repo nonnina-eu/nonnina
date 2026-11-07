@@ -21,27 +21,18 @@ export function Mark({ className, light = false }: { className?: string; light?:
   );
 }
 
-/** "Nonnina" wordmark – the spark replaces the dot of the i. Text stays real for screen readers. */
-export function Wordmark({ className }: { className?: string }) {
+/**
+ * The logo: the symbol takes the place of the "N", followed by "onnina".
+ * The spark lives in the symbol, so the "i" keeps its normal dot.
+ */
+export function Logo({ className, light = false }: { className?: string; light?: boolean }) {
   return (
-    <span className={cn("wm", className)} aria-label="Nonnina" role="img">
-      <span aria-hidden="true">Nonn</span>
-      <span className="wm-i" aria-hidden="true">
-        ı
-        <svg viewBox="0 0 20 20" className="wm-spark">
-          <path d={SPARK} />
-        </svg>
-      </span>
-      <span aria-hidden="true">na</span>
+    <span role="img" aria-label="Nonnina" className={cn("wm inline-flex items-baseline", light ? "text-white" : "text-ink", className)}>
+      <Mark light={light} className="mr-[0.05em] h-[0.7em] w-[0.7em] self-baseline" />
+      <span aria-hidden="true">onnina</span>
     </span>
   );
 }
 
-export function Logo({ className, light = false }: { className?: string; light?: boolean }) {
-  return (
-    <span className={cn("inline-flex items-center gap-[0.32em]", className)}>
-      <Mark className="h-[1.05em] w-[1.05em]" light={light} />
-      <Wordmark className={light ? "text-white" : "text-ink"} />
-    </span>
-  );
-}
+/** Kept for existing imports: same as Logo. */
+export const Wordmark = Logo;

@@ -42,10 +42,8 @@
   .pill { @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-sm font-bold; }
   .card-float { @apply rounded-lg bg-white p-4 shadow-float; }
 
-  /* Wordmark: the spark replaces the dot of the i */
+  /* Logo: the symbol replaces the N */
   .wm { font-family: var(--font-display), sans-serif; font-stretch: 75%; font-weight: 800; letter-spacing: -0.012em; line-height: 1; white-space: nowrap; display: inline-flex; align-items: baseline; }
-  .wm-i { position: relative; display: inline-block; }
-  .wm-spark { position: absolute; left: 50%; top: 0.02em; width: 0.3em; height: 0.3em; transform: translateX(-50%); fill: #F4B740; }
 
   /* Reveal on scroll (progressive enhancement: visible without JS) */
   .js .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
