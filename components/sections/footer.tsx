@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Logo } from "../brand";
 import { LanguageSwitcher } from "../language-switcher";
 import { localePath, type Dictionary, type Locale } from "@/lib/i18n";
@@ -23,7 +24,7 @@ export function Footer({ t, nav, locale, cookies }: { t: Dictionary["footer"]; n
           <a href={`${home}#safety`} className="text-muted hover:text-ink">{nav.safety}</a>
           <a href={`${home}#families`} className="text-muted hover:text-ink">{nav.families}</a>
           <a href={`${home}#helpers`} className="text-muted hover:text-ink">{nav.helpers}</a>
-          <a href={appDemoUrl()} className="text-muted hover:text-ink" rel="noopener">{t.demo}</a>
+          <Link href={appDemoUrl()} className="text-muted hover:text-ink" rel="noopener">{t.demo}</Link>
         </nav>
         <div className="grid content-start gap-2.5 text-[0.9375rem]">
           <p className="mb-1 font-extrabold">{t.company}</p>

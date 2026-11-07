@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Spark } from "../brand";
 import { ArrowRight, CheckBadge } from "../icons";
 import type { Dictionary } from "@/lib/i18n";
@@ -15,8 +16,8 @@ export function Marketplace({ t }: { t: Dictionary["marketplace"] }) {
           <h2 id="marketplace-title" className="mt-4 text-balance text-[2.25rem] leading-[1.02] sm:text-5xl">{t.title}</h2>
           <p className="lede mt-4">{t.lede}</p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a href={appHelpersUrl()} className="btn btn-ink">{t.browse}<ArrowRight className="size-[18px]" /></a>
-            <a href={appHelpersUrl("/join")} className="btn btn-outline">{t.offer}</a>
+            <Link href={appHelpersUrl()} className="btn btn-ink">{t.browse}<ArrowRight className="size-[18px]" /></Link>
+            <Link href={appHelpersUrl("/join")} className="btn btn-outline">{t.offer}</Link>
           </div>
           <p className="mt-5 flex items-start gap-2 text-sm text-muted"><CheckBadge className="mt-0.5 size-4 shrink-0" />{t.note}</p>
         </div>

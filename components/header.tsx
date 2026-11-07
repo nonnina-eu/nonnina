@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "./brand";
 import { Close, MenuIcon } from "./icons";
@@ -58,7 +59,7 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher current={locale} label={t.language} className="hidden sm:inline-flex" />
-          <a href="/demo" className="btn btn-ink btn-sm hidden md:inline-flex">{t.demo}</a>
+          <Link href="/demo" className="btn btn-ink btn-sm hidden md:inline-flex">{t.demo}</Link>
           <a href="#waitlist" className="btn btn-outline btn-sm hidden xl:inline-flex">{t.cta}</a>
           <button
             ref={btnRef}
@@ -81,7 +82,7 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
             <LanguageSwitcher current={locale} label={t.language} />
             <div className="flex gap-2">
-              <a href="/demo" className="btn btn-ink btn-sm">{t.demo}</a>
+              <Link href="/demo" className="btn btn-ink btn-sm">{t.demo}</Link>
               <a href="#waitlist" onClick={() => setOpen(false)} className="btn btn-outline btn-sm">{t.cta}</a>
             </div>
           </div>
