@@ -79,6 +79,27 @@ export function spokenEmergencyText(senior: Senior, event: Pick<EmergencyEvent, 
   return `Hier ist Nonnina. ${senior.first_name} in ${senior.city} braucht Hilfe. Sie sagte: "${said}". Drücken Sie die 1, wenn Sie sich kümmern. Sonst rufen wir die nächste Person an.`;
 }
 
+/** False for localhost / private hosts, which Twilio cannot reach. */
+export function isPublicUrl(url: string): boolean {
+  try {
+    const host = new URL(url).hostname;
+    return !(host === "localhost" || host === "127.0.0.1" || host.endsWith(".local") || /^(10|192\.168|172\.(1[6-9]|2\d|3[01]))\./.test(host));
+  } catch {
+    return false;
+  }
+}
+
+function escapeXml(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+}
+
+/** Self-contained call script for local runs: the message twice, no key press. */
+export function inlineCallTwiml(text: string, language: Senior["language"]): string {
+  const lang = language === "it" ? "it-IT" : "de-DE";
+  const say = `<Say language="${lang}">${escapeXml(text)}</Say>`;
+  return `<Response>${say}<Pause length="1"/>${say}</Response>`;
+}
+
 export function voiceWebhookUrl(eventId: string, relativeId: string, language: Senior["language"]): string {
   const u = new URL(`${env.appUrl()}/api/twilio/voice`);
   u.searchParams.set("event", eventId);
@@ -108,13 +129,12 @@ export async function callRelativeWithGather(input: {
   try {
     const twilio = (await import("twilio")).default;
     const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-    const call = await client.calls.create({
-      to,
-      from: process.env.TWILIO_FROM_NUMBER!,
-      url: voiceWebhookUrl(event.id, relativeId, senior.language),
-      method: "POST",
-      timeout: 25,
-    });
+    const from = process.env.TWILIO_FROM_NUMBER!;
+    // Twilio must fetch the TwiML from a public URL. On localhost it cannot, so the call carries its
+    // own TwiML: it rings and speaks the message twice, but "press 1" needs a public URL.
+    const call = isPublicUrl(env.appUrl())
+      ? await client.calls.create({ to, from, url: voiceWebhookUrl(event.id, relativeId, senior.language), method: "POST", timeout: 25 })
+      : await client.calls.create({ to, from, twiml: inlineCallTwiml(text, senior.language), timeout: 25 });
     return { ...base, channel: "call", status: "sent", detail: call.sid };
   } catch (e) {
     return { ...base, channel: "call", status: "failed", detail: errorMessage(e) };
