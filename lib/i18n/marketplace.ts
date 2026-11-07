@@ -22,7 +22,7 @@ export interface MarketplaceStrings {
   kinds: Record<HelperKind, string>;
   languages: Record<string, string>;
   status: Record<HelperRequestStatus, string>;
-  common: { verified: string; notVerified: string; volunteer: string; free: string; perHour: (eur: string) => string; back: string; demoNote: string; demoProfile: string; demoProfileHint: string };
+  common: { verified: string; notVerified: string; volunteer: string; free: string; perHour: (eur: string) => string; back: string; demoNote: string; demoProfile: string; demoProfileHint: string; reliefEligible: string; reliefEligibleHint: string };
   directory: {
     eyebrow: string;
     title: string;
@@ -141,6 +141,17 @@ export interface MarketplaceStrings {
     declinedHint: string;
   };
   feed: { findHelper: string };
+  /** "Mark as done" form (helper on /helpers/me, family on /app). */
+  complete: {
+    open: string;
+    date: string;
+    hours: string;
+    amount: string;
+    amountHint: (suggested: string) => string;
+    submit: string;
+    invalid: string;
+    summary: (args: { date: string; hours: string; amount: string }) => string;
+  };
   sms: {
     newRequest: (args: { senior: string; city: string; service: string; url: string }) => string;
     accepted: (args: { helper: string; senior: string; service: string; url: string }) => string;
@@ -178,6 +189,8 @@ const en: MarketplaceStrings = {
     demoNote: "Demo mode: notifications are shown here instead of being sent.",
     demoProfile: "Demo profile",
     demoProfileHint: "Fictional example profile to show how Nonnina works. This person does not exist.",
+    reliefEligible: "Payable via relief amount (131 €)",
+    reliefEligibleHint: "Recognised offer: with care level 1 or higher the care insurance reimburses it from the relief amount (Entlastungsbetrag, 131 € per month).",
   },
   directory: {
     eyebrow: "Nonnina helpers",
@@ -320,6 +333,16 @@ const en: MarketplaceStrings = {
     declinedHint: "Not available – try another helper.",
   },
   feed: { findHelper: "Find a helper" },
+  complete: {
+    open: "Record as done",
+    date: "Date of the service",
+    hours: "Hours",
+    amount: "Amount (€)",
+    amountHint: (suggested) => `Leave empty for hours × hourly rate (${suggested}).`,
+    submit: "Save as done",
+    invalid: "Please check date, hours and amount.",
+    summary: ({ date, hours, amount }) => `Done on ${date} · ${hours} h · ${amount}`,
+  },
   sms: {
     newRequest: ({ senior, city, service, url }) => `Nonnina: New request – ${service} for ${senior} in ${city}. Accept or decline: ${url}`,
     accepted: ({ helper, senior, service, url }) => `Nonnina: ${helper} accepted your request (${service} for ${senior}). Contact: ${url}`,
@@ -357,6 +380,8 @@ const de: MarketplaceStrings = {
     demoNote: "Demo-Modus: Benachrichtigungen werden hier angezeigt statt verschickt.",
     demoProfile: "Demo-Profil",
     demoProfileHint: "Erfundenes Beispielprofil, um zu zeigen, wie Nonnina funktioniert. Diese Person gibt es nicht.",
+    reliefEligible: "Über Entlastungsbetrag abrechenbar (131 €)",
+    reliefEligibleHint: "Anerkanntes Angebot: Ab Pflegegrad 1 erstattet die Pflegekasse die Kosten aus dem Entlastungsbetrag (131 € im Monat).",
   },
   directory: {
     eyebrow: "Nonnina Helfer",
@@ -499,6 +524,16 @@ const de: MarketplaceStrings = {
     declinedHint: "Nicht verfügbar – fragen Sie eine andere Hilfe.",
   },
   feed: { findHelper: "Hilfe finden" },
+  complete: {
+    open: "Als erledigt erfassen",
+    date: "Datum des Einsatzes",
+    hours: "Stunden",
+    amount: "Betrag (€)",
+    amountHint: (suggested) => `Leer lassen für Stunden × Stundensatz (${suggested}).`,
+    submit: "Als erledigt speichern",
+    invalid: "Bitte Datum, Stunden und Betrag prüfen.",
+    summary: ({ date, hours, amount }) => `Erledigt am ${date} · ${hours} Std. · ${amount}`,
+  },
   sms: {
     newRequest: ({ senior, city, service, url }) => `Nonnina: Neue Anfrage – ${service} für ${senior} in ${city}. Annehmen oder ablehnen: ${url}`,
     accepted: ({ helper, senior, service, url }) => `Nonnina: ${helper} hat Ihre Anfrage angenommen (${service} für ${senior}). Kontakt: ${url}`,
@@ -536,6 +571,8 @@ const it: MarketplaceStrings = {
     demoNote: "Modalità demo: le notifiche vengono mostrate qui invece di essere inviate.",
     demoProfile: "Profilo demo",
     demoProfileHint: "Profilo di esempio inventato per mostrare come funziona Nonnina. Questa persona non esiste.",
+    reliefEligible: "Pagabile con l'importo di sgravio (131 €)",
+    reliefEligibleHint: "Offerta riconosciuta: dal grado di assistenza 1 la cassa di assistenza rimborsa il costo dall'importo di sgravio (Entlastungsbetrag, 131 € al mese).",
   },
   directory: {
     eyebrow: "Aiutanti Nonnina",
@@ -678,6 +715,16 @@ const it: MarketplaceStrings = {
     declinedHint: "Non disponibile – prova un altro aiutante.",
   },
   feed: { findHelper: "Trova un aiutante" },
+  complete: {
+    open: "Registra come completata",
+    date: "Data del servizio",
+    hours: "Ore",
+    amount: "Importo (€)",
+    amountHint: (suggested) => `Lascia vuoto per ore × tariffa oraria (${suggested}).`,
+    submit: "Salva come completata",
+    invalid: "Controlla data, ore e importo.",
+    summary: ({ date, hours, amount }) => `Completata il ${date} · ${hours} ore · ${amount}`,
+  },
   sms: {
     newRequest: ({ senior, city, service, url }) => `Nonnina: Nuova richiesta – ${service} per ${senior} a ${city}. Accetta o rifiuta: ${url}`,
     accepted: ({ helper, senior, service, url }) => `Nonnina: ${helper} ha accettato la richiesta (${service} per ${senior}). Contatto: ${url}`,

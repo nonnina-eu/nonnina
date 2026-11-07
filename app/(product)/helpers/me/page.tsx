@@ -13,7 +13,11 @@ import { FormError, PageTitle, Section } from "@/components/family/shell";
 import { HelperProfileForm } from "@/components/marketplace/helper-profile-form";
 import { MarketplaceShell } from "@/components/marketplace/shell";
 import { AutoRefresh } from "@/components/marketplace/auto-refresh";
-import { respondToHelperRequest, saveHelperProfile, signOutHelper } from "../actions";
+import { CompleteJobForm } from "@/components/marketplace/complete-job-form";
+import { ReliefBadge } from "@/components/marketplace/helper-card";
+import { formatDay, formatEur, formatHours } from "@/lib/i18n/relief";
+import { berlinDate } from "@/lib/relief-budget";
+import { completeHelperRequest, respondToHelperRequest, saveHelperProfile, signOutHelper } from "../actions";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "My helper profile", robots: { index: false } };
@@ -54,6 +58,7 @@ export default async function HelperMePage({ searchParams }: Props) {
     }),
   );
   const pending = views.some((v) => v.request.status === "sent");
+  const today = berlinDate(new Date());
 
   return (
     <MarketplaceShell locale={locale} active="offer" isHelper isFamily={Boolean(member?.family)} here="/helpers/me" narrow>
@@ -61,7 +66,7 @@ export default async function HelperMePage({ searchParams }: Props) {
       <PageTitle eyebrow={t.join.eyebrow} title={m.title(helper.name.split(" ")[0])} />
 
       <div className="mb-6 grid gap-3">
-        <FormError message={error ? t.requestErrors.generic : null} />
+        <FormError message={error === "complete" ? t.complete.invalid : error ? t.requestErrors.generic : null} />
         {welcome ? (
           <p role="status" className="rounded-sm border border-salvia bg-salvia px-4 py-3 text-sm font-bold text-bene">
             {t.form.saved}
@@ -77,6 +82,7 @@ export default async function HelperMePage({ searchParams }: Props) {
               <Clock className="size-3.5" aria-hidden /> {t.common.notVerified}
             </Badge>
           )}
+          <ReliefBadge eligible={helper.relief_eligible} locale={locale} />
           <p className="flex-1 text-sm text-ink">{helper.verified ? m.verified : m.pending}</p>
           <Link href={`/helpers/${helper.id}`} className="text-sm font-bold text-link underline-offset-4 hover:underline">
             {m.viewPublic}
@@ -129,24 +135,28 @@ export default async function HelperMePage({ searchParams }: Props) {
                 </div>
               ) : null}
 
-              {request.status === "sent" || request.status === "accepted" ? (
+              {request.status === "sent" ? (
                 <form action={respondToHelperRequest} className="mt-4 flex flex-wrap gap-2">
                   <input type="hidden" name="request_id" value={request.id} />
-                  {request.status === "sent" ? (
-                    <>
-                      <Button type="submit" name="action" value="accept">
-                        <Check aria-hidden /> {m.accept}
-                      </Button>
-                      <Button type="submit" name="action" value="decline" variant="outline">
-                        <X aria-hidden /> {m.decline}
-                      </Button>
-                    </>
-                  ) : (
-                    <Button type="submit" name="action" value="done" variant="outline">
-                      <Check aria-hidden /> {m.markDone}
-                    </Button>
-                  )}
+                  <Button type="submit" name="action" value="accept">
+                    <Check aria-hidden /> {m.accept}
+                  </Button>
+                  <Button type="submit" name="action" value="decline" variant="outline">
+                    <X aria-hidden /> {m.decline}
+                  </Button>
                 </form>
+              ) : null}
+              {request.status === "accepted" ? (
+                <CompleteJobForm action={completeHelperRequest} requestId={request.id} hourlyRate={helper.hourly_rate_eur} today={today} locale={locale} />
+              ) : null}
+              {request.status === "done" && request.service_date && request.hours !== null ? (
+                <p className="mt-3 text-sm font-bold text-bene">
+                  {t.complete.summary({
+                    date: formatDay(request.service_date, locale, "long"),
+                    hours: formatHours(request.hours, locale),
+                    amount: formatEur(request.amount_eur ?? 0, locale),
+                  })}
+                </p>
               ) : null}
             </article>
           ))}

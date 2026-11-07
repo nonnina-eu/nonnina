@@ -187,6 +187,20 @@ export function completeJobSchema(today: string) {
 }
 export type CompleteJobInput = z.infer<ReturnType<typeof completeJobSchema>>;
 
+/** The "Record as done" form (helper on /helpers/me, family on /app). */
+export function parseCompletionForm(formData: FormData, today: string) {
+  const get = (key: string) => {
+    const v = formData.get(key);
+    return typeof v === "string" ? v : undefined;
+  };
+  return completeJobSchema(today).safeParse({
+    request_id: get("request_id"),
+    service_date: get("service_date"),
+    hours: get("hours"),
+    amount_eur: get("amount_eur"),
+  });
+}
+
 /** GET /api/helpers query. */
 export const helperQuerySchema = z.object({
   service: helperServiceSchema.optional(),
