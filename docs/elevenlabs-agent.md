@@ -184,7 +184,7 @@ Runs 10 tests on the live agent with the ElevenLabs agent-testing API: 6 tool-ca
 (fall DE → `trigger_emergency` emergency, fall IT → emergency, dizzy → warning, Pflegekasse letter →
 `create_help_request` legal/money, shopping IT → daily_help, small talk → no emergency) and 4
 simulations that check Lina reports the real tool outcome (notified / failed / demo mode, Italian with
-"Lei"). Last run 7 Nov 2026 on `agent_1101m6tq1z65e36bzdh1f3vy2kcc` (gpt-4.1, flash v2.5): **10/10 passed**.
+"Lei"). Last run 7 Nov 2026 on `agent_1101m6tq1z65e36bzdh1f3vy2kcc` (gpt-4.1, flash v2.5) with JSON tool results: **10/10 passed**.
 
 ### Manual checks
 
