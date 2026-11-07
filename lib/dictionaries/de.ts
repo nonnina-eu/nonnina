@@ -126,6 +126,15 @@ export const de: Dictionary = {
     cta: "Als Helfer/in anmelden",
     imageAlt: "Ein lächelnder Pfleger im weißen Kittel mit Stethoskop",
   },
+  marketplace: {
+    eyebrow: "Marktplatz",
+    title: "Jemand in der Nähe, wenn Sie nicht da sein können.",
+    lede: "Helfende am Wohnort Ihrer Eltern übernehmen, was Sie selbst tun würden, wenn Sie näher wohnten. Jedes Profil prüfen wir von Hand, bevor es das Häkchen „geprüft“ bekommt.",
+    services: ["Einkaufen", "Kochen", "Gesellschaft", "Haushalt", "Fahrdienst", "Termine", "Papierkram", "Technik"],
+    browse: "Helfende finden",
+    offer: "Hilfe anbieten",
+    note: "Für Helfende kostenlos. Familien sehen nur geprüfte Angaben, Kontaktdaten gibt es erst, wenn die helfende Person eine Anfrage annimmt.",
+  },
   promise: {
     title: "Nie allein zu Hause. Und die Familie weiß Bescheid.",
     body: "Entwickelt in Stuttgart, zu Hause in Deutschland und Italien.",

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Bell, CheckBadge, Clock, Phone } from "../icons";
 import { FeatureBlock } from "./feature-block";
 import type { Dictionary } from "@/lib/i18n";
+import { appHelpersUrl } from "@/lib/site";
 
 type T = Dictionary;
 
@@ -93,7 +94,7 @@ export function Helpers({ t }: { t: T["helpers"] }) {
       tone="bg-camomilla"
       aspect="aspect-[3/2]"
       image={{ src: "/photos/nurse.jpg", alt: t.imageAlt, position: "55% 30%" }}
-      cta={{ href: "?role=helper#waitlist", label: t.cta }}
+      cta={{ href: appHelpersUrl("/join"), label: t.cta }}
       card={
         <div aria-hidden="true" className="flex items-center gap-3 rounded-md bg-white p-3 shadow-float">
           <span className="grid size-10 place-items-center rounded-full bg-salvia"><CheckBadge className="size-6" /></span>

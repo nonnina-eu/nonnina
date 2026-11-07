@@ -126,6 +126,15 @@ export const it: Dictionary = {
     cta: "Iscriviti per aiutare",
     imageAlt: "Un infermiere sorridente con camice bianco e stetoscopio",
   },
+  marketplace: {
+    eyebrow: "Marketplace",
+    title: "Qualcuno vicino, quando tu non puoi esserci.",
+    lede: "Persone nella città dei tuoi genitori offrono quello che faresti tu se abitassi più vicino. Controlliamo ogni profilo a mano prima di dargli il bollino “verificato”.",
+    services: ["Spesa", "Cucina", "Compagnia", "Casa", "Trasporti", "Appuntamenti", "Pratiche", "Tecnologia"],
+    browse: "Trova chi aiuta",
+    offer: "Offri il tuo aiuto",
+    note: "Gratis per chi aiuta. Le famiglie vedono solo dati verificati e i contatti vengono condivisi solo dopo che la persona accetta la richiesta.",
+  },
   promise: {
     title: "Mai soli a casa. E la famiglia è sempre informata.",
     body: "Sviluppata a Stoccarda, di casa in Germania e in Italia.",

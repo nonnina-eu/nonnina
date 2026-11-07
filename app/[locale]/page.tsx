@@ -6,6 +6,7 @@ import { TrustStrip } from "@/components/sections/strip";
 import { Features } from "@/components/sections/features";
 import { HowItWorks } from "@/components/sections/how";
 import { Companion, Families, Health, Helpers, Safety } from "@/components/sections/blocks";
+import { Marketplace } from "@/components/sections/marketplace";
 import { PromiseBand } from "@/components/sections/promise";
 import { Faq } from "@/components/sections/faq";
 import { Waitlist } from "@/components/sections/waitlist";
@@ -34,6 +35,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <Health t={t.health} cta={t.nav.cta} />
           <Safety t={t.safety} />
           <Families t={t.families} cta={t.nav.cta} />
+          <Marketplace t={t.marketplace} />
           <Helpers t={t.helpers} />
         </div>
         <PromiseBand t={t.promise} />

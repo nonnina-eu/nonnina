@@ -124,6 +124,15 @@ export const en = {
     cta: "Join as a helper",
     imageAlt: "A smiling nurse in a white coat with a stethoscope",
   },
+  marketplace: {
+    eyebrow: "Marketplace",
+    title: "Someone nearby, when you can’t be there.",
+    lede: "Helpers in your parent’s town offer what you would do yourself if you lived closer. Every profile is checked by hand before it gets the verified badge.",
+    services: ["Shopping", "Cooking", "Company", "Household", "Transport", "Appointments", "Paperwork", "Tech help"],
+    browse: "Find a helper",
+    offer: "Offer your help",
+    note: "Free to join for helpers. Families see only verified details, and helpers share contact details only with families they accept.",
+  },
   promise: {
     title: "Never alone at home. And the family always knows.",
     body: "Made in Stuttgart, at home in Germany and Italy.",
