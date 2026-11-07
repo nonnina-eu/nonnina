@@ -16,6 +16,8 @@ export async function addToWaitlist(input: WaitlistInput): Promise<{ created: bo
     g.__waitlistMemory ??= new Map();
     if (g.__waitlistMemory.has(email)) return { created: false };
     g.__waitlistMemory.set(email, { ...input, email });
+    // No database configured: keep a trace in the server logs so a sign-up is never silently lost.
+    if (process.env.VERCEL) console.info("[waitlist] signup (no database configured)", JSON.stringify({ email, role: input.role, city: input.city }));
     return { created: true };
   }
 

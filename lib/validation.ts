@@ -7,7 +7,7 @@ export const waitlistSchema = z.object({
   role: waitlistRoleSchema,
   city: z.string().trim().max(100).optional().default(""),
   message: z.string().trim().max(1000).optional().default(""),
-  /** honeypot, must stay empty */
-  website: z.string().max(0).optional(),
+  /** honeypot: real users never see it; bots that fill it get a silent success */
+  hp_field: z.string().max(500).optional().default(""),
 });
 export type WaitlistInput = z.infer<typeof waitlistSchema>;

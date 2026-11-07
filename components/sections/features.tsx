@@ -1,4 +1,4 @@
-import { Bell, Doc, Hand, Mic, Phone, Clock } from "../icons";
+import { Bell, Clock, Doc, Mic, Phone, Users } from "../icons";
 import { SectionHeading } from "./heading";
 import type { Dictionary } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -9,7 +9,7 @@ const look = [
   { icon: Phone, bg: "bg-allarme-soft", iconClass: "text-allarme" },
   { icon: Bell, bg: "bg-glicine" },
   { icon: Doc, bg: "bg-cielo" },
-  { icon: Hand, bg: "bg-salvia" },
+  { icon: Users, bg: "bg-salvia" },
 ];
 
 export function Features({ t }: { t: Dictionary["features"] }) {
@@ -24,7 +24,7 @@ export function Features({ t }: { t: Dictionary["features"] }) {
               <span className="grid size-12 place-items-center rounded-sm bg-white"><Icon className={cn("size-6", iconClass)} /></span>
               <div>
                 <h3 className="text-[1.75rem] leading-none">{item.title}</h3>
-                <p className="mt-2 text-[0.9375rem] text-graphite">{item.body}</p>
+                <p className="mt-2 text-base text-graphite">{item.body}</p>
               </div>
             </li>
           );

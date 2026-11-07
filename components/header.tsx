@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Logo } from "./brand";
 import { Close, MenuIcon } from "./icons";
 import { LanguageSwitcher } from "./language-switcher";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -20,9 +21,20 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        btnRef.current?.focus();
+      }
+    };
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onWide = () => mq.matches && setOpen(false);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    mq.addEventListener("change", onWide);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      mq.removeEventListener("change", onWide);
+    };
   }, [open]);
 
   const links = [
@@ -36,7 +48,7 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
   return (
     <header className={cn("sticky top-0 z-50 transition-colors", scrolled || open ? "border-b border-line bg-white/90 backdrop-blur-md" : "bg-white")}>
       <div className="wrap flex h-16 items-center justify-between gap-4 md:h-20">
-        <a href={localePath(locale)} aria-label="Nonnina" className="text-[1.75rem]">
+        <a href={localePath(locale)} aria-label={t.home} className="text-[1.75rem]">
           <Logo />
         </a>
         <nav aria-label="Main" className="hidden items-center gap-7 text-[0.9375rem] font-bold lg:flex">
@@ -48,11 +60,12 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
           <LanguageSwitcher current={locale} label={t.language} className="hidden sm:inline-flex" />
           <a href="#waitlist" className="btn btn-outline btn-sm hidden md:inline-flex">{t.cta}</a>
           <button
+            ref={btnRef}
             type="button"
-            className="inline-flex size-11 items-center justify-center rounded-xs border border-line lg:hidden"
+            className="inline-flex size-11 items-center justify-center rounded-xs border border-[#9AA3B5] lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-menu"
-            aria-label={open ? t.close : t.menu}
+            aria-label={t.menu}
             onClick={() => setOpen((v) => !v)}
           >
             {open ? <Close className="size-5" /> : <MenuIcon className="size-5" />}

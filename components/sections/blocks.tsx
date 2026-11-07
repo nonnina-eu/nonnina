@@ -91,7 +91,8 @@ export function Helpers({ t }: { t: T["helpers"] }) {
       lede={t.lede}
       points={t.points}
       tone="bg-camomilla"
-      image={{ src: "/photos/nurse.jpg", alt: t.imageAlt, position: "55% 40%" }}
+      aspect="aspect-[3/2]"
+      image={{ src: "/photos/nurse.jpg", alt: t.imageAlt, position: "55% 30%" }}
       cta={{ href: "?role=helper#waitlist", label: t.cta }}
       card={
         <div aria-hidden="true" className="flex items-center gap-3 rounded-md bg-white p-3 shadow-float">

@@ -9,10 +9,11 @@ type Status = { kind: "idle" } | { kind: "sending" } | { kind: "done"; created: 
 const ROLES = ["family", "helper", "care_service", "other"] as const;
 
 const field =
-  "h-[3.25rem] w-full rounded-md border border-line bg-white px-4 text-base text-ink placeholder:text-muted/70 focus:border-ink focus:outline-none focus:ring-2 focus:ring-sole/50";
+  "h-[3.25rem] w-full rounded-md border border-[#7A8294] bg-white px-4 text-base text-ink placeholder:text-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link";
 
 export function Waitlist({ t }: { t: Dictionary["waitlist"] }) {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [role, setRole] = useState<(typeof ROLES)[number]>("family");
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -31,10 +32,12 @@ export function Waitlist({ t }: { t: Dictionary["waitlist"] }) {
     const form = e.currentTarget;
     const email = form.elements.namedItem("email") as HTMLInputElement;
     if (!email.checkValidity()) {
-      setStatus({ kind: "error", message: t.invalidEmail });
+      setEmailError(t.invalidEmail);
       email.focus();
       return;
     }
+    setEmailError(null);
+    if (status.kind === "sending") return;
     setStatus({ kind: "sending" });
     try {
       const res = await fetch("/api/waitlist", {
@@ -68,8 +71,9 @@ export function Waitlist({ t }: { t: Dictionary["waitlist"] }) {
         ) : (
           <form onSubmit={onSubmit} noValidate className="reveal reveal-d1 grid gap-4 rounded-lg bg-white p-5 sm:grid-cols-2 sm:p-7">
             <div className="grid gap-2 sm:col-span-2">
-              <label htmlFor="wl-email" className="text-sm font-bold">{t.email}</label>
-              <input id="wl-email" name="email" type="email" required autoComplete="email" inputMode="email" placeholder={t.emailPlaceholder} className={field} aria-describedby="wl-privacy" />
+              <label htmlFor="wl-email" className="text-sm font-bold">{t.email} <span aria-hidden="true" className="text-allarme">*</span></label>
+              <input id="wl-email" name="email" type="email" required autoComplete="email" inputMode="email" placeholder={t.emailPlaceholder} className={field} aria-invalid={emailError ? true : undefined} aria-describedby={emailError ? "wl-email-err wl-privacy" : "wl-privacy"} onChange={() => emailError && setEmailError(null)} />
+              {emailError ? <p id="wl-email-err" className="text-sm font-bold text-allarme">{emailError}</p> : null}
             </div>
             <div className="grid gap-2">
               <label htmlFor="wl-role" className="text-sm font-bold">{t.role}</label>
@@ -86,16 +90,17 @@ export function Waitlist({ t }: { t: Dictionary["waitlist"] }) {
               <textarea id="wl-message" name="message" rows={4} maxLength={1000} placeholder={t.messagePlaceholder} className={`${field} h-auto py-3`} />
             </div>
             <div className="hidden" aria-hidden="true">
-              <label htmlFor="wl-website">Website</label>
-              <input id="wl-website" name="website" tabIndex={-1} autoComplete="off" />
+              <label htmlFor="wl-hp">Leave this field empty</label>
+              <input id="wl-hp" name="hp_field" tabIndex={-1} autoComplete="off" />
             </div>
-            {status.kind === "error" ? <p role="alert" className="text-sm font-bold text-allarme sm:col-span-2">{status.message}</p> : null}
+            <div role="alert" className="sm:col-span-2 empty:hidden">{status.kind === "error" ? <p className="text-sm font-bold text-allarme">{status.message}</p> : null}</div>
+            <p className="sr-only" role="status">{status.kind === "sending" ? t.submitting : ""}</p>
             <div className="flex flex-col items-start gap-3 sm:col-span-2">
-              <button type="submit" className="btn btn-ink w-full sm:w-auto" disabled={status.kind === "sending"} aria-busy={status.kind === "sending"}>
+              <button type="submit" className="btn btn-ink w-full sm:w-auto" aria-disabled={status.kind === "sending" ? true : undefined}>
                 {status.kind === "sending" ? t.submitting : t.submit}
                 <ArrowRight className="size-[18px]" />
               </button>
-              <p id="wl-privacy" className="text-xs text-muted">{t.privacy}</p>
+              <p id="wl-privacy" className="text-sm text-muted">{t.privacy}</p>
             </div>
           </form>
         )}

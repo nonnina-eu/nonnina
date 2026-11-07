@@ -23,7 +23,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         {t.skip}
       </a>
       <Header t={t.nav} locale={locale} />
-      <main id="main">
+      <main id="main" tabIndex={-1} className="outline-none">
         <Hero t={t.hero} />
         <TrustStrip items={t.strip} />
         <Features t={t.features} />

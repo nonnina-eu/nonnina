@@ -2,7 +2,7 @@ export const en = {
   meta: {
     title: "Nonnina – One button for Nonna. Peace of mind for the whole family.",
     description:
-      "Nonnina is a voice companion for older people who live at home. It talks, reminds and listens every day, and tells the family the moment something is wrong.",
+      "Nonnina is a voice companion for older people who live at home. It chats, listens and gives gentle reminders every day, and tells the family the moment something is wrong.",
   },
   skip: "Skip to content",
   nav: {
@@ -14,13 +14,14 @@ export const en = {
     cta: "Join the waitlist",
     menu: "Menu",
     close: "Close menu",
+    home: "Nonnina – home",
     language: "Language",
   },
   hero: {
     eyebrow: "Voice companion for older people at home",
     titleA: "One button for Nonna.",
     titleB: "Peace of mind for the whole family.",
-    lede: "Nonnina is a voice companion for older people who live at home. It talks, reminds and listens every day, and tells the family the moment something is wrong.",
+    lede: "Nonnina is a voice companion for older people who live at home. It chats, listens and gives gentle reminders every day, and tells the family the moment something is wrong.",
     cta: "Join the waitlist",
     cta2: "See how it works",
     trust: ["No smartphone needed", "German & Italian", "Data stored in the EU"],
@@ -33,7 +34,7 @@ export const en = {
   strip: ["Made in Stuttgart", "Data stored in the EU", "Speaks German and Italian", "Free during the pilot"],
   features: {
     eyebrow: "What Nonnina does",
-    title: "Everything your parent needs, behind one button.",
+    title: "What matters most, behind one button.",
     lede: "No menus, no passwords, no small icons. Your parent taps once and talks. Nonnina takes care of the rest, and keeps you in the loop.",
     items: [
       { title: "Talk", body: "A warm, patient voice that answers in German or Italian." },
@@ -88,12 +89,12 @@ export const en = {
     title: "When something is wrong, the family knows in seconds.",
     body: "If Maria says she fell, has chest pain or cannot breathe, Nonnina stays calm, shows a big “Call 112” button and alerts her relatives by SMS at once.",
     points: [
-      "Three independent triggers: the voice assistant, a keyword safety net, and a red Help button that always works.",
-      "Relatives get an SMS, and the first contact also gets a phone call.",
+      "Three independent ways to raise the alarm: Lina herself, a backup that listens for emergency words, and a red Help button that always works.",
+      "Relatives get an SMS, and the main contact also gets a phone call.",
       "Maria can say “I am fine” at any time, and the family gets the all-clear.",
     ],
     note: "Nonnina is not an emergency service and does not replace 112. It never calls 112 by itself.",
-    screenTitle: "Help is on the way.",
+    screenTitle: "I am here with you.",
     screenBody: "I have notified Anna and Thomas.",
     call: "Call 112",
     callRelative: "Call Anna",
@@ -124,7 +125,7 @@ export const en = {
     imageAlt: "A smiling nurse in a white coat with a stethoscope",
   },
   promise: {
-    title: "Never alone at home. Never in the dark for the family.",
+    title: "Never alone at home. And the family always knows.",
     body: "Made in Stuttgart, at home in Germany and Italy.",
   },
   faq: {
@@ -134,8 +135,8 @@ export const en = {
       { q: "Does my parent need a smartphone?", a: "No. A tablet with one button is enough. During the pilot we can send a tablet that is already set up." },
       { q: "Which languages does Nonnina speak?", a: "German and Italian today. It speaks slowly, in short sentences, and always uses the formal form." },
       { q: "What happens in an emergency?", a: "The screen switches to emergency mode with a big “Call 112” button, and relatives are alerted by SMS within seconds. Nonnina never calls 112 by itself." },
-      { q: "Who can see the data?", a: "Only relatives the senior has invited. Data is stored in the EU, and conversations are never recorded, only summarised in a few lines." },
-      { q: "Is Nonnina medical or legal advice?", a: "No. Nonnina gives orientation and connects you with the right people. It never gives a diagnosis, a medication dose or legal advice." },
+      { q: "Who can see the data?", a: "Only relatives your parent has invited. Data is stored in the EU, and conversations are never recorded, only summarised in a few lines." },
+      { q: "Does Nonnina give medical or legal advice?", a: "No. Nonnina gives orientation and connects you with the right people. It never gives a diagnosis, a medication dose or legal advice." },
       { q: "How much will it cost?", a: "It is free during the pilot in Stuttgart. We will share pricing with the waitlist first." },
     ],
   },

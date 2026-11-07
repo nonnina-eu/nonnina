@@ -15,9 +15,11 @@ interface Props {
   cta: { href: string; label: string };
   reverse?: boolean;
   tone?: string;
+  /** Tailwind aspect class for the photo frame. */
+  aspect?: string;
 }
 
-export function FeatureBlock({ id, eyebrow, title, lede, points, image, card, cta, reverse = false, tone = "bg-latte" }: Props) {
+export function FeatureBlock({ id, eyebrow, title, lede, points, image, card, cta, reverse = false, tone = "bg-latte", aspect = "aspect-[4/4.3]" }: Props) {
   const headingId = id ? `${id}-title` : undefined;
   return (
     <section id={id} className="wrap py-6 md:py-8" aria-labelledby={headingId}>
@@ -33,7 +35,7 @@ export function FeatureBlock({ id, eyebrow, title, lede, points, image, card, ct
           </ul>
           <a href={cta.href} className="btn btn-ink">{cta.label}<ArrowRight className="size-[18px]" /></a>
         </div>
-        <div className={cn("reveal reveal-d1 relative aspect-[4/4.3] overflow-hidden rounded-lg", reverse && "md:order-1")}>
+        <div className={cn("reveal reveal-d1 relative overflow-hidden rounded-lg", aspect, reverse && "md:order-1")}>
           <Image src={image.src} alt={image.alt} fill sizes="(min-width: 768px) 45vw, 100vw" className="object-cover" style={{ objectPosition: image.position ?? "50% 50%" }} />
           <div className="absolute inset-x-3 bottom-3 sm:inset-x-4 sm:bottom-4">{card}</div>
         </div>

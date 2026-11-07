@@ -15,6 +15,9 @@ export async function POST(request: Request) {
   const parsed = await parseJson(request, waitlistSchema);
   if (!parsed.ok) return parsed.response;
 
+  // Honeypot filled: pretend success, store nothing.
+  if (parsed.data.hp_field) return NextResponse.json({ ok: true, created: true }, { status: 201 });
+
   try {
     const result = await addToWaitlist(parsed.data);
     return NextResponse.json({ ok: true, created: result.created }, { status: result.created ? 201 : 200 });
