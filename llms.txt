@@ -2,7 +2,7 @@
 
 > Voice companion for older people living alone at home, with real-time family alerts, a relief-amount budget for families, and a marketplace of verified local helpers. One Next.js 15 app (landing + product). Built at the Cursor x Sandbox Founders Hackathon, Stuttgart, 7 Nov 2026. Not an emergency service; never dials 112.
 
-Live: https://nonnina-website.vercel.app (demo mode, every page works) · Domain: https://www.nonnina.eu
+Live: https://www.nonnina.eu (real database, accounts) · https://nonnina-website.vercel.app (demo mode, one-click login)
 
 ## Start here
 - [README.md](README.md): what it is, what we built, architecture, how to run

@@ -1,8 +1,9 @@
 # Judging map: criteria → evidence
 
 The hackathon scores four criteria, 25 % each. This page points to the evidence for each one.
-Live URL used below: https://nonnina-website.vercel.app (runs in demo mode, so every page works
-without accounts).
+Live URLs: https://www.nonnina.eu runs with the real database (accounts via magic link);
+https://nonnina-website.vercel.app is the same app in demo mode (one-click login as "Anna"), used
+for the paths below.
 
 ## 1. Problem & Customer
 

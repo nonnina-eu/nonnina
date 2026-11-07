@@ -11,8 +11,8 @@ Built at the **Cursor x Sandbox Founders Hackathon**, Stuttgart, 7 Nov 2026.
 
 | | |
 | --- | --- |
-| Live product (landing, demo, senior screen, family area, marketplace) | https://nonnina-website.vercel.app |
-| Domain | https://www.nonnina.eu |
+| Live product with the real database (create an account via magic link) | https://www.nonnina.eu |
+| Same app in demo mode (one-click login as "Anna", nothing persisted) | https://nonnina-website.vercel.app |
 | Live demo, senior tablet and family view side by side | https://nonnina-website.vercel.app/demo |
 | Pitch deck (5 slides, in the app) | https://nonnina-website.vercel.app/pitch |
 | Brand identity | https://nonnina-website.vercel.app/brand/nonnina-brand-identity.html |
