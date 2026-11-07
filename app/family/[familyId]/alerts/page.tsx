@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 import { DEMO_IDS, getStore } from "@/lib/db";
+import { getCurrentMember } from "@/lib/auth";
 import { familyT } from "@/lib/i18n/family";
 import { Logo } from "@/components/logo";
 import { AlertsFeed } from "@/components/family/alerts-feed";
@@ -20,6 +21,11 @@ export default async function FamilyAlertsPage({ params, searchParams }: Params)
   const { familyId } = await params;
   const { embed } = await searchParams;
   if (!z.string().uuid().safeParse(familyId).success) notFound();
+  if (familyId !== DEMO_IDS.family) {
+    const member = await getCurrentMember();
+    if (!member) redirect(`/login?next=/family/${familyId}/alerts`);
+    if (member.family?.id !== familyId) notFound();
+  }
   const store = getStore();
   const [feed, overview] = await Promise.all([store.getFamilyFeed(familyId, 50), store.getFamilyOverview(familyId)]);
   if (!feed) notFound();
