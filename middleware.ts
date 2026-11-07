@@ -8,7 +8,9 @@ const COOKIE = "nonnina-locale";
  * - "/en/..." redirects to the unprefixed URL (one canonical URL per page).
  * - Unprefixed paths are rewritten internally to "/en/...".
  * - On the home page only, first-time visitors whose browser prefers German or Italian
- *   are redirected once; an explicit choice in the switcher is stored in a cookie.
+ *   are redirected; an explicit choice in the switcher is stored in a cookie.
+ * - The automatic redirect sets no cookie: it is recomputed from the browser on each visit,
+ *   so the only cookie is the one the visitor asks for (see the cookie policy).
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -27,9 +29,7 @@ export function middleware(request: NextRequest) {
     if (preferred && preferred !== "en") {
       const url = request.nextUrl.clone();
       url.pathname = `/${preferred}`;
-      const res = NextResponse.redirect(url, 307);
-      res.cookies.set(COOKIE, preferred, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" });
-      return res;
+      return NextResponse.redirect(url, 307);
     }
   }
 

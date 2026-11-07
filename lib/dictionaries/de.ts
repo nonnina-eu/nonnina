@@ -162,6 +162,7 @@ export const de: Dictionary = {
     error: "Das hat leider nicht geklappt. Bitte versuchen Sie es erneut.",
     invalidEmail: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
     privacy: "Wir nutzen Ihre E-Mail-Adresse nur, um Sie zu Nonnina zu kontaktieren.",
+    privacyLink: "Datenschutzerklärung",
   },
   footer: {
     tagline: "Der Sprachbegleiter für ältere Menschen zu Hause.",
@@ -173,6 +174,14 @@ export const de: Dictionary = {
     demo: "Live-Demo",
     brand: "Markenidentität",
     rights: "Alle Rechte vorbehalten.",
+  },
+  cookies: {
+    title: "Cookies auf nonnina.eu",
+    body: "Wir verwenden keine Tracking- oder Werbe-Cookies. Wir speichern nur Ihre Sprachwahl und diese Entscheidung. Sie können sie jederzeit unter Cookie-Einstellungen im Footer ändern.",
+    policy: "Cookie-Richtlinie",
+    accept: "Akzeptieren",
+    necessary: "Nur notwendige",
+    settings: "Cookie-Einstellungen",
   },
   notFound: { title: "Diese Seite gibt es nicht.", body: "Im Notfall 112 anrufen.", back: "Zur Startseite" },
 };

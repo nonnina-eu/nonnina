@@ -160,6 +160,7 @@ export const en = {
     error: "That did not work. Please try again.",
     invalidEmail: "Please enter a valid email address.",
     privacy: "We only use your email to contact you about Nonnina.",
+    privacyLink: "Privacy policy",
   },
   footer: {
     tagline: "The voice companion for older people at home.",
@@ -171,6 +172,14 @@ export const en = {
     demo: "Live demo",
     brand: "Brand identity",
     rights: "All rights reserved.",
+  },
+  cookies: {
+    title: "Cookies on nonnina.eu",
+    body: "We use no tracking or advertising cookies. We only store your language choice and this decision. You can change it any time under Cookie settings in the footer.",
+    policy: "Cookie policy",
+    accept: "Accept",
+    necessary: "Only necessary",
+    settings: "Cookie settings",
   },
   notFound: { title: "This page does not exist.", body: "In an emergency call 112.", back: "Back to the start" },
 };

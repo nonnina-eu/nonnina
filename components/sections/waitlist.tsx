@@ -11,7 +11,7 @@ const ROLES = ["family", "helper", "care_service", "other"] as const;
 const field =
   "h-[3.25rem] w-full rounded-md border border-[#7A8294] bg-white px-4 text-base text-ink placeholder:text-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link";
 
-export function Waitlist({ t }: { t: Dictionary["waitlist"] }) {
+export function Waitlist({ t, privacyHref }: { t: Dictionary["waitlist"]; privacyHref: string }) {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [emailError, setEmailError] = useState<string | null>(null);
   const [role, setRole] = useState<(typeof ROLES)[number]>("family");
@@ -100,7 +100,10 @@ export function Waitlist({ t }: { t: Dictionary["waitlist"] }) {
                 {status.kind === "sending" ? t.submitting : t.submit}
                 <ArrowRight className="size-[18px]" />
               </button>
-              <p id="wl-privacy" className="text-sm text-muted">{t.privacy}</p>
+              <p id="wl-privacy" className="text-sm text-muted">
+                {t.privacy}{" "}
+                <a href={privacyHref} className="font-bold text-ink underline underline-offset-4">{t.privacyLink}</a>
+              </p>
             </div>
           </form>
         )}

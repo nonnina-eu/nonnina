@@ -5,14 +5,17 @@ import { cn } from "@/lib/utils";
 
 const NAMES: Record<Locale, string> = { en: "English", de: "Deutsch", it: "Italiano" };
 
-/** EN · DE · IT. Plain links (crawlable); remembers the explicit choice in a cookie. */
-export function LanguageSwitcher({ current, label, className }: { current: Locale; label: string; className?: string }) {
+/**
+ * EN · DE · IT. Plain links (crawlable); remembers the explicit choice in a cookie.
+ * `path` keeps the visitor on the same page (e.g. "/privacy") when switching language.
+ */
+export function LanguageSwitcher({ current, label, className, path = "" }: { current: Locale; label: string; className?: string; path?: string }) {
   return (
     <div role="group" aria-label={label} className={cn("inline-flex rounded-full border border-[#9AA3B5] bg-white p-[3px]", className)}>
       {locales.map((l) => (
         <a
           key={l}
-          href={localePath(l)}
+          href={path ? `${localePath(l) === "/" ? "" : localePath(l)}${path}` : localePath(l)}
           hrefLang={l}
           lang={l}
           aria-label={NAMES[l]}
