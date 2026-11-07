@@ -89,7 +89,7 @@ Same set in Italian: „Sono caduta e non riesco ad alzarmi", „Ho le vertigini
 
 | Behaviour | File |
 | --- | --- |
-| Persona, first message, tools, data collection | `docs/elevenlabs-agent.md` (dashboard config) |
+| Persona, first message, tools, data collection | `scripts/elevenlabs/agent-config.mjs` (applied by `node scripts/elevenlabs/setup-agent.mjs`), mirrored in `docs/elevenlabs-agent.md` |
 | Tool handlers in the browser | `components/senior/senior-screen.tsx` |
 | Keyword safety net | `lib/emergency-keywords.ts` + tests |
 | Escalation rule (help request) | `lib/escalation.ts` + tests |
