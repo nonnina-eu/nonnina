@@ -38,6 +38,7 @@ app/
   (to build) app/        family area behind Supabase Auth: onboarding, seniors, relatives, feed
   (to build) login/, auth/callback/
 components/senior/       talk-button, captions, emergency-overlay, mic-permission, clock
+components/marketplace/  helper card, profile form, request form, family requests panel, shell
 components/family/       alerts-feed
 components/ui/           button, card, input, label, select, textarea, badge, accordion
 hooks/                   use-emergency (client state machine), use-wake-lock
@@ -63,6 +64,10 @@ docs/                    this folder
 | `/login`, `/auth/callback`, `/auth/signout` | pages/GET/POST | Family sign-in: Supabase magic link (`signInWithOtp` → `exchangeCodeForSession`); demo mode uses a signed cookie |
 | `/app`, `/app/setup`, `/app/settings`, `/app/join` | pages + server actions | Family area behind `middleware.ts`: live feed, 5-step onboarding wizard (family → parent → relatives → safety net + consent → tablet QR), settings (edit parent, relatives, invite, fallback number, rotate tablet link), invite landing |
 | `/api/cron/escalate` | GET | Runs the escalation ladder every minute (Vercel Cron, `Authorization: Bearer CRON_SECRET`); logic in `lib/escalation-runner.ts` |
+| `/helpers`, `/helpers/[id]` | pages + server action | Public helper directory (filters: service, city – default Stuttgart, language, verified only) and detail; signed-in family members send a request (service, message, preferred time, optional `help_request_id`). Phone / email never rendered |
+| `/helpers/join`, `/helpers/me` | pages + server actions | Helper sign-up (Supabase magic link → `/helpers/join`, or demo cookie `nonnina_helper`), profile form (zod, consent), edit profile, incoming requests with Accept / Decline / Done; Accept reveals the family contact and sets a linked help request to `matched` |
+| `/helpers/lang?l=en\|de\|it` | GET | Sets the marketplace language cookie `nonnina_lang` |
+| `/api/helpers` | GET | Public helper list for the voice agent tools: `?service=&city=&language=&verified=1` (city defaults to Stuttgart, `city=*` = all). Safe fields only (no phone / email / user id) + `url` |
 | `/api/twilio/voice` + `/api/twilio/gather` | POST | TwiML for the relative call (Say + Gather), digit 1 → acknowledge; `X-Twilio-Signature` verified, 403 without Twilio |
 
 ## Data model (`lib/db/types.ts` ⇄ `supabase/migrations/0001_init.sql`)
@@ -77,7 +82,13 @@ families (id, name, email, [fallback_phone*], created_at)
       └─ emergency_events (level, reason, quote, source, status, notified jsonb,
                            [escalation_step*, next_step_at*, acknowledged_by*], created_at, updated_at)
 waitlist (email, role, city, message)            ← shared with the website repo
+helpers (id, [user_id], name, kind independent|service|volunteer, city, bio, languages[], services[],
+         hourly_rate_eur null=free, phone*, email*, verified, active)          ← migration 0005
+ └─ helper_requests (family_id, senior_id, helper_id, relative_id, help_request_id?, service, message,
+                     preferred_time, status sent|accepted|declined|done, notified jsonb)
 ```
+`phone*`/`email*` of helpers are hidden from anon/authenticated by column grants; the public
+reads `helpers_public` or the safe columns. All marketplace writes go through server actions.
 `*` = columns the MVP adds (migration `0002`). Keep `types.ts` and SQL one-to-one.
 
 ## Security model

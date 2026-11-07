@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FormError, PageTitle, Section } from "@/components/family/shell";
 import { HelperProfileForm } from "@/components/marketplace/helper-profile-form";
-import { NotificationList } from "@/components/marketplace/notification-list";
 import { MarketplaceShell } from "@/components/marketplace/shell";
 import { AutoRefresh } from "@/components/marketplace/auto-refresh";
 import { respondToHelperRequest, saveHelperProfile, signOutHelper } from "../actions";
@@ -149,7 +148,6 @@ export default async function HelperMePage({ searchParams }: Props) {
                   )}
                 </form>
               ) : null}
-              {request.status !== "sent" ? <NotificationList records={request.notified.filter((n) => n.relative_id !== null)} locale={locale} /> : null}
             </article>
           ))}
         </section>

@@ -98,7 +98,7 @@ not react to a medication reminder, Lina speaks ("Maria, ist alles in Ordnung?")
 
 ## Help requests (non-urgent needs)
 
-`help_requests.status`: `open → ai_solved | escalated → matched` (matched = Layer 3). A relative
+`help_requests.status`: `open → ai_solved | escalated → matched` (matched = a marketplace helper accepted a request linked to it, `/helpers`). A relative
 takes a request from the feed ("I'm on it" → `acknowledged_by`, `acknowledged_at`; status is
 unchanged) and the senior tablet shows "Anna kümmert sich um: …" until the request is marked
 done (`resolved_at`) or 12 h have passed. The family marks a request done from the feed. Priority-1 relative gets one SMS per request; others

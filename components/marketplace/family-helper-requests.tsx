@@ -5,6 +5,7 @@ import type { Helper, HelperRequest, Senior } from "@/lib/db/types";
 import { getMarketplaceT } from "@/lib/i18n/marketplace-locale";
 import { Badge } from "@/components/ui/badge";
 import { AutoRefresh } from "./auto-refresh";
+import { NotificationList } from "./notification-list";
 
 const statusVariant = { sent: "warning", accepted: "success", declined: "outline", done: "outline" } as const;
 
@@ -13,7 +14,7 @@ const statusVariant = { sent: "warning", accepted: "success", declined: "outline
  * email appear only after the helper accepted.
  */
 export async function FamilyHelperRequests({ familyId, seniors }: { familyId: string; seniors: Senior[] }) {
-  const { t } = await getMarketplaceT();
+  const { locale, t } = await getMarketplaceT();
   const f = t.family;
   const store = getStore();
   const requests = await store.listHelperRequestsForFamily(familyId);
@@ -44,7 +45,7 @@ export async function FamilyHelperRequests({ familyId, seniors }: { familyId: st
       ) : (
         <ul className="grid gap-2">
           {requests.slice(0, 8).map((r) => (
-            <RequestRow key={r.id} request={r} helper={helpers.get(r.helper_id) ?? null} seniorName={seniorName(r.senior_id)} t={t} />
+            <RequestRow key={r.id} request={r} helper={helpers.get(r.helper_id) ?? null} seniorName={seniorName(r.senior_id)} t={t} locale={locale} />
           ))}
         </ul>
       )}
@@ -57,11 +58,13 @@ function RequestRow({
   helper,
   seniorName,
   t,
+  locale,
 }: {
   request: HelperRequest;
   helper: Helper | null;
   seniorName: string;
   t: Awaited<ReturnType<typeof getMarketplaceT>>["t"];
+  locale: Awaited<ReturnType<typeof getMarketplaceT>>["locale"];
 }) {
   const revealed = request.status === "accepted" || request.status === "done";
   return (
@@ -97,6 +100,8 @@ function RequestRow({
           ) : null}
         </div>
       ) : null}
+      {/* Demo mode: the SMS the family would have received about the answer. */}
+      <NotificationList records={request.notified.filter((n) => n.relative_id !== null && n.status === "demo")} locale={locale} />
     </li>
   );
 }

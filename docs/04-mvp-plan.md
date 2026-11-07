@@ -93,7 +93,7 @@ Each step ends in something demoable. Owner column is a proposal.
 - Benefits rule table + traffic light + "you are missing X €/month" (data already in the PDF, Part 5).
 - Proactive reminders spoken by the tablet; no-response check.
 - Web push; native wrapper (Capacitor) if the tablet browser is a problem.
-- Marketplace of verified helpers; Exa search for local care counselling.
+- ~~Marketplace of verified helpers~~ – v1 built (`/helpers`, see `docs/agents/agent-marketplace.md`); open: admin verify toggle, distance, Exa search for local care counselling.
 - Certified Hausnotruf/teleassistenza partner for real 112 dispatch.
 
 ## Demo script (today)
@@ -105,6 +105,14 @@ Each step ends in something demoable. Owner column is a proposal.
 5. Maria presses **Mir geht es gut** → Anna gets the all-clear.
 6. Say „Ich schaffe den Einkauf nicht mehr" → help request appears, category daily_help.
 7. Reset demo data.
+
+### Marketplace add-on (Layer 3)
+
+1. Helper: `/helpers/join` → fill in the profile (or "Continue as Lucia") → `/helpers/me` shows "not yet verified".
+2. Family: `/app` → help request "Ich schaffe den Einkauf nicht mehr" → **Find a helper** → `/helpers?service=shopping&request=…`.
+3. Open a helper → **Send request** → confirmation shows the (demo) SMS to the helper.
+4. Helper `/helpers/me` → **Accept** → Anna's name, phone and email appear.
+5. Family `/app` → Helpers panel: **Accepted** + helper phone; the help request shows `matched`.
 
 ## Open questions for the team
 

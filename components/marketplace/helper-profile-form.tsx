@@ -202,7 +202,7 @@ export function HelperProfileForm({ action, locale, helper, mode }: { action: Pr
           {(["consent_share", "consent_verify"] as const).map((k) => (
             <div key={k} className="flex flex-col gap-1">
               <label className="flex cursor-pointer items-start gap-3 text-sm text-ink">
-                <input type="checkbox" name={k} defaultChecked={v(k) === "on"} required className="mt-0.5 size-5 shrink-0 accent-ink" {...invalid(k)} />
+                <input type="checkbox" name={k} defaultChecked={v(k) === "on"} className="mt-0.5 size-5 shrink-0 accent-ink" {...invalid(k)} />
                 {k === "consent_share" ? f.consentShare : f.consentVerify}
               </label>
               <ErrorText id={`${k}-error`} message={err(k)} />
