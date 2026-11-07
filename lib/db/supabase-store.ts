@@ -130,6 +130,21 @@ export class SupabaseStore implements Store {
     return (data as HelpRequest) ?? null;
   }
 
+  async findAcknowledgedHelpRequest(seniorId: string, since: Date): Promise<HelpRequest | null> {
+    const { data, error } = await this.db
+      .from("help_requests")
+      .select("*")
+      .eq("senior_id", seniorId)
+      .not("acknowledged_at", "is", null)
+      .is("resolved_at", null)
+      .gte("acknowledged_at", since.toISOString())
+      .order("acknowledged_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error) fail("help_requests.acknowledged", error);
+    return (data as HelpRequest) ?? null;
+  }
+
   async createVoiceSession(input: NewVoiceSession): Promise<VoiceSession> {
     const { data, error } = await this.db.from("voice_sessions").insert(input).select("*").single();
     if (error) fail("voice_sessions.insert", error);
@@ -141,7 +156,7 @@ export class SupabaseStore implements Store {
     if (fErr) fail("families.get", fErr);
     if (!family) return null;
 
-    const { data: seniors, error: sErr } = await this.db.from("seniors").select("*").eq("family_id", familyId);
+    const { data: seniors, error: sErr } = await this.db.from("seniors").select("*").eq("family_id", familyId).order("created_at");
     if (sErr) fail("seniors.byFamily", sErr);
     const ids = (seniors ?? []).map((s) => (s as Senior).id);
     if (ids.length === 0) {

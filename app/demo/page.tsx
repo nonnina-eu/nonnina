@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExternalLink, Users } from "lucide-react";
-import { DEMO_IDS, DEMO_TOKEN } from "@/lib/db";
+import { DEMO_IDS, DEMO_TOKEN, DEMO_TOKEN_IT } from "@/lib/db";
 import { serviceStatus } from "@/lib/env";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ export const metadata: Metadata = { title: "Live demo", robots: { index: false }
 export default function DemoPage() {
   const status = serviceStatus();
   const seniorUrl = `/senior/${DEMO_TOKEN}`;
+  const seniorItUrl = `/senior/${DEMO_TOKEN_IT}`;
   const alertsUrl = `/family/${DEMO_IDS.family}/alerts`;
 
   return (
@@ -44,6 +45,9 @@ export default function DemoPage() {
           <div className="flex flex-wrap gap-4 text-sm font-bold">
             <Link href={seniorUrl} target="_blank" className="inline-flex items-center gap-1 text-link hover:underline">
               Open senior screen <ExternalLink className="size-3.5" />
+            </Link>
+            <Link href={seniorItUrl} target="_blank" className="inline-flex items-center gap-1 text-link hover:underline" lang="it">
+              Giulia (italiano) <ExternalLink className="size-3.5" />
             </Link>
             <Link href={alertsUrl} target="_blank" className="inline-flex items-center gap-1 text-link hover:underline">
               Open alerts page <ExternalLink className="size-3.5" />

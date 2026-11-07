@@ -1,6 +1,6 @@
 /**
  * Shared domain types. They mirror the Supabase schema in
- * supabase/migrations/0001_init.sql + 0002_escalation_and_auth.sql one to one (snake_case on purpose),
+ * supabase/migrations/0001_init.sql + 0002_escalation_and_auth.sql + 0003_help_request_acknowledge.sql one to one (snake_case on purpose),
  * so Layer 2 (family dashboard) and Layer 3 (marketplace) can reuse them.
  */
 export type Language = "de" | "it";
@@ -79,6 +79,9 @@ export interface HelpRequest {
   summary: string;
   status: HelpStatus;
   resolved_at: string | null;
+  /** Relative who pressed "I'm on it" in the feed (null = nobody yet). */
+  acknowledged_by: string | null;
+  acknowledged_at: string | null;
   created_at: string;
 }
 

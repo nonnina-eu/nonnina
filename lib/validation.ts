@@ -23,7 +23,10 @@ export const emergencyUpdateSchema = z.object({
 export type EmergencyUpdate = z.infer<typeof emergencyUpdateSchema>;
 
 export const helpRequestUpdateSchema = z.object({
-  action: z.enum(["resolve", "reopen"]),
+  /** "acknowledge" = a relative pressed "I'm on it"; the senior tablet then shows "Anna kümmert sich um: …". */
+  action: z.enum(["resolve", "reopen", "acknowledge"]),
+  /** optional for "acknowledge" without a session (demo page): which relative takes it */
+  relative_id: z.string().uuid().optional(),
 });
 export type HelpRequestUpdate = z.infer<typeof helpRequestUpdateSchema>;
 

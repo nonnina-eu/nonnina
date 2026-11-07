@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { MemoryStore } from "@/lib/db/memory-store";
-import { DEMO_IDS, DEMO_TOKEN } from "@/lib/db/seed";
+import { DEMO_IDS, DEMO_TOKEN, DEMO_TOKEN_IT } from "@/lib/db/seed";
 
 const g = globalThis as unknown as { __careCopilotMemory?: unknown };
 
@@ -128,5 +128,48 @@ describe("MemoryStore – escalation and help requests", () => {
     expect(done?.status).toBe("matched");
     expect(done?.resolved_at).toBe(at);
     expect(await store.updateHelpRequest("missing", { status: "open" })).toBeNull();
+  });
+
+  it("acknowledges a help request and finds the latest taken, unresolved one for the tablet", async () => {
+    const since = new Date(Date.now() - 60_000);
+    const req = await store.createHelpRequest({ senior_id: DEMO_IDS.senior, category: "legal", summary: "Brief der Pflegekasse", status: "escalated" });
+    expect(req.acknowledged_by).toBeNull();
+    expect(req.acknowledged_at).toBeNull();
+    expect(await store.findAcknowledgedHelpRequest(DEMO_IDS.senior, since)).toBeNull();
+
+    const at = new Date().toISOString();
+    const taken = await store.updateHelpRequest(req.id, { acknowledged_by: DEMO_IDS.anna, acknowledged_at: at });
+    expect(taken?.acknowledged_by).toBe(DEMO_IDS.anna);
+    expect(taken?.status).toBe("escalated");
+
+    const found = await store.findAcknowledgedHelpRequest(DEMO_IDS.senior, since);
+    expect(found?.id).toBe(req.id);
+    // other senior and a later `since` see nothing
+    expect(await store.findAcknowledgedHelpRequest(DEMO_IDS.giulia, since)).toBeNull();
+    expect(await store.findAcknowledgedHelpRequest(DEMO_IDS.senior, new Date(Date.now() + 60_000))).toBeNull();
+
+    // marked done → no longer shown on the tablet
+    await store.updateHelpRequest(req.id, { resolved_at: new Date().toISOString() });
+    expect(await store.findAcknowledgedHelpRequest(DEMO_IDS.senior, since)).toBeNull();
+  });
+
+  it("returns the most recently acknowledged request first", async () => {
+    const since = new Date(Date.now() - 60_000);
+    const a = await store.createHelpRequest({ senior_id: DEMO_IDS.senior, category: "daily_help", summary: "Einkauf", status: "open" });
+    const b = await store.createHelpRequest({ senior_id: DEMO_IDS.senior, category: "money", summary: "Rechnung", status: "open" });
+    await store.updateHelpRequest(b.id, { acknowledged_by: DEMO_IDS.thomas, acknowledged_at: new Date(Date.now() - 10_000).toISOString() });
+    await store.updateHelpRequest(a.id, { acknowledged_by: DEMO_IDS.anna, acknowledged_at: new Date().toISOString() });
+    expect((await store.findAcknowledgedHelpRequest(DEMO_IDS.senior, since))?.id).toBe(a.id);
+  });
+
+  it("seeds Giulia (Italian, Stuttgart) in the demo family", async () => {
+    const ctx = await store.getSeniorByToken(DEMO_TOKEN_IT);
+    expect(ctx?.senior.first_name).toBe("Giulia");
+    expect(ctx?.senior.language).toBe("it");
+    expect(ctx?.senior.city).toBe("Stuttgart");
+    expect(ctx?.family.id).toBe(DEMO_IDS.family);
+    expect(ctx?.senior.medication_times.map((m) => m.time)).toEqual(["08:00", "18:00"]);
+    const feed = await store.getFamilyFeed(DEMO_IDS.family);
+    expect(feed?.seniors.map((s) => s.first_name)).toEqual(["Maria", "Giulia"]);
   });
 });

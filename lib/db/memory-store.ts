@@ -17,7 +17,7 @@ import type {
   SeniorContext,
   VoiceSession,
 } from "./types";
-import { demoFamily, demoRelatives, demoSenior } from "./seed";
+import { demoFamily, demoRelatives, demoSeniors } from "./seed";
 
 interface MemoryState {
   families: Family[];
@@ -34,7 +34,7 @@ function state(): MemoryState {
   if (!g.__careCopilotMemory) {
     g.__careCopilotMemory = {
       families: [demoFamily()],
-      seniors: [demoSenior()],
+      seniors: demoSeniors(),
       relatives: demoRelatives(),
       events: [],
       helpRequests: [],
@@ -143,7 +143,7 @@ export class MemoryStore implements Store {
   }
 
   async createHelpRequest(input: NewHelpRequest): Promise<HelpRequest> {
-    const req: HelpRequest = { id: randomUUID(), ...input, resolved_at: null, created_at: now() };
+    const req: HelpRequest = { id: randomUUID(), ...input, resolved_at: null, acknowledged_by: null, acknowledged_at: null, created_at: now() };
     state().helpRequests.unshift(req);
     return req;
   }
@@ -153,6 +153,17 @@ export class MemoryStore implements Store {
     if (!req) return null;
     Object.assign(req, patch);
     return req;
+  }
+
+  async findAcknowledgedHelpRequest(seniorId: string, since: Date): Promise<HelpRequest | null> {
+    const t = since.getTime();
+    return (
+      state()
+        .helpRequests.filter(
+          (h) => h.senior_id === seniorId && h.acknowledged_at !== null && h.resolved_at === null && new Date(h.acknowledged_at).getTime() >= t,
+        )
+        .sort((a, b) => new Date(b.acknowledged_at!).getTime() - new Date(a.acknowledged_at!).getTime())[0] ?? null
+    );
   }
 
   async createVoiceSession(input: NewVoiceSession): Promise<VoiceSession> {

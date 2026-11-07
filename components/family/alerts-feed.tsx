@@ -89,6 +89,7 @@ export function AlertsFeed({ familyId, initial, compact = false, relativeId = nu
 
   const items = useMemo(() => merge(feed), [feed]);
   const seniorName = feed.seniors[0]?.first_name ?? "your parent";
+  const seniorNameFor = (id: string) => feed.seniors.find((x) => x.id === id)?.first_name ?? seniorName;
   const sortedRelatives = useMemo(() => [...relatives].sort((a, b) => a.priority - b.priority), [relatives]);
 
   async function patch(url: string, body: Record<string, unknown>, key: string) {
@@ -124,7 +125,7 @@ export function AlertsFeed({ familyId, initial, compact = false, relativeId = nu
               <EventCard
                 event={item.data}
                 when={timeAgo(item.at, now)}
-                seniorName={seniorName}
+                seniorName={seniorNameFor(item.data.senior_id)}
                 relatives={sortedRelatives}
                 busy={busy === item.data.id}
                 onAcknowledge={() => void patch(`/api/emergency/${item.data.id}`, relativeId ? { action: "acknowledge", relative_id: relativeId } : { action: "acknowledge" }, item.data.id)}
@@ -135,7 +136,12 @@ export function AlertsFeed({ familyId, initial, compact = false, relativeId = nu
                 when={timeAgo(item.at, now)}
                 busy={busy === item.data.id}
                 canResolve={canResolve}
+                seniorName={feed.seniors.length > 1 ? seniorNameFor(item.data.senior_id) : null}
+                ackName={item.data.acknowledged_by ? (sortedRelatives.find((r) => r.id === item.data.acknowledged_by)?.name ?? null) : null}
                 onToggle={(action) => void patch(`/api/help-request/${item.data.id}`, { action }, item.data.id)}
+                onAcknowledge={() =>
+                  void patch(`/api/help-request/${item.data.id}`, relativeId ? { action: "acknowledge", relative_id: relativeId } : { action: "acknowledge" }, item.data.id)
+                }
               />
             ) : (
               <SessionCard session={item.data} when={timeAgo(item.at, now)} />
@@ -236,33 +242,75 @@ function EventCard({ event, when, onAcknowledge, seniorName, relatives, busy }: 
   );
 }
 
-function HelpCard({ request, when, onToggle, busy, canResolve }: { request: HelpRequest; when: string; onToggle: (action: "resolve" | "reopen") => void; busy: boolean; canResolve: boolean }) {
+function HelpCard({
+  request,
+  when,
+  onToggle,
+  onAcknowledge,
+  busy,
+  canResolve,
+  seniorName,
+  ackName,
+}: {
+  request: HelpRequest;
+  when: string;
+  onToggle: (action: "resolve" | "reopen") => void;
+  onAcknowledge: () => void;
+  busy: boolean;
+  canResolve: boolean;
+  /** Shown only when the family has more than one senior. */
+  seniorName: string | null;
+  ackName: string | null;
+}) {
   const t = familyT().feed;
   const paperwork = request.category === "legal" || request.category === "money";
   const resolved = Boolean(request.resolved_at);
+  const acknowledged = Boolean(request.acknowledged_at);
   return (
     <article className={cn("rounded-xl border border-line p-5 shadow-soft", resolved ? "bg-white" : paperwork ? "bg-cielo" : "bg-glicine")}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline">
             <HandHelping className="size-3.5" />
+            {seniorName ? `${seniorName} · ` : ""}
             {t.helpRequest} · {t.categories[request.category]}
           </Badge>
-          <Badge variant={resolved ? "success" : "outline"}>{resolved ? t.resolved : request.status.replace("_", " ")}</Badge>
+          {resolved ? (
+            <Badge variant="success">{t.resolved}</Badge>
+          ) : acknowledged ? (
+            <Badge variant="success">
+              <Check className="size-3.5" /> {ackName ? t.isOnIt(ackName) : t.onIt}
+            </Badge>
+          ) : (
+            <Badge variant="outline">{request.status.replace("_", " ")}</Badge>
+          )}
         </div>
         <time className="text-xs text-muted">{when}</time>
       </div>
       <p className={cn("mt-3 text-base text-ink", resolved && "text-muted line-through")}>{request.summary}</p>
       {canResolve ? (
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => onToggle(resolved ? "reopen" : "resolve")}
-          className="mt-4 inline-flex h-10 items-center gap-2 rounded-sm border-[1.5px] border-ink bg-white px-4 text-sm font-bold text-ink hover:bg-mist disabled:opacity-60"
-        >
-          {busy ? <Loader2 className="size-4 animate-spin" /> : resolved ? <Undo2 className="size-4" /> : <Check className="size-4" />}
-          {resolved ? t.reopen : t.done}
-        </button>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {!resolved && !acknowledged ? (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={onAcknowledge}
+              className="inline-flex h-10 items-center gap-2 rounded-sm bg-ink px-4 text-sm font-bold text-white hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sole disabled:opacity-60"
+            >
+              {busy ? <Loader2 className="size-4 animate-spin" /> : <HandHelping className="size-4" />}
+              {t.onIt}
+            </button>
+          ) : null}
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => onToggle(resolved ? "reopen" : "resolve")}
+            className="inline-flex h-10 items-center gap-2 rounded-sm border-[1.5px] border-ink bg-white px-4 text-sm font-bold text-ink hover:bg-mist disabled:opacity-60"
+          >
+            {busy ? <Loader2 className="size-4 animate-spin" /> : resolved ? <Undo2 className="size-4" /> : <Check className="size-4" />}
+            {resolved ? t.reopen : t.done}
+          </button>
+        </div>
       ) : null}
     </article>
   );

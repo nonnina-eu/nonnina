@@ -2,13 +2,15 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useConversation } from "@elevenlabs/react";
-import { Check, Clock3, Phone, RotateCcw } from "lucide-react";
+import { Check, Clock3, HandHelping, Phone, RotateCcw } from "lucide-react";
 import { Mark } from "@/components/logo";
-import type { Language, MedicationTime } from "@/lib/db/types";
-import { seniorT } from "@/lib/i18n/senior";
+import type { HelpCategory, Language, MedicationTime, NotificationRecord } from "@/lib/db/types";
+import { seniorT, type SeniorStrings } from "@/lib/i18n/senior";
 import { detectEmergency } from "@/lib/emergency-keywords";
 import { formatReminder, nextReminder } from "@/lib/time";
+import { emergencyToolOutcome, helpRequestToolOutcome } from "@/lib/tool-outcomes";
 import { useEmergency } from "@/hooks/use-emergency";
+import { useSeniorStatus } from "@/hooks/use-senior-status";
 import { useWakeLock } from "@/hooks/use-wake-lock";
 import { Captions } from "./captions";
 import { Clock, Greeting, useNow } from "./clock";
@@ -30,6 +32,12 @@ type VoiceError = { title: string; body?: string; retry: boolean } | null;
 
 const MIC_KEY = "care-copilot.mic-granted";
 
+const HELP_CATEGORIES: readonly HelpCategory[] = ["daily_help", "legal", "money", "health", "loneliness", "other"];
+/** The agent may send an unknown category; the API would reject it (422), so fall back to "other". */
+function normalizeCategory(value: string | undefined): HelpCategory {
+  return HELP_CATEGORIES.includes(value as HelpCategory) ? (value as HelpCategory) : "other";
+}
+
 export function SeniorScreen(props: SeniorScreenProps) {
   const { token, firstName, language, medicationTimes, relatives, voiceConfigured } = props;
   const t = useMemo(() => seniorT(language), [language]);
@@ -44,6 +52,7 @@ export function SeniorScreen(props: SeniorScreenProps) {
   const primaryRelative = useMemo(() => [...relatives].sort((a, b) => a.priority - b.priority)[0] ?? null, [relatives]);
 
   const emergency = useEmergency(token);
+  const takenHelp = useSeniorStatus(token)?.helpRequest ?? null;
   const triggerRef = useRef(emergency.trigger);
   triggerRef.current = emergency.trigger;
 
@@ -92,27 +101,30 @@ export function SeniorScreen(props: SeniorScreenProps) {
       }
     },
     clientTools: {
+      // Tool results are the real outcome (lib/tool-outcomes.ts), so Lina never claims an SMS that was not sent.
       trigger_emergency: async (params: { level?: string; reason?: string; quote?: string }) => {
         const level = params.level === "warning" ? "warning" : "emergency";
-        await triggerRef.current({
+        const result = await triggerRef.current({
           level,
           reason: params.reason?.slice(0, 300) || (level === "emergency" ? "Emergency reported by assistant" : "Warning reported by assistant"),
           quote: params.quote?.slice(0, 600) || "",
           source: "agent_tool",
         });
-        return "relatives_notified";
+        return emergencyToolOutcome(result);
       },
       create_help_request: async (params: { category?: string; summary?: string }) => {
         try {
-          await fetch("/api/help-request", {
+          const res = await fetch("/api/help-request", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token, category: params.category ?? "other", summary: params.summary?.slice(0, 500) || "Help requested" }),
+            body: JSON.stringify({ token, category: normalizeCategory(params.category), summary: params.summary?.trim().slice(0, 500) || "Help requested" }),
           });
+          const json = (await res.json().catch(() => null)) as { ok?: boolean; notified?: NotificationRecord[] } | null;
+          return helpRequestToolOutcome({ ok: res.ok && Boolean(json?.ok), notified: json?.notified });
         } catch {
-          /* the agent still tells the senior; the webhook escalation is a second chance */
+          // Network down: the post-call webhook is a second chance, but Lina must not promise anything.
+          return helpRequestToolOutcome({ ok: false });
         }
-        return "family_informed";
       },
       get_next_reminder: () => reminderRef.current,
     },
@@ -258,23 +270,11 @@ export function SeniorScreen(props: SeniorScreenProps) {
       </main>
 
       <footer className="flex items-end justify-between gap-6">
-        {/* "connected" pill: Salvia surface, Bene text */}
-        <p
-          className={
-            relativeNames.length > 0
-              ? "flex items-center gap-2 rounded-full bg-salvia px-[1em] py-[0.5em] font-bold text-bene"
-              : "flex items-center gap-2 rounded-full bg-mist px-[1em] py-[0.5em] font-bold text-graphite"
-          }
-        >
-          {relativeNames.length > 0 ? (
-            <>
-              <Check className="size-[1.2em]" />
-              {t.connected(relativeNames[0])}
-            </>
-          ) : (
-            t.nobodyConnected
-          )}
-        </p>
+        <StatusPill
+          t={t}
+          relativeName={relativeNames[0] ?? null}
+          takenHelp={takenHelp ? t.helpTaken(takenHelp.acknowledgedBy, takenHelp.summary) : null}
+        />
         {emergency.state.allClearSent ? <p className="font-semibold text-bene">{t.allClearSent}</p> : null}
         <HelpButton label={t.help} onClick={manualHelp} inline />
       </footer>
@@ -282,6 +282,30 @@ export function SeniorScreen(props: SeniorScreenProps) {
       <WarningBanner t={t} state={emergency.state} relativeNames={relativeNames} onCancel={emergency.cancel} onDismiss={emergency.dismiss} />
       <EmergencyOverlay t={t} state={emergency.state} relativeNames={relativeNames} primaryRelative={primaryRelative} onCancel={emergency.cancel} />
     </div>
+  );
+}
+
+/**
+ * Footer pill. Default: "Anna ist verbunden" (Salvia surface, Bene text). When a relative has taken a
+ * help request ("I'm on it" in the family feed) it becomes "Anna kümmert sich um: …".
+ */
+function StatusPill({ t, relativeName, takenHelp }: { t: SeniorStrings; relativeName: string | null; takenHelp: string | null }) {
+  if (takenHelp) {
+    return (
+      <p role="status" aria-live="polite" className="flex min-w-0 max-w-[60%] items-center gap-2 rounded-2xl bg-salvia px-[1em] py-[0.5em] font-bold text-bene">
+        <HandHelping className="size-[1.3em] shrink-0" />
+        <span className="line-clamp-2">{takenHelp}</span>
+      </p>
+    );
+  }
+  if (!relativeName) {
+    return <p className="flex items-center gap-2 rounded-full bg-mist px-[1em] py-[0.5em] font-bold text-graphite">{t.nobodyConnected}</p>;
+  }
+  return (
+    <p className="flex items-center gap-2 rounded-full bg-salvia px-[1em] py-[0.5em] font-bold text-bene">
+      <Check className="size-[1.2em]" />
+      {t.connected(relativeName)}
+    </p>
   );
 }
 

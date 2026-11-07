@@ -98,8 +98,10 @@ not react to a medication reminder, Lina speaks ("Maria, ist alles in Ordnung?")
 
 ## Help requests (non-urgent needs)
 
-`help_requests.status`: `open → ai_solved | escalated → matched` (matched = Layer 3). The
-family marks a request done from the feed. Priority-1 relative gets one SMS per request; others
+`help_requests.status`: `open → ai_solved | escalated → matched` (matched = Layer 3). A relative
+takes a request from the feed ("I'm on it" → `acknowledged_by`, `acknowledged_at`; status is
+unchanged) and the senior tablet shows "Anna kümmert sich um: …" until the request is marked
+done (`resolved_at`) or 12 h have passed. The family marks a request done from the feed. Priority-1 relative gets one SMS per request; others
 see it in the feed only.
 
 ## What exists today vs. what the MVP still needs
@@ -114,6 +116,8 @@ see it in the feed only.
 | "Press 1 to confirm" in the voice call (Twilio Gather → ack) | ✅ built – `/api/twilio/voice` (TwiML + Gather) and `/api/twilio/gather` (digit 1 → acknowledge), signature-verified |
 | "Anna is on it" message to the other relatives | ✅ built – kind `acknowledged` in `lib/notify.ts`, sent on app ack and on key 1 |
 | `fallback_phone` on `families` | ✅ built – migration `0002`, used by the ladder after the relatives |
+| Help request "I'm on it" → tablet shows "Anna kümmert sich um: …" / "Anna se ne occupa: …" | ✅ built – migration `0003` (`help_requests.acknowledged_by/_at`), `PATCH /api/help-request/:id {action:"acknowledge"}`, tablet polls `GET /api/senior/:token/status` |
+| Honest agent tool results (real outcome, not always "notified") | ✅ built – `lib/tool-outcomes.ts` (pure, tested), used by the client tools in `senior-screen.tsx` |
 | Web push for relatives | ⏭ post-MVP |
 | No-response check | ⏭ post-MVP |
 | Certified Hausnotruf partner | ⏭ post-MVP |

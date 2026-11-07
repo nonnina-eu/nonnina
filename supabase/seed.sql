@@ -1,4 +1,5 @@
--- Demo data: family Weber, senior Maria (82, Stuttgart), relatives Anna and Thomas.
+-- Demo data: family Weber, seniors Maria (82, Stuttgart, German) and Giulia (Italian, Stuttgart),
+-- relatives Anna and Thomas.
 -- Ids are fixed so that /demo links are identical in memory mode and Supabase mode.
 -- Requires migrations 0001 and 0002.
 insert into families (id, name, email, fallback_phone) values
@@ -9,6 +10,15 @@ insert into seniors (id, family_id, first_name, language, city, address_note, ca
   ('22222222-2222-4222-8222-222222222222', '11111111-1111-4111-8111-111111111111', 'Maria', 'de', 'Stuttgart',
    'Schlüssel bei Nachbar Thomas, Wohnung 3', 3, 'maria-demo',
    '[{"time":"08:00","label":"Tabletten"},{"time":"18:00","label":"Tabletten"}]'::jsonb)
+on conflict (id) do nothing;
+
+-- Giulia: same family, Italian screen + Italian SMS (device token giulia-demo).
+-- created_at after Maria so the family pages keep Maria as the first senior (ordered by created_at).
+insert into seniors (id, family_id, first_name, language, city, address_note, care_level, device_token, medication_times, created_at) values
+  ('55555555-5555-4555-8555-555555555555', '11111111-1111-4111-8111-111111111111', 'Giulia', 'it', 'Stuttgart',
+   null, 2, 'giulia-demo',
+   '[{"time":"08:00","label":"Pastiglie"},{"time":"18:00","label":"Pastiglie"}]'::jsonb,
+   now() + interval '1 second')
 on conflict (id) do nothing;
 
 -- Replace the placeholder numbers with real E.164 numbers before a live demo.

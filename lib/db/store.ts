@@ -19,7 +19,7 @@ import type {
 export type EmergencyEventPatch = Partial<
   Pick<EmergencyEvent, "status" | "notified" | "escalation_step" | "next_step_at" | "acknowledged_by">
 >;
-export type HelpRequestPatch = Partial<Pick<HelpRequest, "status" | "resolved_at">>;
+export type HelpRequestPatch = Partial<Pick<HelpRequest, "status" | "resolved_at" | "acknowledged_by" | "acknowledged_at">>;
 
 /**
  * Storage port. Two adapters implement it:
@@ -44,6 +44,8 @@ export interface Store {
 
   createHelpRequest(input: NewHelpRequest): Promise<HelpRequest>;
   updateHelpRequest(id: string, patch: HelpRequestPatch): Promise<HelpRequest | null>;
+  /** Latest help request of the senior that a relative took ("I'm on it") after `since` and nobody marked done yet. */
+  findAcknowledgedHelpRequest(seniorId: string, since: Date): Promise<HelpRequest | null>;
   createVoiceSession(input: NewVoiceSession): Promise<VoiceSession>;
 
   getFamilyFeed(familyId: string, limit?: number): Promise<FamilyFeed | null>;
