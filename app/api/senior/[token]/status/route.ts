@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getStore } from "@/lib/db";
 import { jsonError } from "@/lib/api";
+import { maybeRunEscalationTick } from "@/lib/escalation-heartbeat";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,6 +24,9 @@ const EMERGENCY_WINDOW_MS = 60 * 60 * 1000;
 export async function GET(_request: Request, { params }: Params) {
   const { token } = await params;
   if (!tokenSchema.safeParse(token).success) return jsonError(400, "Invalid token");
+
+  // The always-on tablet drives the escalation ladder (no per-minute cron on Vercel Hobby).
+  await maybeRunEscalationTick();
 
   const store = getStore();
   const ctx = await store.getSeniorByToken(token);

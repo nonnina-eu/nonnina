@@ -112,7 +112,7 @@ see it in the feed only.
 | Tablet emergency mode, 112 button, "I'm fine", warning countdown | ✅ built |
 | Realtime family feed, "I'm on it" (acknowledge, with relative id), all-clear SMS | ✅ built |
 | Family login (magic link / demo cookie), onboarding wizard, QR tablet link, settings, invite, help request "Done" | ✅ built (`/app`) |
-| Escalation ladder (timer, priority-2…n, fallback number, "nobody confirmed") | ✅ built – `lib/escalation-ladder.ts` (pure, tested), `lib/escalation-runner.ts`, `/api/cron/escalate` every minute via `vercel.json`, `CRON_SECRET` |
+| Escalation ladder (timer, priority-2…n, fallback number, "nobody confirmed") | ✅ built – `lib/escalation-ladder.ts` (pure, tested), `lib/escalation-runner.ts`, driven by the always-on tablet: `/api/senior/[token]/status` runs at most one tick per 15 s per instance (`lib/escalation-heartbeat.ts`), because Vercel Hobby allows only daily crons; `/api/cron/escalate` stays as a daily safety net (`CRON_SECRET`). Known limit: no cross-instance lock, keep the tablet as the single driver |
 | "Press 1 to confirm" in the voice call (Twilio Gather → ack) | ✅ built – `/api/twilio/voice` (TwiML + Gather) and `/api/twilio/gather` (digit 1 → acknowledge), signature-verified |
 | "Anna is on it" message to the other relatives | ✅ built – kind `acknowledged` in `lib/notify.ts`, sent on app ack and on key 1 |
 | `fallback_phone` on `families` | ✅ built – migration `0002`, used by the ladder after the relatives |
