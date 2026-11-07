@@ -1,20 +1,16 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useLanding } from "./language-provider";
 
-type State = { kind: "idle" } | { kind: "submitting" } | { kind: "success"; created: boolean } | { kind: "error"; message: string };
+type State = { kind: "idle" } | { kind: "submitting" } | { kind: "success"; created: boolean } | { kind: "error" };
 
-const field = "rounded-lg border-[#e0e4ec] bg-white";
+const field = "h-14 rounded-2xl border-[#e0e4ec] bg-white text-base";
 
 export function WaitlistForm() {
-  const { t } = useLanding();
   const [state, setState] = useState<State>({ kind: "idle" });
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -33,76 +29,71 @@ export function WaitlistForm() {
       setState({ kind: "success", created: json.created ?? true });
       form.reset();
     } catch {
-      setState({ kind: "error", message: t.waitlist.error });
+      setState({ kind: "error" });
     }
   }
 
   return (
-    <section id="lista" className="scroll-mt-24 bg-[#f5f7fb] py-20 md:py-28">
-      <div className="container">
-        <h2 className="max-w-[14ch] text-4xl text-[#202128] sm:text-5xl lg:text-[4.4rem]">{t.lead.title}</h2>
-        <div className="mt-10 grid gap-4 md:grid-cols-2">
-          <article className="rounded-[1.5rem] bg-white p-6 sm:p-8">
-            <h3 className="font-display text-2xl font-extrabold tracking-[-0.03em]">{t.lead.homeTitle}</h3>
-            <p className="mt-3 text-base leading-relaxed text-[#343a46]">{t.lead.homeBody}</p>
-          </article>
-          <article className="rounded-[1.5rem] bg-[#202128] p-6 text-white sm:p-8">
-            <h3 className="font-display text-2xl font-extrabold tracking-[-0.03em]">{t.lead.familyTitle}</h3>
-            <p className="mt-3 text-base leading-relaxed text-white/75">{t.lead.familyBody}</p>
-          </article>
-        </div>
+    <section id="join" className="scroll-mt-20 bg-[#202128] px-5 py-14 text-white">
+      <div className="mx-auto max-w-5xl">
+        <h2 className="max-w-[12ch] text-4xl text-white sm:text-5xl">Be ready when it opens.</h2>
+        <p className="mt-3 max-w-xl text-lg leading-relaxed text-white/75">
+          We are starting with a small group of families. Leave your email and we will write to you.
+        </p>
 
-        <div className="mt-6 rounded-[1.5rem] bg-white p-6 sm:p-10">
-          <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#476adb]">{t.waitlist.eyebrow}</p>
-          <h3 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">{t.waitlist.title}</h3>
-          <p className="mt-3 max-w-2xl text-base text-[#343a46]">{t.waitlist.body}</p>
-
-          {state.kind === "success" ? (
-            <div role="status" className="mt-8 flex flex-col items-start gap-3 rounded-2xl bg-[#e9f3df] p-8">
-              <CheckCircle2 className="size-8 text-[#10bb48]" />
-              <p className="text-xl font-bold">{t.waitlist.successTitle}</p>
-              <p>{state.created ? t.waitlist.successBody : t.waitlist.duplicate}</p>
+        {state.kind === "success" ? (
+          <div role="status" className="mt-8 rounded-3xl bg-white p-6 text-[#202128]">
+            <CheckCircle2 className="size-8 text-[#2f6b32]" />
+            <p className="mt-3 text-2xl font-extrabold">You are on the list.</p>
+            <p className="mt-2 text-base text-[#343a46]">
+              {state.created ? "Thank you. We will write when the pilot opens." : "This email is already on the list. Thank you."}
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={onSubmit} className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="email" className="text-white">
+                Email
+              </Label>
+              <Input id="email" name="email" type="email" autoComplete="email" required placeholder="you@email.com" className={field} />
             </div>
-          ) : (
-            <form onSubmit={onSubmit} className="mt-8 grid gap-5 sm:grid-cols-2">
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="email">{t.waitlist.email}</Label>
-                <Input id="email" name="email" type="email" autoComplete="email" required placeholder="tu@email.it" className={field} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="role">{t.waitlist.role}</Label>
-                <Select id="role" name="role" defaultValue="family" required className={field}>
-                  <option value="family">{t.waitlist.roles.family}</option>
-                  <option value="helper">{t.waitlist.roles.helper}</option>
-                  <option value="care_service">{t.waitlist.roles.care_service}</option>
-                  <option value="other">{t.waitlist.roles.other}</option>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="city">{t.waitlist.city}</Label>
-                <Input id="city" name="city" autoComplete="address-level2" maxLength={100} className={field} />
-              </div>
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="message">{t.waitlist.message}</Label>
-                <Textarea id="message" name="message" placeholder={t.waitlist.messagePlaceholder} maxLength={1000} className="rounded-lg border-[#e0e4ec]" />
-              </div>
-              <div className="hidden" aria-hidden>
-                <label htmlFor="website">Website</label>
-                <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
-              </div>
-              {state.kind === "error" ? (
-                <p role="alert" className="text-sm font-medium text-red-700 sm:col-span-2">{state.message}</p>
-              ) : null}
-              <div className="flex flex-col items-start gap-3 sm:col-span-2">
-                <Button type="submit" variant="ink" size="lg" disabled={state.kind === "submitting"}>
-                  {state.kind === "submitting" ? <Loader2 className="animate-spin" /> : <ArrowRight />}
-                  {state.kind === "submitting" ? t.waitlist.submitting : t.waitlist.submit}
-                </Button>
-                <p className="text-xs text-[#8b94a7]">{t.waitlist.privacy}</p>
-              </div>
-            </form>
-          )}
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="role" className="text-white">
+                I am
+              </Label>
+              <Select id="role" name="role" defaultValue="family" required className={field}>
+                <option value="family">A family member</option>
+                <option value="helper">A helper</option>
+                <option value="care_service">A care service</option>
+                <option value="other">Someone else</option>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="city" className="text-white">
+                City
+              </Label>
+              <Input id="city" name="city" autoComplete="address-level2" maxLength={100} className={field} />
+            </div>
+            <div className="hidden" aria-hidden>
+              <label htmlFor="website">Website</label>
+              <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
+            {state.kind === "error" ? (
+              <p role="alert" className="text-sm font-semibold text-red-200 sm:col-span-2">
+                That did not work. Please try again.
+              </p>
+            ) : null}
+            <button
+              type="submit"
+              disabled={state.kind === "submitting"}
+              className="inline-flex h-14 items-center justify-center rounded-full bg-white px-6 text-base font-bold text-[#202128] disabled:opacity-60 sm:col-span-2 sm:w-fit"
+            >
+              {state.kind === "submitting" ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
+              {state.kind === "submitting" ? "Sending" : "Join the waitlist"}
+            </button>
+            <p className="text-sm text-white/60 sm:col-span-2">We only use your email to write to you about Nonnina.</p>
+          </form>
+        )}
       </div>
     </section>
   );

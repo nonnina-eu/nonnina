@@ -9,17 +9,16 @@ const appUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: "Nonnina – La compagna vocale per chi resta a casa",
+    default: "Nonnina – One tap at home. A clear text for you.",
     template: "%s · Nonnina",
   },
   description:
-    "Nonnina è la compagna vocale per le persone anziane che vivono a casa. Un bottone per loro, un piano chiaro per la famiglia. nonnina.eu",
+    "Nonnina is a voice companion for older people living at home. They tap once and talk. The family hears about it in seconds. nonnina.eu",
   openGraph: {
     title: "Nonnina",
-    description:
-      "La compagna vocale per chi resta a casa. Un bottone per la nonna, un piano chiaro per te. nonnina.eu",
+    description: "One tap at home. A clear text for the family. nonnina.eu",
     type: "website",
-    locale: "it_IT",
+    locale: "en_GB",
     siteName: "Nonnina",
   },
 };
@@ -47,7 +46,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="it" className={`${manrope.variable} ${outfit.variable}`}>
+    <html lang="en" className={`${manrope.variable} ${outfit.variable}`}>
       <body className="min-h-dvh font-sans">{children}</body>
     </html>
   );

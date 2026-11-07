@@ -1,51 +1,36 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 import { photos } from "./media";
-import { useLanding } from "./language-provider";
+import { ScreenPreview } from "./screen-preview";
 
 export function Hero() {
-  const { t } = useLanding();
-
   return (
-    <section className="pb-6 pt-10 md:pb-10 md:pt-16">
-      <div className="container">
-        <div className="mx-auto max-w-[18ch] text-center md:max-w-[16ch]">
-          <h1 className="text-[2.7rem] text-[#202128] sm:text-6xl lg:text-[5.4rem]">{t.hero.title}</h1>
-        </div>
-        <p className="mx-auto mt-6 max-w-[46rem] text-center text-base leading-relaxed text-[#343a46] sm:text-lg">{t.hero.subtitle}</p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a href="#lista" className="inline-flex items-center gap-2 rounded-lg bg-[#202128] px-7 py-3.5 text-base font-bold text-white hover:bg-black">
-            <ArrowRight className="size-4" />
-            {t.hero.primary}
-          </a>
-          <a
-            href="#come-funziona"
-            className="inline-flex items-center gap-2 rounded-lg border border-[#202128] bg-white px-7 py-3.5 text-base font-bold text-[#202128] hover:bg-[#f5f7fb]"
-          >
-            <ArrowRight className="size-4" />
-            {t.hero.secondary}
-          </a>
-        </div>
+    <section className="px-5 pb-8 pt-8 sm:pt-12">
+      <div className="mx-auto max-w-5xl">
+        <p className="text-sm font-bold uppercase tracking-[0.14em] text-[#476adb]">For families with a parent at home</p>
+        <h1 className="mt-3 max-w-[12ch] text-[2.6rem] text-[#202128] sm:text-6xl">One tap at home. A clear text for you.</h1>
+        <p className="mt-4 max-w-xl text-lg leading-relaxed text-[#343a46]">
+          Nonnina is a voice companion on a tablet. Your parent talks. You find out, in seconds, if they need you.
+        </p>
+        <a href="#join" className="mt-6 inline-flex h-14 w-full items-center justify-center rounded-full bg-[#202128] px-6 text-base font-bold text-white sm:w-auto">
+          Join the waitlist
+        </a>
 
-        <div className="relative mx-auto mt-12 h-[420px] overflow-hidden rounded-[1.75rem] sm:h-[520px] md:mt-16 lg:h-[620px]">
-          <Image src={photos.tea} alt="" fill priority className="object-cover object-[center_35%]" sizes="(min-width: 1200px) 1120px, 100vw" />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#202128]/35 via-transparent to-transparent" />
-        </div>
-
-        <div className="relative z-10 mx-auto -mt-16 max-w-5xl rounded-[1.75rem] bg-[#dff1f3] px-5 py-8 sm:-mt-24 sm:px-10 sm:py-10">
-          <p className="text-center text-xs font-extrabold uppercase tracking-[0.16em] text-[#5f7d45] sm:text-sm">{t.award.label}</p>
-          <ul className="mt-6 flex gap-3 overflow-x-auto pb-1 sm:flex-wrap sm:justify-center sm:overflow-visible">
-            {t.award.items.map((item) => (
-              <li
-                key={item}
-                className="shrink-0 rounded-2xl bg-white/80 px-4 py-3 text-sm font-semibold text-[#202128] shadow-[0_8px_24px_-16px_rgba(32,33,40,0.4)]"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
+        <div className="mt-8">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[1.75rem] sm:aspect-[16/8]">
+            <Image
+              src={photos.tea}
+              alt="A carer pouring tea for an older woman at home"
+              fill
+              priority
+              className="object-cover object-[center_35%]"
+              sizes="(min-width: 1024px) 960px, 100vw"
+            />
+          </div>
+          <div className="mt-4 sm:mx-auto sm:max-w-sm">
+            <ScreenPreview />
+          </div>
         </div>
       </div>
     </section>
