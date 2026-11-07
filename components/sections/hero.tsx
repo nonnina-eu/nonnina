@@ -23,7 +23,7 @@ export function Hero({ t }: { t: Dictionary["hero"] }) {
           <p className="max-w-[32rem] text-[1.0625rem] leading-relaxed text-graphite md:text-xl">{t.lede}</p>
           <div className="flex flex-wrap gap-3">
             <a href="#waitlist" className="btn btn-ink">{t.cta}<ArrowRight className="size-[18px]" /></a>
-            <a href="#how" className="btn btn-outline">{t.cta2}</a>
+            <a href="/demo" className="btn btn-outline">{t.cta2}</a>
           </div>
           <ul className="flex flex-wrap gap-2">
             {t.trust.map((item) => (

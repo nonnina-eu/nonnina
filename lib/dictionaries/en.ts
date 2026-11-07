@@ -16,6 +16,8 @@ export const en = {
     close: "Close menu",
     home: "Nonnina – home",
     language: "Language",
+    marketplace: "Find a helper",
+    demo: "Live demo",
   },
   hero: {
     eyebrow: "Voice companion for older people at home",
@@ -23,7 +25,7 @@ export const en = {
     titleB: "Peace of mind for the whole family.",
     lede: "Nonnina is a voice companion for older people who live at home. It chats, listens and gives gentle reminders every day, and tells the family the moment something is wrong.",
     cta: "Join the waitlist",
-    cta2: "See how it works",
+    cta2: "Try the live demo",
     trust: ["No smartphone needed", "German & Italian", "Data stored in the EU"],
     cardVoice: "Lina is listening",
     cardVoiceQuote: "“Have you taken your tablets, Maria?”",

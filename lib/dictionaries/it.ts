@@ -18,6 +18,8 @@ export const it: Dictionary = {
     close: "Chiudi menu",
     home: "Nonnina – pagina iniziale",
     language: "Lingua",
+    marketplace: "Trova chi aiuta",
+    demo: "Demo dal vivo",
   },
   hero: {
     eyebrow: "Compagna vocale per gli anziani a casa",
@@ -25,7 +27,7 @@ export const it: Dictionary = {
     titleB: "Serenità per tutta la famiglia.",
     lede: "Nonnina è una compagna vocale per le persone anziane che vivono a casa. Parla, ricorda e ascolta ogni giorno, e avvisa la famiglia appena qualcosa non va.",
     cta: "Iscriviti alla lista d’attesa",
-    cta2: "Scopri come funziona",
+    cta2: "Prova la demo dal vivo",
     trust: ["Senza smartphone", "Tedesco e italiano", "Dati conservati nell’UE"],
     cardVoice: "Lina sta ascoltando",
     cardVoiceQuote: "«Ha preso le pastiglie, Maria?»",

@@ -18,6 +18,8 @@ export const de: Dictionary = {
     close: "Menü schließen",
     home: "Nonnina – Startseite",
     language: "Sprache",
+    marketplace: "Hilfe finden",
+    demo: "Live-Demo",
   },
   hero: {
     eyebrow: "Sprachbegleiter für ältere Menschen zu Hause",
@@ -25,7 +27,7 @@ export const de: Dictionary = {
     titleB: "Ein gutes Gefühl für die ganze Familie.",
     lede: "Nonnina ist ein Sprachbegleiter für ältere Menschen, die zu Hause leben. Nonnina hört zu, spricht und erinnert an Wichtiges, jeden Tag. Wenn etwas nicht stimmt, weiß die Familie sofort Bescheid.",
     cta: "Auf die Warteliste",
-    cta2: "So funktioniert’s",
+    cta2: "Live-Demo ausprobieren",
     trust: ["Kein Smartphone nötig", "Deutsch & Italienisch", "Daten in der EU"],
     cardVoice: "Lina hört zu",
     cardVoiceQuote: "„Haben Sie Ihre Tabletten genommen, Maria?“",

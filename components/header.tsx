@@ -41,7 +41,7 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
     { href: "#how", label: t.how },
     { href: "#safety", label: t.safety },
     { href: "#families", label: t.families },
-    { href: "#helpers", label: t.helpers },
+    { href: "/helpers", label: t.marketplace },
     { href: "#faq", label: t.faq },
   ];
 
@@ -58,7 +58,8 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher current={locale} label={t.language} className="hidden sm:inline-flex" />
-          <a href="#waitlist" className="btn btn-outline btn-sm hidden md:inline-flex">{t.cta}</a>
+          <a href="/demo" className="btn btn-ink btn-sm hidden md:inline-flex">{t.demo}</a>
+          <a href="#waitlist" className="btn btn-outline btn-sm hidden xl:inline-flex">{t.cta}</a>
           <button
             ref={btnRef}
             type="button"
@@ -79,7 +80,10 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
           ))}
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
             <LanguageSwitcher current={locale} label={t.language} />
-            <a href="#waitlist" onClick={() => setOpen(false)} className="btn btn-ink btn-sm">{t.cta}</a>
+            <div className="flex gap-2">
+              <a href="/demo" className="btn btn-ink btn-sm">{t.demo}</a>
+              <a href="#waitlist" onClick={() => setOpen(false)} className="btn btn-outline btn-sm">{t.cta}</a>
+            </div>
           </div>
         </nav>
       </div>
