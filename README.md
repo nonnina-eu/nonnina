@@ -26,7 +26,8 @@ over phone calls, WhatsApp and Google while working full time. The parent cannot
 can go unnoticed for hours, everyday errands pile up, and the money the care insurance already
 pays for help (the **relief amount, 131 € per month from care level 1**) often goes unused.
 
-We talked to three Stuttgart care providers on the day. They confirmed that small everyday
+On the day we called **26 care providers** in Stuttgart, reached and interviewed **4**, and spent
+**3h+** on the phone with them. They confirmed that small everyday
 requests (the TV, a letter, the post, shopping) land on carers every day, that strangers are the
 blocker for seniors, and that relatives end up organising everything. Full notes and what we
 changed: [docs/validation.md](docs/validation.md).
@@ -63,12 +64,14 @@ Plus the landing page in EN/DE/IT (`/`, `/de`, `/it`):
 
 ## Business in one paragraph
 
-The senior never pays. The family pays **€19/month per senior**, with all relatives included, or
-€29 with a pre-configured tablet. Helpers join free during the pilot and will later pay for
-request management. That price sits between app-only care software and family-response
-emergency systems, and clearly below call-centre Hausnotruf at €27–45. Germany has 5.52 M people
-cared for at home and a care-staff gap of 280 000–690 000 by 2049. Details:
-[docs/business-model.md](docs/business-model.md), [docs/07-pricing.md](docs/07-pricing.md) and
+**The Upwork for elderly care.** The senior never pays and never sees a marketplace. Families
+compare, book and pay for every kind of help in one place. Nonnina takes **10–15 % of the order
+value on every completed job**, and a monthly family subscription lowers that fee. Much of this
+help can be paid from a budget families already have: the relief amount of **131 € per month**
+from care level 1, for recognised services. Germany has **5.52 M** people cared for at home, 6 M
+people aged 80+ today and up to **9.8 M by 2050**, and up to **690 000** carers missing by 2049.
+We are raising a **€500k pre-seed** for twelve months: the five of us, the helper vetting process
+and one dense city. Details: [docs/business-model.md](docs/business-model.md),
 [docs/05-market-and-evidence.md](docs/05-market-and-evidence.md).
 
 ## For judges and reviewers
@@ -159,7 +162,14 @@ To go live with real accounts, follow [docs/go-live.md](docs/go-live.md):
 
 ## Team
 
-Ruben Havrestiuc, Glory Niiquaye, David Göz, Arjit Yadav, Megha Darda. Roles in
-[docs/06-pitch-and-team.md](docs/06-pitch-and-team.md).
+| Person | Role |
+| --- | --- |
+| Ruben Havrestiuc | CTO · Tech lead |
+| Arjit Yadav | Backend & Voice AI |
+| Megha Darda | QA & Reliability |
+| Gloria Niiquaye | Market & sales validation |
+| David Göz | Marketing & go-to-market |
+
+Yes, we would take this full-time.
 
 Licence: MIT ([LICENSE](LICENSE)).

@@ -1,6 +1,6 @@
 # Role · Family layer – login, onboarding, dashboard
 
-**Owner today:** Dev 2 (proposal: Glory). **Works in:** this repo under `app/(product)/app/*`, `app/(product)/login`, `app/(product)/auth`, `components/family/*`.
+**Owner today:** Dev 2 (proposal: Gloria). **Works in:** this repo under `app/(product)/app/*`, `app/(product)/login`, `app/(product)/auth`, `components/family/*`.
 
 ## Goal
 A family member signs up, creates the senior, adds relatives, links the tablet with a QR code,

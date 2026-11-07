@@ -18,6 +18,17 @@ her hometown, has **care level 1** and a growing need for help.
 The paying customer is the adult child or grandchild (40–60) who lives away. The user is the
 person aged 70+ living alone, who must never need an app.
 
+## In numbers
+
+| | |
+| --- | --- |
+| Care providers called on 7 Nov 2026 | 26 |
+| Reached and interviewed | 4 (Pflegezentrum Paulinenpark, Pflegedienst Stuttgart-West, IMPULS Bad Cannstatt, and one more) |
+| Time on the phone | 3h+ |
+| Everyday jobs every one of them named | 8 |
+
+The notes below cover the three conversations we wrote down in detail.
+
 ## The questions we asked care providers
 
 1. Think of last week: which tasks do clients give you as a carer that are not your job but still cost you time?

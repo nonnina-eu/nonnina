@@ -5,13 +5,13 @@ evidence for judging. Hackathon dashboard: https://www.creators-ecosystem.de/fou
 
 ## Team
 
-| Person | Role today |
+| Person | Role |
 | --- | --- |
-| Ruben | Dev 1 – voice + integration: repo, Supabase, ElevenLabs agent, tools, webhook, deploy (owner of `app`) |
-| Glory | Dev – family layer (dashboard, wizard, rule table) *(proposal)* |
-| Arjit | Dev – marketplace layer / website *(proposal)* |
-| David | Research + customers: interviews with adult children and carers, quotes, GTM |
-| Megha | Research + facts: benefit and legal facts, competitors, video |
+| Ruben Havrestiuc | CTO · Tech lead |
+| Arjit Yadav | Backend & Voice AI |
+| Megha Darda | QA & Reliability |
+| Gloria Niiquaye | Market & sales validation |
+| David Göz | Marketing & go-to-market |
 
 Contact details are in the docx, not in the repo.
 

@@ -11,7 +11,7 @@ for the paths below.
 | --- | --- |
 | Who exactly has the problem? | Adult children 40–60 living away from a parent 70+ who lives alone. Persona "Dr. Julia, 48" and her grandmother (85, care level 1): `docs/validation.md` |
 | How do they solve it today and why does that hurt? | Calls, WhatsApp, Google; no overview, no alert, help that goes unused: `README.md`, `docs/00-vision.md`, deck slide 1 |
-| Did we talk to real people? | Three Stuttgart care providers on 7 Nov 2026 (assisted living, two home-care services): `docs/validation.md` |
+| Did we talk to real people? | 26 Stuttgart care providers called on 7 Nov 2026, 4 reached and interviewed, 3h+ on the phone: `docs/validation.md` |
 | What did we learn and change? | Table "What changed in Nonnina because of these conversations": help requests, verified helpers with family approval, relief-budget tracking, relief-amount badge: `docs/validation.md` |
 | Landing page with sign-up | https://www.nonnina.eu (waitlist form, EN/DE/IT); API `app/api/waitlist`, never loses a sign-up (`tests/waitlist.test.ts`) |
 
@@ -29,7 +29,7 @@ for the paths below.
 
 | Question | Evidence |
 | --- | --- |
-| Who pays and how much? | Family €19/month per senior (€29 with tablet); senior free; providers later: `docs/business-model.md`, `docs/07-pricing.md` |
+| Who pays and how much? | Families: 10–15 % of every completed job, a monthly subscription lowers the fee; senior free; €500k pre-seed ask: `docs/business-model.md` |
 | How big is the market? | 5.52 M people cared for at home in Germany (2025), 80+ growing to 8.5–9.8 M by 2050, care-staff gap 280 000–690 000 by 2049: `docs/05-market-and-evidence.md` |
 | Why now? | Voice AI for people who never learned apps; relief-amount rule change reported by a care service; DiPA framework opened to apps that relieve family carers (Jul 2026): `docs/business-model.md` |
 | Why we beat alternatives | Comparison with Hausnotruf, care services, generic marketplaces, priced competitors: `docs/business-model.md`, `docs/07-pricing.md` |

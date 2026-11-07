@@ -8,22 +8,19 @@ Our own prices are hypotheses for the Stuttgart pilot, not published tariffs.
 
 | Who | Pays | What they get |
 | --- | --- | --- |
-| Senior (70+, lives alone) | **Nothing**, never sees a price | One button, the voice companion Lina (DE/IT), emergency alerts |
-| Family (adult children 40–60) | **€19/month per senior**, all relatives included; €29/month on 24 months with a pre-configured tablet | Real-time alerts, escalation ladder, call summaries, help requests, relief-amount budget, helper marketplace |
-| Helpers and care/support services | Free to join in the pilot; later a provider subscription for request management | Requests from families nearby, verified badge, relief-amount badge |
+| Senior (70+, lives alone) | **Nothing**, never sees a marketplace | One button, the voice companion Lina (DE/IT), emergency alerts |
+| Family (adult children 40–60) | **10–15 % of the order value on every completed job**; a monthly family subscription lowers the fee | Real-time alerts, call summaries, help requests, relief-amount budget, verified helpers |
+| Helpers and support services | Free to list | Requests from families nearby, verified badge, relief-amount badge |
 
-The Stuttgart pilot is free for families.
+If Lina solves the need herself (a recipe, a call, an order), there is no job and no fee.
+Families can pay much of this help from a budget they already have: the **relief amount of
+131 € per month from care level 1**, for recognised services. Non-medical help needs no SGB XI
+approval, so the marketplace can operate immediately. Subscription price points are tested in
+the pilot (working hypotheses in `docs/07-pricing.md`).
 
-## Why these prices
-
-- Nonnina is software plus a tablet with **no 24/7 call centre**: the family is the responder.
-  That places it between app-only care software (~€10–20/month) and family-response emergency
-  systems (easierLife HOME Family €19.95/month).
-- It stays clearly **below** call-centre Hausnotruf (€27–45/month), which has staffed response we
-  do not offer and do not claim.
-- Families already have money for exactly the services in our marketplace: the **relief amount
-  (Entlastungsbetrag) of 131 € per month from care level 1**, reimbursed for recognised services.
-  Nonnina shows how much of it is used, so it stops going unused.
+**Funding:** €500k pre-seed for twelve months of runway for the five of us, the helper vetting
+process and one dense city. **Next 90 days:** twenty verified helpers in one Stuttgart postcode,
+fifty households live with the family paying, willingness to pay proven end to end.
 
 ## Market
 
@@ -60,8 +57,8 @@ local helper does it, and the relief amount pays where it can.
 
 ## Revenue path
 
-1. **Pilot (now):** free, measure time from alert to "I'm on it", sign-ups and willingness to pay.
-2. **Family subscription:** €19/month (or €29 with tablet).
-3. **Provider subscription:** helpers and support services pay for request management once demand exists.
+1. **Pilot (now):** one Stuttgart postcode, twenty verified helpers, fifty households.
+2. **Marketplace fee:** 10–15 % of every completed job.
+3. **Family subscription:** lowers the fee for families that book often.
 4. **Later:** DiPA listing for a reimbursable version priced at or below €40/month; B2B with care
    services that want to hand over everyday requests.
