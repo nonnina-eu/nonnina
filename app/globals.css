@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Design tokens – derived from the UI reference (ADA health landing):
+  airy white canvas, a soft sky-blue glow, one saturated brand blue,
+  glossy pill buttons, generous radii and very soft shadows.
+*/
+@layer base {
+  :root {
+    --background: 210 60% 99%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 218 92% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 100% 96%;
+    --secondary-foreground: 218 92% 40%;
+    --muted: 214 40% 96%;
+    --muted-foreground: 215 16% 40%;
+    --accent: 214 100% 94%;
+    --accent-foreground: 218 92% 40%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 72% 35%;
+    --warning: 32 95% 44%;
+    --border: 214 32% 90%;
+    --input: 214 32% 88%;
+    --ring: 218 92% 57%;
+    --radius: 1.25rem;
+
+    /* brand gradient / glow */
+    --brand-glow: 218 92% 57%;
+    --sky-glow: 212 100% 92%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* The glossy pill button from the reference image */
+  .btn-glossy {
+    background-image: linear-gradient(
+      180deg,
+      hsl(214 100% 72%) 0%,
+      hsl(218 92% 57%) 55%,
+      hsl(220 90% 50%) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.45),
+      0 10px 24px -8px hsl(var(--brand-glow) / 0.55);
+  }
+  .btn-glossy:hover {
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.45),
+      0 14px 30px -8px hsl(var(--brand-glow) / 0.65);
+  }
+
+  .card-soft {
+    @apply rounded-[var(--radius)] border border-border/70 bg-card;
+    box-shadow: 0 10px 30px -14px hsl(222 47% 11% / 0.14);
+  }
+
+  .sky-glow {
+    background:
+      radial-gradient(60% 50% at 50% 100%, hsl(var(--sky-glow)) 0%, transparent 70%),
+      radial-gradient(40% 30% at 20% 10%, hsl(214 100% 96%) 0%, transparent 60%);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Marketing shell derived from the Grassfeld layout. Senior screens keep the tokens above. */
+  .site {
+    --foreground: 230 10% 14%;
+    --muted-foreground: 220 9% 42%;
+    --border: 200 10% 90%;
+    --secondary: 220 33% 97%;
+    background: #fff;
+    color: #202128;
+  }
+
+  .site :is(h1, h2) {
+    font-family: var(--font-display), var(--font-manrope), sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+  }
+}
