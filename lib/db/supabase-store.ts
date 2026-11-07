@@ -1,21 +1,26 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { randomBytes } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { Store } from "./store";
+import type { EmergencyEventPatch, HelpRequestPatch, Store } from "./store";
 import type {
   EmergencyEvent,
-  EmergencyStatus,
   Family,
   FamilyFeed,
+  FamilyOverview,
   HelpRequest,
   NewEmergencyEvent,
+  NewFamily,
   NewHelpRequest,
+  NewRelative,
+  NewSenior,
   NewVoiceSession,
-  NotificationRecord,
   Relative,
   Senior,
   SeniorContext,
   VoiceSession,
 } from "./types";
+
+const newDeviceToken = () => randomBytes(12).toString("hex");
 
 function fail(where: string, error: { message: string } | null): never {
   throw new Error(`[supabase] ${where}: ${error?.message ?? "unknown error"}`);
@@ -82,10 +87,7 @@ export class SupabaseStore implements Store {
     return (data as EmergencyEvent) ?? null;
   }
 
-  async updateEmergencyEvent(
-    id: string,
-    patch: Partial<{ status: EmergencyStatus; notified: NotificationRecord[] }>,
-  ): Promise<EmergencyEvent | null> {
+  async updateEmergencyEvent(id: string, patch: EmergencyEventPatch): Promise<EmergencyEvent | null> {
     const { data, error } = await this.db
       .from("emergency_events")
       .update({ ...patch, updated_at: new Date().toISOString() })
@@ -96,10 +98,36 @@ export class SupabaseStore implements Store {
     return (data as EmergencyEvent) ?? null;
   }
 
+  async findEventsDueForEscalation(now: Date, limit = 20): Promise<EmergencyEvent[]> {
+    const { data, error } = await this.db
+      .from("emergency_events")
+      .select("*")
+      .eq("level", "emergency")
+      .in("status", ["open", "relatives_notified"])
+      .not("next_step_at", "is", null)
+      .lte("next_step_at", now.toISOString())
+      .order("next_step_at", { ascending: true })
+      .limit(limit);
+    if (error) fail("emergency_events.due", error);
+    return (data ?? []) as EmergencyEvent[];
+  }
+
+  async getRelative(id: string): Promise<Relative | null> {
+    const { data, error } = await this.db.from("relatives").select("*").eq("id", id).maybeSingle();
+    if (error) fail("relatives.get", error);
+    return (data as Relative) ?? null;
+  }
+
   async createHelpRequest(input: NewHelpRequest): Promise<HelpRequest> {
     const { data, error } = await this.db.from("help_requests").insert(input).select("*").single();
     if (error) fail("help_requests.insert", error);
     return data as HelpRequest;
+  }
+
+  async updateHelpRequest(id: string, patch: HelpRequestPatch): Promise<HelpRequest | null> {
+    const { data, error } = await this.db.from("help_requests").update(patch).eq("id", id).select("*").maybeSingle();
+    if (error) fail("help_requests.update", error);
+    return (data as HelpRequest) ?? null;
   }
 
   async createVoiceSession(input: NewVoiceSession): Promise<VoiceSession> {
@@ -147,5 +175,89 @@ export class SupabaseStore implements Store {
       this.db.from("help_requests").delete().in("senior_id", ids),
       this.db.from("voice_sessions").delete().in("senior_id", ids),
     ]);
+  }
+
+  // ---------- family management ----------
+
+  async createFamily(input: NewFamily): Promise<Family> {
+    const { data, error } = await this.db.from("families").insert(input).select("*").single();
+    if (error) fail("families.insert", error);
+    return data as Family;
+  }
+
+  async updateFamily(id: string, patch: Partial<NewFamily>): Promise<Family | null> {
+    const { data, error } = await this.db.from("families").update(patch).eq("id", id).select("*").maybeSingle();
+    if (error) fail("families.update", error);
+    return (data as Family) ?? null;
+  }
+
+  async createSenior(input: NewSenior): Promise<Senior> {
+    // Without device_token the DB default generates one.
+    const row: Record<string, unknown> = { ...input };
+    if (!row.device_token) delete row.device_token;
+    const { data, error } = await this.db.from("seniors").insert(row).select("*").single();
+    if (error) fail("seniors.insert", error);
+    return data as Senior;
+  }
+
+  async updateSenior(id: string, patch: Partial<Omit<NewSenior, "family_id">>): Promise<Senior | null> {
+    const { data, error } = await this.db.from("seniors").update(patch).eq("id", id).select("*").maybeSingle();
+    if (error) fail("seniors.update", error);
+    return (data as Senior) ?? null;
+  }
+
+  async rotateDeviceToken(seniorId: string): Promise<Senior | null> {
+    return this.updateSenior(seniorId, { device_token: newDeviceToken() });
+  }
+
+  async createRelative(input: NewRelative): Promise<Relative> {
+    const { data, error } = await this.db.from("relatives").insert(input).select("*").single();
+    if (error) fail("relatives.insert", error);
+    return data as Relative;
+  }
+
+  async updateRelative(id: string, patch: Partial<Omit<NewRelative, "family_id">>): Promise<Relative | null> {
+    const { data, error } = await this.db.from("relatives").update(patch).eq("id", id).select("*").maybeSingle();
+    if (error) fail("relatives.update", error);
+    return (data as Relative) ?? null;
+  }
+
+  async deleteRelative(id: string): Promise<void> {
+    const { error } = await this.db.from("relatives").delete().eq("id", id);
+    if (error) fail("relatives.delete", error);
+  }
+
+  private async overviewFor(family: Family): Promise<FamilyOverview> {
+    const [{ data: seniors, error: sErr }, { data: relatives, error: rErr }] = await Promise.all([
+      this.db.from("seniors").select("*").eq("family_id", family.id).order("created_at"),
+      this.db.from("relatives").select("*").eq("family_id", family.id).order("priority"),
+    ]);
+    if (sErr) fail("seniors.byFamily", sErr);
+    if (rErr) fail("relatives.byFamily", rErr);
+    return { family, seniors: (seniors ?? []) as Senior[], relatives: (relatives ?? []) as Relative[] };
+  }
+
+  async getFamilyForUser(userId: string): Promise<FamilyOverview | null> {
+    const { data: rel, error: rErr } = await this.db
+      .from("relatives")
+      .select("family_id")
+      .eq("user_id", userId)
+      .order("priority")
+      .limit(1)
+      .maybeSingle();
+    if (rErr) fail("relatives.byUser", rErr);
+    if (!rel) return null;
+    return this.getFamilyOverview((rel as { family_id: string }).family_id);
+  }
+
+  async getFamilyOverview(familyId: string): Promise<FamilyOverview | null> {
+    const { data: family, error } = await this.db.from("families").select("*").eq("id", familyId).maybeSingle();
+    if (error) fail("families.get", error);
+    if (!family) return null;
+    return this.overviewFor(family as Family);
+  }
+
+  async linkRelativeToUser(relativeId: string, userId: string): Promise<Relative | null> {
+    return this.updateRelative(relativeId, { user_id: userId });
   }
 }

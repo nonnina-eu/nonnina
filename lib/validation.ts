@@ -17,7 +17,64 @@ export const emergencyUpdateSchema = z.object({
   action: z.enum(["acknowledge", "cancel"]),
   /** required for "cancel" (the senior's device), ignored for "acknowledge" */
   token: z.string().min(3).max(120).optional(),
+  /** optional for "acknowledge": which relative pressed "I'm on it" */
+  relative_id: z.string().uuid().optional(),
 });
+export type EmergencyUpdate = z.infer<typeof emergencyUpdateSchema>;
+
+export const helpRequestUpdateSchema = z.object({
+  action: z.enum(["resolve", "reopen"]),
+});
+export type HelpRequestUpdate = z.infer<typeof helpRequestUpdateSchema>;
+
+// ---------- family onboarding + settings ----------
+
+export const phoneE164 = z.string().trim().regex(/^\+[1-9][0-9]{6,14}$/, "Use the international format, e.g. +49 151 ... without spaces");
+
+/** Optional phone: empty string or undefined → null. */
+const optionalPhone = z
+  .union([phoneE164, z.literal(""), z.undefined(), z.null()])
+  .transform((v) => (v ? v : null));
+
+/** Optional email: empty string → null. */
+const optionalEmail = z
+  .union([z.string().trim().email().max(120), z.literal(""), z.undefined(), z.null()])
+  .transform((v) => (v ? v : null));
+
+export const familySetupSchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  email: optionalEmail,
+  fallback_phone: optionalPhone,
+});
+export type FamilySetupInput = z.infer<typeof familySetupSchema>;
+
+export const medicationTimeSchema = z.object({
+  time: z.string().regex(/^([01][0-9]|2[0-3]):[0-5][0-9]$/, "HH:MM"),
+  label: z.string().trim().min(1).max(60),
+});
+
+export const seniorSchema = z.object({
+  first_name: z.string().trim().min(1).max(60),
+  language: z.enum(["de", "it"]),
+  city: z.string().trim().min(1).max(80),
+  address_note: z
+    .union([z.string().trim().max(200), z.literal(""), z.undefined(), z.null()])
+    .transform((v) => (v ? v : null)),
+  care_level: z.coerce.number().int().min(0).max(5),
+  medication_times: z.array(medicationTimeSchema).max(8).default([]),
+});
+export type SeniorInput = z.infer<typeof seniorSchema>;
+
+export const relativeSchema = z.object({
+  name: z.string().trim().min(1).max(60),
+  relation: z.string().trim().min(1).max(40),
+  phone: phoneE164,
+  email: optionalEmail,
+  notify_sms: z.boolean().default(true),
+  notify_call: z.boolean().default(false),
+  priority: z.coerce.number().int().min(1).max(10),
+});
+export type RelativeInput = z.infer<typeof relativeSchema>;
 
 export const helpRequestSchema = z.object({
   token: z.string().min(3).max(120),

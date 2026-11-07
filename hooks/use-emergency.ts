@@ -163,8 +163,13 @@ export function useEmergency(token: string) {
         const res = await fetch(`/api/emergency/${id}`, { cache: "no-store" });
         if (!res.ok) return;
         const json = (await res.json()) as { event?: EmergencyEvent };
-        if (json.event?.status === "acknowledged") {
-          setState((s) => ({ ...s, event: json.event ?? s.event, phase: "acknowledged" }));
+        const fresh = json.event;
+        if (!fresh) return;
+        if (fresh.status === "acknowledged") {
+          setState((s) => ({ ...s, event: fresh, phase: "acknowledged" }));
+        } else if (fresh.updated_at !== stateRef.current.event?.updated_at) {
+          // Keep escalation progress (who is being called) visible on the tablet.
+          setState((s) => (s.phase === "notified" ? { ...s, event: fresh } : s));
         }
       } catch {
         /* ignore */

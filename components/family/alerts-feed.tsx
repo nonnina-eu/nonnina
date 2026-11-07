@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { AlertTriangle, Check, HandHelping, Loader2, MessageSquareText, Phone, RefreshCw, Siren } from "lucide-react";
-import type { EmergencyEvent, FamilyFeed, HelpRequest, VoiceSession } from "@/lib/db/types";
+import { AlertTriangle, Check, HandHelping, Loader2, MessageSquareText, Phone, PhoneOutgoing, RefreshCw, Siren, Undo2 } from "lucide-react";
+import type { EmergencyEvent, FamilyFeed, HelpRequest, Relative, VoiceSession } from "@/lib/db/types";
+import { familyT } from "@/lib/i18n/family";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -12,6 +13,8 @@ type FeedItem =
   | { kind: "event"; at: string; data: EmergencyEvent }
   | { kind: "help"; at: string; data: HelpRequest }
   | { kind: "session"; at: string; data: VoiceSession };
+
+type RelativeLite = Pick<Relative, "id" | "name" | "priority" | "phone">;
 
 const POLL_MS = 2_500;
 
@@ -29,13 +32,29 @@ function timeAgo(iso: string, now: number): string {
   if (diff < 5) return "just now";
   if (diff < 60) return `${diff} s ago`;
   if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+  return clock(iso);
+}
+
+function clock(iso: string): string {
   return new Date(iso).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
 }
 
-export function AlertsFeed({ familyId, initial, compact = false }: { familyId: string; initial: FamilyFeed; compact?: boolean }) {
+export interface AlertsFeedProps {
+  familyId: string;
+  initial: FamilyFeed;
+  compact?: boolean;
+  /** The signed-in relative (sent with "I'm on it"). */
+  relativeId?: string | null;
+  relatives?: RelativeLite[];
+  /** Whether help requests can be resolved from this view. */
+  canResolve?: boolean;
+}
+
+export function AlertsFeed({ familyId, initial, compact = false, relativeId = null, relatives = [], canResolve = true }: AlertsFeedProps) {
+  const t = familyT().feed;
   const [feed, setFeed] = useState<FamilyFeed>(initial);
   const [now, setNow] = useState(() => Date.now());
-  const [refreshing, setRefreshing] = useState(false);
+  const [busy, setBusy] = useState<string | null>(null);
   const reduce = useReducedMotion();
 
   const refresh = useCallback(async () => {
@@ -70,30 +89,25 @@ export function AlertsFeed({ familyId, initial, compact = false }: { familyId: s
 
   const items = useMemo(() => merge(feed), [feed]);
   const seniorName = feed.seniors[0]?.first_name ?? "your parent";
+  const sortedRelatives = useMemo(() => [...relatives].sort((a, b) => a.priority - b.priority), [relatives]);
 
-  async function acknowledge(id: string) {
-    setRefreshing(true);
+  async function patch(url: string, body: Record<string, unknown>, key: string) {
+    setBusy(key);
     try {
-      await fetch(`/api/emergency/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "acknowledge" }),
-      });
+      await fetch(url, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       await refresh();
     } finally {
-      setRefreshing(false);
+      setBusy(null);
     }
   }
 
   return (
-    <div className={cn("flex flex-col gap-3", compact ? "" : "")}>
+    <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {items.length === 0 ? `No alerts for ${seniorName} yet.` : `${items.length} update${items.length === 1 ? "" : "s"} · live`}
-        </p>
-        <button type="button" onClick={() => void refresh()} className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground" aria-label="Refresh">
-          <RefreshCw className={cn("size-3.5", refreshing && "animate-spin")} />
-          Refresh
+        <p className="text-sm text-muted">{items.length === 0 ? t.none(seniorName) : t.updates(items.length)}</p>
+        <button type="button" onClick={() => void refresh()} className="inline-flex items-center gap-1 rounded-sm px-2 py-1 text-xs font-bold text-muted hover:bg-mist hover:text-ink" aria-label={t.refresh}>
+          <RefreshCw className="size-3.5" />
+          {t.refresh}
         </button>
       </div>
 
@@ -107,9 +121,22 @@ export function AlertsFeed({ familyId, initial, compact = false }: { familyId: s
             transition={{ duration: 0.3 }}
           >
             {item.kind === "event" ? (
-              <EventCard event={item.data} when={timeAgo(item.at, now)} onAcknowledge={() => void acknowledge(item.data.id)} seniorName={seniorName} />
+              <EventCard
+                event={item.data}
+                when={timeAgo(item.at, now)}
+                seniorName={seniorName}
+                relatives={sortedRelatives}
+                busy={busy === item.data.id}
+                onAcknowledge={() => void patch(`/api/emergency/${item.data.id}`, relativeId ? { action: "acknowledge", relative_id: relativeId } : { action: "acknowledge" }, item.data.id)}
+              />
             ) : item.kind === "help" ? (
-              <HelpCard request={item.data} when={timeAgo(item.at, now)} />
+              <HelpCard
+                request={item.data}
+                when={timeAgo(item.at, now)}
+                busy={busy === item.data.id}
+                canResolve={canResolve}
+                onToggle={(action) => void patch(`/api/help-request/${item.data.id}`, { action }, item.data.id)}
+              />
             ) : (
               <SessionCard session={item.data} when={timeAgo(item.at, now)} />
             )}
@@ -118,121 +145,158 @@ export function AlertsFeed({ familyId, initial, compact = false }: { familyId: s
       </AnimatePresence>
 
       {items.length === 0 ? (
-        <div className="card-soft flex flex-col items-center gap-2 p-8 text-center text-sm text-muted-foreground">
-          <Check className="size-6 text-emerald-600" />
-          All quiet. New alerts appear here automatically.
+        <div className={cn("flex flex-col items-center gap-3 rounded-xl border border-line bg-salvia p-8 text-center text-sm text-ink", compact && "p-6")}>
+          <span className="flex size-10 items-center justify-center rounded-full bg-white text-bene">
+            <Check className="size-5" />
+          </span>
+          {t.none(seniorName)}
         </div>
       ) : null}
     </div>
   );
 }
 
-function EventCard({ event, when, onAcknowledge, seniorName }: { event: EmergencyEvent; when: string; onAcknowledge: () => void; seniorName: string }) {
+function EventCard({ event, when, onAcknowledge, seniorName, relatives, busy }: { event: EmergencyEvent; when: string; onAcknowledge: () => void; seniorName: string; relatives: RelativeLite[]; busy: boolean }) {
+  const t = familyT().feed;
   const isEmergency = event.level === "emergency";
   const cancelled = event.status === "cancelled_by_senior";
   const acknowledged = event.status === "acknowledged";
   const notified = event.notified.filter((n) => n.status === "sent" || n.status === "demo");
-  const sourceLabel = { agent_tool: "AI assistant", keyword_detector: "keyword safety net", manual_button: "help button", no_response: "no response" }[event.source];
+  const calls = event.notified.filter((n) => n.channel === "call" && (n.status === "sent" || n.status === "demo"));
+  const ackName = acknowledged ? relatives.find((r) => r.id === event.acknowledged_by)?.name ?? null : null;
+  const nextRelative = !acknowledged && !cancelled && event.next_step_at ? relatives[event.escalation_step] ?? null : null;
+  const fallbackReached = !acknowledged && !cancelled && event.next_step_at && !nextRelative && isEmergency && relatives.length > 0;
+  const primaryPhone = relatives[0]?.phone ?? null;
 
   return (
     <article
       className={cn(
-        "card-soft border-l-[6px] p-5",
-        cancelled ? "border-l-emerald-500" : isEmergency ? "border-l-red-600" : "border-l-amber-500",
+        "rounded-xl border border-line border-l-[6px] bg-white p-5 shadow-soft",
+        cancelled ? "border-l-bene" : isEmergency ? "border-l-allarme" : "border-l-sole",
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Badge variant={cancelled ? "success" : isEmergency ? "danger" : "warning"}>
             {isEmergency ? <Siren className="size-3.5" /> : <AlertTriangle className="size-3.5" />}
-            {cancelled ? "All clear" : isEmergency ? "Emergency" : "Check in soon"}
+            {cancelled ? t.allClear : isEmergency ? t.emergency : t.warning}
           </Badge>
           {acknowledged ? (
-            <Badge variant="outline">
-              <Check className="size-3.5" /> On it
+            <Badge variant="success">
+              <Check className="size-3.5" /> {ackName ? t.isOnIt(ackName) : t.onIt}
             </Badge>
           ) : null}
         </div>
-        <time className="text-xs text-muted-foreground">{when}</time>
+        <time className="text-xs text-muted">{when}</time>
       </div>
 
-      <p className="mt-3 text-base font-semibold">
-        {cancelled ? `${seniorName} says she is OK now.` : event.reason}
-      </p>
-      {event.quote ? <p className="mt-1 text-base italic text-muted-foreground">“{event.quote}”</p> : null}
+      <p className="mt-3 text-base font-bold text-ink">{cancelled ? t.saysOk(seniorName) : event.reason}</p>
+      {event.quote ? <p className="mt-1 text-base italic text-muted">“{event.quote}”</p> : null}
 
-      <p className="mt-3 text-xs text-muted-foreground">
-        Triggered by {sourceLabel}
-        {notified.length > 0 ? ` · notified ${[...new Set(notified.map((n) => n.name))].join(", ")} (${[...new Set(notified.map((n) => n.channel))].join(", ")})` : " · nobody notified yet"}
-      </p>
+      <ul className="mt-3 flex flex-col gap-1 text-xs text-muted">
+        <li>
+          {t.triggeredBy} {t.sources[event.source]}
+          {notified.length > 0 ? ` · ${t.notified.toLowerCase()} ${[...new Set(notified.map((n) => n.name))].join(", ")}` : ` · ${t.nobodyNotified}`}
+        </li>
+        {calls.map((c) => (
+          <li key={`${c.relative_id}-${c.at}`} className="inline-flex items-center gap-1.5">
+            <PhoneOutgoing className="size-3.5" /> {t.called(c.name, clock(c.at))}
+          </li>
+        ))}
+        {nextRelative ? (
+          <li className="inline-flex items-center gap-1.5 font-bold text-ink">
+            <Loader2 className="size-3.5 animate-spin" /> {t.callingNext(nextRelative.name)}
+          </li>
+        ) : null}
+        {fallbackReached ? <li className="font-bold text-allarme">{t.nobodyConfirmed}</li> : null}
+      </ul>
 
       {!cancelled && !acknowledged ? (
+        <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+          <button
+            type="button"
+            onClick={onAcknowledge}
+            disabled={busy}
+            className={cn(
+              "flex h-12 items-center justify-center gap-2 rounded-sm text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sole disabled:opacity-60",
+              isEmergency ? "bg-allarme hover:bg-allarme-deep" : "bg-ink hover:bg-black",
+            )}
+          >
+            {busy ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />}
+            {t.onIt}
+          </button>
+          {primaryPhone && isEmergency ? (
+            <a href={`tel:${primaryPhone}`} className="flex h-12 items-center justify-center gap-2 rounded-sm border-[1.5px] border-ink bg-white px-4 text-sm font-bold text-ink hover:bg-mist">
+              <Phone className="size-4" /> {t.call(seniorName)}
+            </a>
+          ) : null}
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
+function HelpCard({ request, when, onToggle, busy, canResolve }: { request: HelpRequest; when: string; onToggle: (action: "resolve" | "reopen") => void; busy: boolean; canResolve: boolean }) {
+  const t = familyT().feed;
+  const paperwork = request.category === "legal" || request.category === "money";
+  const resolved = Boolean(request.resolved_at);
+  return (
+    <article className={cn("rounded-xl border border-line p-5 shadow-soft", resolved ? "bg-white" : paperwork ? "bg-cielo" : "bg-glicine")}>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline">
+            <HandHelping className="size-3.5" />
+            {t.helpRequest} · {t.categories[request.category]}
+          </Badge>
+          <Badge variant={resolved ? "success" : "outline"}>{resolved ? t.resolved : request.status.replace("_", " ")}</Badge>
+        </div>
+        <time className="text-xs text-muted">{when}</time>
+      </div>
+      <p className={cn("mt-3 text-base text-ink", resolved && "text-muted line-through")}>{request.summary}</p>
+      {canResolve ? (
         <button
           type="button"
-          onClick={onAcknowledge}
-          className={cn(
-            "mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold text-white shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            isEmergency ? "bg-red-600 hover:bg-red-700" : "bg-amber-600 hover:bg-amber-700",
-          )}
+          disabled={busy}
+          onClick={() => onToggle(resolved ? "reopen" : "resolve")}
+          className="mt-4 inline-flex h-10 items-center gap-2 rounded-sm border-[1.5px] border-ink bg-white px-4 text-sm font-bold text-ink hover:bg-mist disabled:opacity-60"
         >
-          <Phone className="size-4" />
-          I’m on it
+          {busy ? <Loader2 className="size-4 animate-spin" /> : resolved ? <Undo2 className="size-4" /> : <Check className="size-4" />}
+          {resolved ? t.reopen : t.done}
         </button>
       ) : null}
     </article>
   );
 }
 
-function HelpCard({ request, when }: { request: HelpRequest; when: string }) {
-  const labels: Record<HelpRequest["category"], string> = {
-    daily_help: "Daily help",
-    legal: "Legal",
-    money: "Money",
-    health: "Health",
-    loneliness: "Company",
-    other: "Other",
-  };
-  return (
-    <article className="card-soft border-l-[6px] border-l-primary p-5">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <Badge>
-            <HandHelping className="size-3.5" />
-            Help request · {labels[request.category]}
-          </Badge>
-          <Badge variant="outline">{request.status.replace("_", " ")}</Badge>
-        </div>
-        <time className="text-xs text-muted-foreground">{when}</time>
-      </div>
-      <p className="mt-3 text-base">{request.summary}</p>
-    </article>
-  );
-}
-
 function SessionCard({ session, when }: { session: VoiceSession; when: string }) {
-  const moodVariant = session.mood === "worried" || session.mood === "low" ? "warning" : "success";
+  const t = familyT().feed;
+  const lowMood = session.mood === "worried" || session.mood === "low";
   return (
-    <article className="card-soft border-l-[6px] border-l-emerald-500 p-5">
+    <article className="rounded-xl border border-line bg-menta p-5 shadow-soft">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <Badge variant="success">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline">
             <MessageSquareText className="size-3.5" />
-            Call summary
+            {t.callSummary}
           </Badge>
-          {session.mood ? <Badge variant={moodVariant}>mood: {session.mood}</Badge> : null}
-          {session.needs_human ? <Badge variant="warning">needs a person</Badge> : null}
+          {session.mood ? <Badge variant={lowMood ? "warning" : "success"}>{t.mood}: {session.mood}</Badge> : null}
+          {session.needs_human ? <Badge variant="warning">{t.needsPerson}</Badge> : null}
         </div>
-        <time className="text-xs text-muted-foreground">{when}</time>
+        <time className="text-xs text-muted">{when}</time>
       </div>
-      <p className="mt-3 text-base">{session.summary ?? "No summary available."}</p>
-      {session.problem_category ? <p className="mt-1 text-xs text-muted-foreground">Topic: {session.problem_category}</p> : null}
+      <p className="mt-3 text-base text-ink">{session.summary ?? t.noSummary}</p>
+      {session.problem_category ? (
+        <p className="mt-1 text-xs text-muted">
+          {t.topic}: {session.problem_category}
+        </p>
+      ) : null}
     </article>
   );
 }
 
 export function FeedSkeleton() {
   return (
-    <div className="flex items-center justify-center p-10 text-muted-foreground">
+    <div className="flex items-center justify-center p-10 text-muted">
       <Loader2 className="size-5 animate-spin" />
     </div>
   );

@@ -7,7 +7,7 @@ import type { EmergencyEvent, EmergencyLevel, NotificationRecord, Relative, Seni
  * It never throws – every failure becomes a NotificationRecord with status "failed",
  * because the emergency flow must never be blocked by a provider.
  */
-export type NotifyKind = EmergencyLevel | "all_clear" | "help_request";
+export type NotifyKind = EmergencyLevel | "all_clear" | "help_request" | "acknowledged" | "nobody_confirmed";
 
 export interface NotifyInput {
   senior: Senior;
@@ -16,6 +16,10 @@ export interface NotifyInput {
   reason: string;
   quote?: string | null;
   alertsUrl: string;
+  /** For kind "acknowledged": who is taking care of it. */
+  actorName?: string;
+  /** For kind "emergency": the event id, so the voice call can offer "press 1". */
+  eventId?: string;
 }
 
 export function buildMessage(input: NotifyInput): string {
@@ -23,8 +27,13 @@ export function buildMessage(input: NotifyInput): string {
   const name = senior.first_name;
   const city = senior.city;
   const q = (quote ?? "").trim();
+  const actor = input.actorName?.trim() || (senior.language === "it" ? "Un familiare" : "Ein Angehöriger");
   if (senior.language === "it") {
     switch (kind) {
+      case "acknowledged":
+        return `Nonnina: ${actor} si sta occupando di ${name}. ${alertsUrl}`;
+      case "nobody_confirmed":
+        return `Nonnina: Nessuno ha confermato. Chiamare ${name} oppure il 112. ${alertsUrl}`;
       case "emergency":
         return `Nonnina: EMERGENZA per ${name} (${city}). Ha detto: "${q || reason}". Chiamare subito oppure il 112. ${alertsUrl}`;
       case "warning":
@@ -36,6 +45,10 @@ export function buildMessage(input: NotifyInput): string {
     }
   }
   switch (kind) {
+    case "acknowledged":
+      return `Nonnina: ${actor} kümmert sich um ${name}. ${alertsUrl}`;
+    case "nobody_confirmed":
+      return `Nonnina: Niemand hat bestätigt. Bitte ${name} anrufen oder 112 wählen. ${alertsUrl}`;
     case "emergency":
       return `Nonnina: NOTFALL bei ${name} (${city}). Sie sagte: "${q || reason}". Bitte sofort anrufen oder 112 wählen. ${alertsUrl}`;
     case "warning":
@@ -56,14 +69,55 @@ async function sendSms(to: string, body: string): Promise<string> {
   return msg.sid;
 }
 
-async function placeCall(to: string, text: string, language: Senior["language"]): Promise<string> {
-  const twilio = (await import("twilio")).default;
-  const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-  const voiceLang = language === "de" ? "de-DE" : "it-IT";
-  const escaped = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  const twiml = `<Response><Say language="${voiceLang}">${escaped}</Say><Pause length="1"/><Say language="${voiceLang}">${escaped}</Say></Response>`;
-  const call = await client.calls.create({ to, from: process.env.TWILIO_FROM_NUMBER!, twiml });
-  return call.sid;
+/** What the voice call says to a relative. Spoken twice, then "press 1". */
+export function spokenEmergencyText(senior: Senior, event: Pick<EmergencyEvent, "reason" | "quote">, language: Senior["language"] = senior.language): string {
+  const said = (event.quote ?? "").trim() || event.reason;
+  if (language === "it") {
+    return `Qui è Nonnina. ${senior.first_name} a ${senior.city} ha bisogno di aiuto. Ha detto: "${said}". Premi 1 se te ne occupi. Altrimenti chiamiamo la prossima persona.`;
+  }
+  return `Hier ist Nonnina. ${senior.first_name} in ${senior.city} braucht Hilfe. Sie sagte: "${said}". Drücken Sie die 1, wenn Sie sich kümmern. Sonst rufen wir die nächste Person an.`;
+}
+
+export function voiceWebhookUrl(eventId: string, relativeId: string, language: Senior["language"]): string {
+  const u = new URL(`${env.appUrl()}/api/twilio/voice`);
+  u.searchParams.set("event", eventId);
+  u.searchParams.set("relative", relativeId);
+  u.searchParams.set("lang", language);
+  return u.toString();
+}
+
+/**
+ * Places the "press 1 if you take care of it" call. The TwiML is served by /api/twilio/voice so the
+ * call can Gather a key press. Never throws; in demo mode (no Twilio) records what would be said.
+ */
+export async function callRelativeWithGather(input: {
+  to: string;
+  senior: Senior;
+  event: Pick<EmergencyEvent, "id" | "reason" | "quote">;
+  /** relative id, or "fallback" for the family's fallback number */
+  relativeId: string;
+  relativeName: string;
+}): Promise<NotificationRecord> {
+  const { to, senior, event, relativeId, relativeName } = input;
+  const base = { relative_id: relativeId === "fallback" ? null : relativeId, name: relativeName, at: stamp() };
+  const text = spokenEmergencyText(senior, event);
+  if (!env.twilio()) {
+    return { ...base, channel: "call", status: "demo", detail: text };
+  }
+  try {
+    const twilio = (await import("twilio")).default;
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    const call = await client.calls.create({
+      to,
+      from: process.env.TWILIO_FROM_NUMBER!,
+      url: voiceWebhookUrl(event.id, relativeId, senior.language),
+      method: "POST",
+      timeout: 25,
+    });
+    return { ...base, channel: "call", status: "sent", detail: call.sid };
+  } catch (e) {
+    return { ...base, channel: "call", status: "failed", detail: errorMessage(e) };
+  }
 }
 
 async function sendEmail(to: string, subject: string, text: string): Promise<string> {
@@ -78,8 +132,12 @@ async function sendEmail(to: string, subject: string, text: string): Promise<str
 function subjectFor(kind: NotifyKind, senior: Senior): string {
   const name = senior.first_name;
   if (senior.language === "it") {
+    if (kind === "acknowledged") return `Qualcuno si occupa di ${name}`;
+    if (kind === "nobody_confirmed") return `Nessuno ha confermato per ${name}`;
     return kind === "emergency" ? `EMERGENZA: ${name}` : kind === "warning" ? `Controlla ${name}` : kind === "all_clear" ? `${name} sta bene` : `Richiesta di aiuto di ${name}`;
   }
+  if (kind === "acknowledged") return `Jemand kümmert sich um ${name}`;
+  if (kind === "nobody_confirmed") return `Niemand hat für ${name} bestätigt`;
   return kind === "emergency" ? `NOTFALL: ${name}` : kind === "warning" ? `Bitte bei ${name} melden` : kind === "all_clear" ? `${name} geht es gut` : `Hilfe-Anfrage von ${name}`;
 }
 
@@ -112,12 +170,15 @@ export async function notifyRelatives(input: NotifyInput): Promise<NotificationR
       }
 
       if (smsEnabled && kind === "emergency" && rel.notify_call && rel.priority === 1 && rel.phone) {
-        try {
-          const sid = await placeCall(rel.phone, body, senior.language);
-          records.push({ ...base, channel: "call", status: "sent", detail: sid });
-        } catch (e) {
-          records.push({ ...base, channel: "call", status: "failed", detail: errorMessage(e) });
-        }
+        records.push(
+          await callRelativeWithGather({
+            to: rel.phone,
+            senior,
+            event: { id: input.eventId ?? "", reason: input.reason, quote: input.quote ?? null },
+            relativeId: rel.id,
+            relativeName: rel.name,
+          }),
+        );
       }
 
       if (emailEnabled && rel.email) {

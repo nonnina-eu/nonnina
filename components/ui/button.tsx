@@ -5,17 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "btn-glossy text-primary-foreground hover:-translate-y-px",
+        default: "bg-ink text-white hover:-translate-y-px hover:bg-black",
         outline:
-          "border border-border bg-card text-foreground shadow-soft hover:border-primary/40 hover:bg-secondary/60",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-accent",
+          "border-[1.5px] border-ink bg-white text-ink hover:bg-mist",
+        secondary: "bg-camomilla text-ink hover:bg-sole/60",
+        sole: "bg-sole text-ink hover:brightness-95",
         ghost: "text-foreground hover:bg-muted",
-        destructive: "bg-destructive text-destructive-foreground shadow-soft hover:bg-destructive/90",
-        link: "text-primary underline-offset-4 hover:underline",
+        destructive: "bg-allarme text-white hover:bg-allarme-deep",
+        link: "text-link underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-6 text-sm [&_svg]:size-4",

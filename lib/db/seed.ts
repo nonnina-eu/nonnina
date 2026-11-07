@@ -18,6 +18,7 @@ export function demoFamily(): Family {
     id: DEMO_IDS.family,
     name: "Weber",
     email: "anna.weber@example.com",
+    fallback_phone: process.env.SEED_FALLBACK_PHONE || "+4915100000003",
     created_at: new Date("2026-11-01T08:00:00Z").toISOString(),
   };
 }
@@ -52,6 +53,7 @@ export function demoRelatives(): Relative[] {
       notify_sms: true,
       notify_call: true,
       priority: 1,
+      user_id: null,
     },
     {
       id: DEMO_IDS.thomas,
@@ -63,6 +65,7 @@ export function demoRelatives(): Relative[] {
       notify_sms: true,
       notify_call: false,
       priority: 2,
+      user_id: null,
     },
   ];
 }

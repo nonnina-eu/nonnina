@@ -18,7 +18,7 @@ export function Greeting({ name, language, greetings }: { name: string; language
   const now = useNow(60_000);
   const word = now ? greetings[partOfDay(now)] : language === "de" ? "Hallo" : "Ciao";
   return (
-    <h1 className="text-[length:var(--s-greet)] font-semibold leading-none tracking-tight text-foreground">
+    <h1 className="font-display text-[length:var(--s-greet)] leading-none text-ink">
       {word}, {name}!
     </h1>
   );
@@ -31,10 +31,10 @@ export function Clock({ language }: { language: Language }) {
   const date = now.toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" });
   const time = now.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
   return (
-    <p className="mt-[0.3em] text-[length:var(--s-clock)] text-muted-foreground">
+    <p className="mt-[0.3em] text-[length:var(--s-clock)] text-graphite">
       <span className="capitalize">{date}</span>
-      <span className="mx-3 text-primary">·</span>
-      <time dateTime={now.toISOString()} className="font-semibold tabular-nums text-foreground">
+      <span className="mx-3 text-sole">·</span>
+      <time dateTime={now.toISOString()} className="font-bold tabular-nums text-ink">
         {time}
       </time>
     </p>

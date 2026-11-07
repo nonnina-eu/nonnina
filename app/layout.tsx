@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Bricolage_Grotesque, Manrope } from "next/font/google";
 import "./globals.css";
 
 const appUrl =
@@ -9,7 +9,7 @@ const appUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: "Nonnina – app",
+    default: "Nonnina",
     template: "%s · Nonnina",
   },
   description:
@@ -18,22 +18,24 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2F7CF6",
+  themeColor: "#FAF6F0",
   width: "device-width",
   initialScale: 1,
 };
 
-const inter = Inter({
-  variable: "--font-inter",
-  display: "swap",
+const display = Bricolage_Grotesque({
   subsets: ["latin", "latin-ext"],
+  axes: ["opsz", "wdth"],
+  variable: "--font-display",
+  display: "swap",
 });
+const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-sans", display: "swap" });
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body className="min-h-dvh font-sans">{children}</body>
     </html>
   );

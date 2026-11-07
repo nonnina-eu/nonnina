@@ -4,6 +4,7 @@ import { jsonError, parseJson } from "@/lib/api";
 import { emergencyRequestSchema } from "@/lib/validation";
 import { rateLimit } from "@/lib/rate-limit";
 import { alertsUrlFor, anyoneNotified, errorMessage, notifyRelatives } from "@/lib/notify";
+import { initialSchedule } from "@/lib/escalation-ladder";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -54,16 +55,20 @@ export async function POST(request: Request) {
       reason,
       quote,
       alertsUrl: alertsUrlFor(family.id),
+      eventId: event.id,
     });
   } catch (e) {
     notified = [{ relative_id: null, name: "system", channel: "demo", status: "failed", detail: errorMessage(e), at: new Date().toISOString() }];
   }
 
+  // Schedule the escalation ladder (emergency only): next relative is called in 90 s unless someone confirms.
+  const schedule = initialSchedule(event, relatives, family, new Date());
   const updated =
     (await store.updateEmergencyEvent(event.id, {
       notified,
       status: anyoneNotified(notified) ? "relatives_notified" : "open",
-    })) ?? { ...event, notified };
+      ...schedule,
+    })) ?? { ...event, notified, ...schedule };
 
   return NextResponse.json({ ok: true, event: updated, deduplicated: false, notified: anyoneNotified(notified) }, { status: 201 });
 }

@@ -12,6 +12,7 @@ export function lastSentences(text: string, count = 2): string {
   return parts.slice(-count).join(" ").trim();
 }
 
+/** Large captions of everything Lina says, on the Menta (voice) surface. */
 export function Captions({ text, speaker }: { text: string | null; speaker: string }) {
   const reduce = useReducedMotion();
   return (
@@ -24,7 +25,7 @@ export function Captions({ text, speaker }: { text: string | null; speaker: stri
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? undefined : { opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="text-balance text-center text-[length:var(--s-caption)] font-medium leading-snug text-foreground"
+            className="text-balance rounded-xl bg-menta px-[1em] py-[0.6em] text-center text-[length:var(--s-caption)] font-semibold leading-snug text-ink"
           >
             <span className="sr-only">{speaker}: </span>
             {lastSentences(text)}

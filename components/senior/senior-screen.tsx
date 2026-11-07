@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useConversation } from "@elevenlabs/react";
 import { Check, Clock3, Phone, RotateCcw } from "lucide-react";
+import { Mark } from "@/components/logo";
 import type { Language, MedicationTime } from "@/lib/db/types";
 import { seniorT } from "@/lib/i18n/senior";
 import { detectEmergency } from "@/lib/emergency-keywords";
@@ -213,13 +214,20 @@ export function SeniorScreen(props: SeniorScreenProps) {
   return (
     <div className="sky-glow relative flex h-dvh w-full select-none flex-col overflow-hidden p-[var(--s-pad)]">
       <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <Greeting name={firstName} language={language} greetings={t.greeting} />
-          <Clock language={language} />
+        <div className="flex items-start gap-[0.7em]">
+          <Mark className="mt-[0.15em] size-[1.9em] shrink-0" />
+          <div>
+            <Greeting name={firstName} language={language} greetings={t.greeting} />
+            <Clock language={language} />
+          </div>
         </div>
-        <div className="flex items-center gap-2 rounded-full bg-secondary px-[1em] py-[0.6em] font-semibold text-primary">
+        {/* reminder card: Camomilla surface, Sole-deep text */}
+        <div className="flex items-center gap-2 rounded-xl bg-camomilla px-[1em] py-[0.6em] font-bold text-sole-deep">
           <Clock3 className="size-[1.3em]" />
-          <span>{reminder}</span>
+          <span>
+            <span className="sr-only">{t.nextReminder}: </span>
+            {reminder}
+          </span>
         </div>
       </header>
 
@@ -227,13 +235,13 @@ export function SeniorScreen(props: SeniorScreenProps) {
         <TalkButton state={talkState} label={label} onPress={onPress} getVolume={getVolume} />
         {voiceError ? (
           <div role="alert" className="flex max-w-3xl flex-col items-center gap-4 text-center">
-            <p className="text-[1.15em] font-semibold">{voiceError.title}</p>
-            {voiceError.body ? <p className="text-muted-foreground">{voiceError.body}</p> : null}
+            <p className="font-display text-[1.35em] text-ink">{voiceError.title}</p>
+            {voiceError.body ? <p className="text-graphite">{voiceError.body}</p> : null}
             {voiceError.retry ? (
               <button
                 type="button"
                 onClick={() => void start()}
-                className="flex min-h-[88px] items-center gap-3 rounded-full border-2 border-primary/30 bg-card px-10 text-[1.1em] font-semibold text-primary shadow-soft"
+                className="flex min-h-[88px] items-center gap-3 rounded-xl border-2 border-ink bg-white px-10 text-[1.1em] font-bold text-ink shadow-soft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sole/50"
               >
                 <RotateCcw className="size-8" />
                 {t.retry}
@@ -243,14 +251,21 @@ export function SeniorScreen(props: SeniorScreenProps) {
         ) : voiceConfigured ? (
           <Captions text={caption} speaker={t.captionsAgent} />
         ) : (
-          <p className="max-w-3xl text-balance text-center text-muted-foreground">
+          <p className="max-w-3xl text-balance text-center font-semibold text-graphite">
             {t.voiceUnavailableTitle}. {t.voiceUnavailableBody}
           </p>
         )}
       </main>
 
       <footer className="flex items-end justify-between gap-6">
-        <p className="flex items-center gap-2 font-medium text-emerald-700">
+        {/* "connected" pill: Salvia surface, Bene text */}
+        <p
+          className={
+            relativeNames.length > 0
+              ? "flex items-center gap-2 rounded-full bg-salvia px-[1em] py-[0.5em] font-bold text-bene"
+              : "flex items-center gap-2 rounded-full bg-mist px-[1em] py-[0.5em] font-bold text-graphite"
+          }
+        >
           {relativeNames.length > 0 ? (
             <>
               <Check className="size-[1.2em]" />
@@ -260,7 +275,7 @@ export function SeniorScreen(props: SeniorScreenProps) {
             t.nobodyConnected
           )}
         </p>
-        {emergency.state.allClearSent ? <p className="text-muted-foreground">{t.allClearSent}</p> : null}
+        {emergency.state.allClearSent ? <p className="font-semibold text-bene">{t.allClearSent}</p> : null}
         <HelpButton label={t.help} onClick={manualHelp} inline />
       </footer>
 
@@ -270,7 +285,7 @@ export function SeniorScreen(props: SeniorScreenProps) {
   );
 }
 
-/** Red help button, ≥ 88 px, always visible bottom right, separated from the main button. */
+/** Allarme help button, ≥ 88 px, always visible bottom right, separated from the main button. Red is used for nothing else. */
 function HelpButton({ label, onClick, inline = false }: { label: string; onClick: () => void; inline?: boolean }) {
   return (
     <button
@@ -278,7 +293,7 @@ function HelpButton({ label, onClick, inline = false }: { label: string; onClick
       onClick={onClick}
       className={
         (inline ? "" : "fixed bottom-[var(--s-pad)] right-[var(--s-pad)] z-30 ") +
-        "flex min-h-[var(--s-help)] min-w-[calc(var(--s-help)*2)] items-center justify-center gap-[0.5em] rounded-full bg-red-600 px-[1.2em] text-[length:var(--s-help-text)] font-bold text-white shadow-[0_16px_40px_-12px_rgba(220,38,38,0.7)] transition-transform active:scale-[0.98] focus-visible:outline-none focus-visible:ring-8 focus-visible:ring-red-300"
+        "flex min-h-[var(--s-help)] min-w-[calc(var(--s-help)*2)] items-center justify-center gap-[0.5em] rounded-xl bg-allarme px-[1.2em] text-[length:var(--s-help-text)] font-bold text-white shadow-[0_16px_40px_-12px_rgba(180,35,24,0.6)] transition-transform hover:bg-allarme-deep active:scale-[0.98] focus-visible:outline-none focus-visible:ring-8 focus-visible:ring-allarme/30"
       }
     >
       <Phone className="size-[1.25em]" />

@@ -1,7 +1,7 @@
 import type { Viewport } from "next";
 
 export const viewport: Viewport = {
-  themeColor: "#2F7CF6",
+  themeColor: "#FAF6F0",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -12,7 +12,7 @@ export const viewport: Viewport = {
 export default function SeniorLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="h-dvh overflow-hidden bg-background text-[length:var(--s-base)]"
+      className="h-dvh overflow-hidden bg-latte text-ink text-[length:var(--s-base)]"
       style={
         {
           // Fluid type scale: ≥ 24 px on a real tablet, scales down only inside small demo frames.

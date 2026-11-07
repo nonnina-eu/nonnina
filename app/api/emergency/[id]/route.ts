@@ -4,6 +4,7 @@ import { getStore } from "@/lib/db";
 import { jsonError, parseJson } from "@/lib/api";
 import { emergencyUpdateSchema } from "@/lib/validation";
 import { alertsUrlFor, notifyRelatives } from "@/lib/notify";
+import { acknowledgeEvent } from "@/lib/escalation-runner";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,7 +24,7 @@ export async function GET(_request: Request, { params }: Params) {
 
 /**
  * PATCH /api/emergency/:id
- *  { action: "acknowledge" }            – a relative pressed "I'm on it"
+ *  { action: "acknowledge", relative_id? } – a relative pressed "I'm on it" (stops the ladder, tells the others)
  *  { action: "cancel", token }          – the senior pressed "I'm fine" (token must match the senior)
  */
 export async function PATCH(request: Request, { params }: Params) {
@@ -37,8 +38,8 @@ export async function PATCH(request: Request, { params }: Params) {
   if (!event) return jsonError(404, "Not found");
 
   if (parsed.data.action === "acknowledge") {
-    if (event.status === "cancelled_by_senior") return NextResponse.json({ ok: true, event });
-    const updated = await store.updateEmergencyEvent(id, { status: "acknowledged" });
+    if (event.status === "cancelled_by_senior" || event.status === "acknowledged") return NextResponse.json({ ok: true, event });
+    const updated = await acknowledgeEvent(event, parsed.data.relative_id ?? null);
     return NextResponse.json({ ok: true, event: updated });
   }
 
@@ -59,6 +60,6 @@ export async function PATCH(request: Request, { params }: Params) {
     });
     notified = [...event.notified, ...followUp];
   }
-  const updated = await store.updateEmergencyEvent(id, { status: "cancelled_by_senior", notified });
+  const updated = await store.updateEmergencyEvent(id, { status: "cancelled_by_senior", notified, next_step_at: null });
   return NextResponse.json({ ok: true, event: updated, followUpSent: wasNotified });
 }

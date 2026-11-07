@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Loader2, Mic, Square, Volume2 } from "lucide-react";
+import { Spark } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
 export type TalkState = "idle" | "connecting" | "listening" | "speaking" | "ended";
@@ -17,8 +18,9 @@ interface TalkButtonProps {
 }
 
 /**
- * The one big round button. ≥ 260 px, one clear visual per state.
- * The ring reacts to the microphone (listening) or the speaker (speaking) volume.
+ * The one big round button: Ink, with one Sole glow. ≥ 260 px, one clear visual per state.
+ * The ring reacts to the microphone (listening) or the speaker (speaking) volume, and the
+ * spark lights up while Nonnina listens or talks.
  */
 export function TalkButton({ state, label, onPress, getVolume, disabled }: TalkButtonProps) {
   const reduce = useReducedMotion();
@@ -50,17 +52,17 @@ export function TalkButton({ state, label, onPress, getVolume, disabled }: TalkB
 
   return (
     <div className="relative flex items-center justify-center">
-      {/* breathing glow (idle) */}
+      {/* breathing Sole glow (idle) */}
       {state === "idle" && !reduce ? (
-        <span aria-hidden className="absolute size-[115%] rounded-full bg-primary/15 blur-2xl animate-breathe" />
+        <span aria-hidden className="absolute size-[115%] rounded-full bg-sole/30 blur-2xl animate-breathe" />
       ) : null}
 
-      {/* volume ring */}
+      {/* volume ring: Sole while listening, Menta while Lina speaks */}
       {active ? (
         <motion.span
           aria-hidden
-          className={cn("absolute inset-[-10%] rounded-full border-[6px]", state === "speaking" ? "border-sky-300/70" : "border-primary/40")}
-          animate={{ scale: reduce ? 1 : ringScale, opacity: 0.5 + volume * 0.5 }}
+          className={cn("absolute inset-[-10%] rounded-full border-[6px]", state === "speaking" ? "border-menta" : "border-sole/80")}
+          animate={{ scale: reduce ? 1 : ringScale, opacity: 0.55 + volume * 0.45 }}
           transition={{ type: "spring", stiffness: 260, damping: 24 }}
         />
       ) : null}
@@ -69,7 +71,7 @@ export function TalkButton({ state, label, onPress, getVolume, disabled }: TalkB
       {state === "connecting" && !reduce ? (
         <motion.span
           aria-hidden
-          className="absolute inset-[-8%] rounded-full border-[6px] border-primary/15 border-t-primary"
+          className="absolute inset-[-8%] rounded-full border-[6px] border-ink/10 border-t-sole"
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1.4, ease: "linear" }}
         />
@@ -83,10 +85,13 @@ export function TalkButton({ state, label, onPress, getVolume, disabled }: TalkB
         aria-label={label}
         whileTap={reduce ? undefined : { scale: 0.97 }}
         className={cn(
-          "btn-glossy relative flex aspect-square w-[var(--s-btn)] flex-col items-center justify-center gap-3 rounded-full text-white focus-visible:outline-none focus-visible:ring-8 focus-visible:ring-primary/30 disabled:opacity-60",
-          state === "speaking" && "saturate-125",
+          "btn-glossy relative flex aspect-square w-[var(--s-btn)] flex-col items-center justify-center gap-3 rounded-full text-white focus-visible:outline-none focus-visible:ring-8 focus-visible:ring-sole/40 disabled:opacity-60",
         )}
       >
+        {/* the voice spark lights up when Nonnina listens */}
+        {active ? (
+          <Spark className={cn("absolute right-[12%] top-[12%] size-[14%]", !reduce && "animate-twinkle")} />
+        ) : null}
         {state === "connecting" ? (
           <Loader2 className="size-[26%] animate-spin" strokeWidth={2} />
         ) : state === "speaking" ? (
@@ -96,7 +101,7 @@ export function TalkButton({ state, label, onPress, getVolume, disabled }: TalkB
         ) : (
           <Mic className="size-[26%]" strokeWidth={2} />
         )}
-        <span className="px-[1em] text-center text-[length:var(--s-btn-label)] font-semibold leading-tight">{label}</span>
+        <span className="px-[1em] text-center text-[length:var(--s-btn-label)] font-bold leading-tight">{label}</span>
       </motion.button>
     </div>
   );
