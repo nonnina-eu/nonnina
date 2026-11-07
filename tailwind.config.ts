@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -74,12 +75,22 @@ export default {
           from: { opacity: "0", transform: "translateY(12px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
       },
       animation: {
         breathe: "breathe 4s ease-in-out infinite",
         "fade-up": "fade-up 0.6s ease-out both",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 } satisfies Config;

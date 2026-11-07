@@ -1,0 +1,233 @@
+export type LandingLocale = "en" | "de";
+
+const en = {
+  nav: { how: "How it works", safety: "Safety", helpers: "For helpers", cta: "Join the waitlist" },
+  hero: {
+    badge: "New · Voice companion for older people",
+    title1: "One button for your parent.",
+    title2: "One clear plan for you.",
+    subtitle:
+      "Care Copilot is a voice companion for older people living at home. It helps every day, and alerts the family the moment something is wrong.",
+    primary: "Join the waitlist",
+    secondary: "See how it works",
+    cardAlert: "Anna notified",
+    cardAlertSub: "SMS sent · 12 s after the fall",
+    cardReminder: "Next reminder",
+    cardReminderSub: "Tablets at 18:00",
+    cardEmergency: "Emergency",
+    cardEmergencySub: "112 is one tap away",
+  },
+  problem: {
+    eyebrow: "The problem",
+    title: "Growing old at home should not mean being on your own.",
+    items: [
+      { title: "Alone at home", body: "Children live far away. Small problems are noticed too late, and a fall can go unseen for hours." },
+      { title: "Lost in paperwork", body: "Care insurance benefits must be claimed one by one. Many families miss money they are entitled to." },
+      { title: "A legal grey zone", body: "Much home care in Germany is arranged without proper contracts. Families carry the risk without knowing it." },
+    ],
+  },
+  how: {
+    eyebrow: "How it works",
+    title: "From one tap to the right help.",
+    steps: [
+      { title: "Senior taps one button", body: "No menus, no passwords. One big round button on a tablet." },
+      { title: "Says the problem", body: "In German or Italian, in their own words. Lina listens and answers calmly." },
+      { title: "Can the AI solve it?", body: "A reminder, a question, a chat: Lina helps right away." },
+    ],
+    yes: { label: "Yes", title: "AI helps now", body: "Reminder, answer, company. Nothing else needed." },
+    no: { label: "No", title: "Help request to the family", body: "Relatives get an alert with a short summary." },
+    after: [
+      { title: "Family dashboard", body: "Legal check, money you are entitled to, clear next steps." },
+      { title: "State services or verified helpers", body: "The family picks the right help: public services or trusted local helpers." },
+    ],
+  },
+  safety: {
+    eyebrow: "Safety first",
+    title: "When something is wrong, the family knows in seconds.",
+    body: "If Maria says she fell, has chest pain or cannot breathe, the assistant stays calm, shows a big “Call 112” button and immediately alerts her relatives by SMS.",
+    bullets: [
+      "Three independent triggers: the AI, a keyword safety net in code, and a red help button that always works.",
+      "Relatives are notified by SMS, and the first contact gets a phone call.",
+      "The senior can always say “I am fine” and the family gets an all-clear.",
+    ],
+    note: "Care Copilot is not an emergency service and does not replace 112.",
+    screenTitle: "Help is on the way.",
+    screenBody: "I have notified Anna and Thomas.",
+    screenCall: "Call 112",
+    screenRelative: "Call Anna",
+    screenFine: "I am fine",
+  },
+  layers: {
+    eyebrow: "Three layers",
+    title: "Built for everyone around the kitchen table.",
+    items: [
+      { title: "For the senior", body: "One button, a warm voice, large captions. Works without a smartphone." },
+      { title: "For the family", body: "Alerts in real time, a clear plan, paperwork and money handled step by step." },
+      { title: "For helpers", body: "Sign up for free, get verified, and get matched with families nearby." },
+    ],
+  },
+  trust: {
+    eyebrow: "Trust and privacy",
+    title: "Your data stays in Europe. Your parent stays in control.",
+    items: [
+      { title: "EU data storage", body: "All data is stored in the EU on Supabase (Frankfurt)." },
+      { title: "The senior's consent", body: "Nothing is switched on without the senior saying yes." },
+      { title: "No voice recordings stored", body: "We keep only short written summaries of conversations." },
+      { title: "Invited relatives only", body: "Family members see data only when the senior invites them." },
+      { title: "Orientation, not advice", body: "Care Copilot gives orientation, not legal or medical advice." },
+    ],
+  },
+  faq: {
+    eyebrow: "FAQ",
+    title: "Questions families ask us.",
+    items: [
+      { q: "Does my parent need a smartphone?", a: "No. A tablet with one button is enough. We can also ship a pre-configured tablet during the pilot." },
+      { q: "Which languages?", a: "German and Italian today. The companion speaks slowly, in short sentences, and uses the formal form." },
+      { q: "What happens in an emergency?", a: "The screen switches to emergency mode with a big “Call 112” button, and relatives are alerted by SMS within seconds. Care Copilot never calls 112 by itself." },
+      { q: "Who can see the data?", a: "Only relatives the senior has invited. Data is stored in the EU and voice is never recorded, only summarised." },
+      { q: "How much will it cost?", a: "Free during the pilot in Stuttgart. We will share pricing with the waitlist first." },
+    ],
+  },
+  waitlist: {
+    eyebrow: "Waitlist",
+    title: "Be the first to try it.",
+    body: "We are starting with families in Stuttgart. Leave your email and we will get in touch.",
+    email: "Email",
+    role: "I am a…",
+    roles: { family: "Family member", helper: "Helper", care_service: "Care service", other: "Other" },
+    city: "City",
+    message: "Message (optional)",
+    messagePlaceholder: "Tell us about your situation…",
+    submit: "Join the waitlist",
+    submitting: "Sending…",
+    successTitle: "You are on the list.",
+    successBody: "Thank you. We will write to you as soon as the pilot starts.",
+    duplicate: "This email is already on the waitlist. Thank you!",
+    error: "That did not work. Please try again.",
+    privacy: "We only use your email to contact you about Care Copilot.",
+  },
+  footer: {
+    built: "Built at the Cursor x Sandbox Hackathon Stuttgart 2026",
+    emergency: "Not an emergency service. In an emergency call 112.",
+    advice: "Orientation only, not legal or medical advice.",
+    demo: "Live demo",
+  },
+};
+
+export type LandingDictionary = typeof en;
+
+const de: LandingDictionary = {
+  nav: { how: "So funktioniert's", safety: "Sicherheit", helpers: "Für Helfer", cta: "Auf die Warteliste" },
+  hero: {
+    badge: "Neu · Sprachbegleiter für ältere Menschen",
+    title1: "Ein Knopf für Ihre Eltern.",
+    title2: "Ein klarer Plan für Sie.",
+    subtitle:
+      "Care Copilot ist ein Sprachbegleiter für ältere Menschen, die zu Hause leben. Er hilft jeden Tag und alarmiert die Familie, sobald etwas nicht stimmt.",
+    primary: "Auf die Warteliste",
+    secondary: "So funktioniert's",
+    cardAlert: "Anna benachrichtigt",
+    cardAlertSub: "SMS gesendet · 12 s nach dem Sturz",
+    cardReminder: "Nächste Erinnerung",
+    cardReminderSub: "Tabletten um 18:00",
+    cardEmergency: "Notfall",
+    cardEmergencySub: "112 mit einem Tipp",
+  },
+  problem: {
+    eyebrow: "Das Problem",
+    title: "Zu Hause alt werden sollte nicht heißen, allein zu sein.",
+    items: [
+      { title: "Allein zu Hause", body: "Die Kinder wohnen weit weg. Kleine Probleme fallen zu spät auf, ein Sturz bleibt stundenlang unbemerkt." },
+      { title: "Verloren im Papierkram", body: "Leistungen der Pflegeversicherung müssen einzeln beantragt werden. Viele Familien verschenken Geld, das ihnen zusteht." },
+      { title: "Eine rechtliche Grauzone", body: "Viel häusliche Pflege in Deutschland läuft ohne ordentliche Verträge. Familien tragen das Risiko, ohne es zu wissen." },
+    ],
+  },
+  how: {
+    eyebrow: "So funktioniert's",
+    title: "Von einem Tipp zur richtigen Hilfe.",
+    steps: [
+      { title: "Senior tippt auf einen Knopf", body: "Keine Menüs, keine Passwörter. Ein großer runder Knopf auf einem Tablet." },
+      { title: "Sagt, was los ist", body: "Auf Deutsch oder Italienisch, in eigenen Worten. Lina hört zu und antwortet ruhig." },
+      { title: "Kann die KI helfen?", body: "Eine Erinnerung, eine Frage, ein Gespräch: Lina hilft sofort." },
+    ],
+    yes: { label: "Ja", title: "KI hilft sofort", body: "Erinnerung, Antwort, Gesellschaft. Mehr braucht es nicht." },
+    no: { label: "Nein", title: "Hilfe-Anfrage an die Familie", body: "Angehörige bekommen eine Nachricht mit kurzer Zusammenfassung." },
+    after: [
+      { title: "Familien-Dashboard", body: "Rechts-Check, Geld, das Ihnen zusteht, klare nächste Schritte." },
+      { title: "Behörden oder geprüfte Helfer", body: "Die Familie wählt die passende Hilfe: öffentliche Stellen oder vertrauenswürdige Helfer vor Ort." },
+    ],
+  },
+  safety: {
+    eyebrow: "Sicherheit zuerst",
+    title: "Wenn etwas nicht stimmt, weiß die Familie es in Sekunden.",
+    body: "Sagt Maria, dass sie gestürzt ist, Brustschmerzen hat oder keine Luft bekommt, bleibt der Assistent ruhig, zeigt einen großen „112 anrufen“-Knopf und benachrichtigt sofort ihre Angehörigen per SMS.",
+    bullets: [
+      "Drei unabhängige Auslöser: die KI, ein Schlüsselwort-Sicherheitsnetz im Code und ein roter Hilfe-Knopf, der immer funktioniert.",
+      "Angehörige bekommen eine SMS, der erste Kontakt zusätzlich einen Anruf.",
+      "Der Senior kann jederzeit „Mir geht es gut“ sagen, die Familie bekommt Entwarnung.",
+    ],
+    note: "Care Copilot ist kein Notdienst und ersetzt nicht die 112.",
+    screenTitle: "Hilfe ist unterwegs.",
+    screenBody: "Ich habe Anna und Thomas benachrichtigt.",
+    screenCall: "112 anrufen",
+    screenRelative: "Anna anrufen",
+    screenFine: "Mir geht es gut",
+  },
+  layers: {
+    eyebrow: "Drei Ebenen",
+    title: "Gebaut für alle am Küchentisch.",
+    items: [
+      { title: "Für den Senior", body: "Ein Knopf, eine warme Stimme, große Untertitel. Funktioniert ohne Smartphone." },
+      { title: "Für die Familie", body: "Alarme in Echtzeit, ein klarer Plan, Papierkram und Geld Schritt für Schritt." },
+      { title: "Für Helfer", body: "Kostenlos anmelden, verifizieren lassen und Familien in der Nähe finden." },
+    ],
+  },
+  trust: {
+    eyebrow: "Vertrauen und Datenschutz",
+    title: "Ihre Daten bleiben in Europa. Ihre Eltern behalten die Kontrolle.",
+    items: [
+      { title: "Datenspeicherung in der EU", body: "Alle Daten liegen in der EU auf Supabase (Frankfurt)." },
+      { title: "Einwilligung des Seniors", body: "Nichts wird eingeschaltet, ohne dass der Senior zustimmt." },
+      { title: "Keine Sprachaufnahmen", body: "Wir speichern nur kurze schriftliche Zusammenfassungen." },
+      { title: "Nur eingeladene Angehörige", body: "Familienmitglieder sehen Daten nur, wenn der Senior sie einlädt." },
+      { title: "Orientierung, keine Beratung", body: "Care Copilot gibt Orientierung, keine Rechts- oder Gesundheitsberatung." },
+    ],
+  },
+  faq: {
+    eyebrow: "FAQ",
+    title: "Was Familien uns fragen.",
+    items: [
+      { q: "Brauchen meine Eltern ein Smartphone?", a: "Nein. Ein Tablet mit einem Knopf reicht. Im Pilotprojekt können wir auch ein vorkonfiguriertes Tablet schicken." },
+      { q: "Welche Sprachen?", a: "Deutsch und Italienisch. Der Begleiter spricht langsam, in kurzen Sätzen und siezt." },
+      { q: "Was passiert im Notfall?", a: "Der Bildschirm wechselt in den Notfallmodus mit einem großen „112 anrufen“-Knopf, Angehörige werden in Sekunden per SMS alarmiert. Care Copilot ruft nie selbst die 112 an." },
+      { q: "Wer kann die Daten sehen?", a: "Nur Angehörige, die der Senior eingeladen hat. Daten liegen in der EU, Stimme wird nie aufgenommen, nur zusammengefasst." },
+      { q: "Was wird es kosten?", a: "Im Pilotprojekt in Stuttgart kostenlos. Preise teilen wir zuerst mit der Warteliste." },
+    ],
+  },
+  waitlist: {
+    eyebrow: "Warteliste",
+    title: "Gehören Sie zu den Ersten.",
+    body: "Wir starten mit Familien in Stuttgart. Hinterlassen Sie Ihre E-Mail, wir melden uns.",
+    email: "E-Mail",
+    role: "Ich bin…",
+    roles: { family: "Angehörige/r", helper: "Helfer/in", care_service: "Pflegedienst", other: "Sonstiges" },
+    city: "Stadt",
+    message: "Nachricht (optional)",
+    messagePlaceholder: "Erzählen Sie uns von Ihrer Situation…",
+    submit: "Auf die Warteliste",
+    submitting: "Wird gesendet…",
+    successTitle: "Sie stehen auf der Liste.",
+    successBody: "Vielen Dank. Wir schreiben Ihnen, sobald das Pilotprojekt startet.",
+    duplicate: "Diese E-Mail steht schon auf der Warteliste. Danke!",
+    error: "Das hat nicht geklappt. Bitte versuchen Sie es erneut.",
+    privacy: "Wir nutzen Ihre E-Mail nur, um Sie zu Care Copilot zu kontaktieren.",
+  },
+  footer: {
+    built: "Entstanden beim Cursor x Sandbox Hackathon Stuttgart 2026",
+    emergency: "Kein Notdienst. Im Notfall 112 anrufen.",
+    advice: "Nur Orientierung, keine Rechts- oder Gesundheitsberatung.",
+    demo: "Live-Demo",
+  },
+};
+
+export const landingDictionaries: Record<LandingLocale, LandingDictionary> = { en, de };
