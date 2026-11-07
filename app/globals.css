@@ -64,3 +64,12 @@
 
 @keyframes wave { 0%, 100% { height: 6px } 50% { height: 24px } }
 @keyframes twinkle { 0%, 100% { transform: scale(1) rotate(0); opacity: 1 } 50% { transform: scale(.82) rotate(12deg); opacity: .75 } }
+
+/* Pitch deck: print one slide per page */
+@media print {
+  @page { size: 1600px 900px; margin: 0; }
+  .deck-root { position: static !important; background: #fff !important; overflow: visible !important; }
+  .deck-screen, .deck-ui { display: none !important; }
+  .deck-print { display: block !important; }
+  .deck-print > div { break-after: page; }
+}
