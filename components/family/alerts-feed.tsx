@@ -29,7 +29,9 @@ function merge(feed: FamilyFeed): FeedItem[] {
   return items.sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime());
 }
 
-function timeAgo(iso: string, now: number): string {
+function timeAgo(iso: string, now: number | null): string {
+  // Unknown until mounted: server and client clocks differ, so render nothing during SSR.
+  if (now === null) return "";
   const diff = Math.max(0, Math.round((now - new Date(iso).getTime()) / 1000));
   if (diff < 5) return "just now";
   if (diff < 60) return `${diff} s ago`;
@@ -55,7 +57,7 @@ export interface AlertsFeedProps {
 export function AlertsFeed({ familyId, initial, compact = false, relativeId = null, relatives = [], canResolve = true }: AlertsFeedProps) {
   const t = familyT().feed;
   const [feed, setFeed] = useState<FamilyFeed>(initial);
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState<number | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const reduce = useReducedMotion();
 
@@ -72,6 +74,7 @@ export function AlertsFeed({ familyId, initial, compact = false, relativeId = nu
 
   // Polling always; Supabase realtime on top when configured (instant refresh).
   useEffect(() => {
+    setNow(Date.now());
     const timer = setInterval(() => {
       setNow(Date.now());
       void refresh();
