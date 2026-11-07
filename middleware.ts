@@ -41,6 +41,12 @@ async function productMiddleware(request: NextRequest, first: string) {
   if (first === "helpers") {
     return hasSupabase() ? (await updateSession(request)).response : NextResponse.next();
   }
+  if (first === "senior") {
+    // Lets the product root layout set <html lang> from the senior's language (de/it).
+    const headers = new Headers(request.headers);
+    headers.set("x-nonnina-path", pathname);
+    return NextResponse.next({ request: { headers } });
+  }
   if (first !== "app") return NextResponse.next();
 
   const isJoin = pathname.startsWith("/app/join");

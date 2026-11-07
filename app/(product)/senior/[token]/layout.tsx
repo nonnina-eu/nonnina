@@ -4,8 +4,7 @@ export const viewport: Viewport = {
   themeColor: "#FAF6F0",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  // No maximum-scale / user-scalable=no: older eyes must be able to zoom (WCAG 1.4.4).
 };
 
 /** The senior screen never scrolls and uses the whole viewport. */
