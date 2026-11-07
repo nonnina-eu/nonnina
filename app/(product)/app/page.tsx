@@ -56,9 +56,9 @@ export default async function FamilyHomePage({ searchParams }: Props) {
         ) : null}
       </div>
 
-      <FamilyHelperRequests familyId={family.id} seniors={overview?.seniors ?? []} completeError={sp.complete_error === "1"} />
-
       <ReliefBudgetCard familyId={family.id} seniors={overview?.seniors ?? []} month={sp.budget_month} seniorId={sp.budget_senior} />
+
+      <FamilyHelperRequests familyId={family.id} seniors={overview?.seniors ?? []} completeError={sp.complete_error === "1"} />
 
       {feed ? (
         <AlertsFeed familyId={family.id} initial={feed} relativeId={member.relative?.id ?? null} relatives={overview?.relatives ?? []} />
