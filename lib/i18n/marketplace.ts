@@ -22,7 +22,7 @@ export interface MarketplaceStrings {
   kinds: Record<HelperKind, string>;
   languages: Record<string, string>;
   status: Record<HelperRequestStatus, string>;
-  common: { verified: string; notVerified: string; volunteer: string; free: string; perHour: (eur: string) => string; back: string; demoNote: string };
+  common: { verified: string; notVerified: string; volunteer: string; free: string; perHour: (eur: string) => string; back: string; demoNote: string; demoProfile: string; demoProfileHint: string };
   directory: {
     eyebrow: string;
     title: string;
@@ -166,7 +166,7 @@ const en: MarketplaceStrings = {
     tech_help: "Phone & tablet help",
   },
   kinds: { independent: "Independent helper", service: "Care service", volunteer: "Volunteer" },
-  languages: { de: "German", it: "Italian", en: "English", tr: "Turkish", pl: "Polish", ru: "Russian", fr: "French", es: "Spanish" },
+  languages: { de: "German", it: "Italian", en: "English", tr: "Turkish", pl: "Polish", ru: "Russian", fr: "French", es: "Spanish", uk: "Ukrainian", el: "Greek", pt: "Portuguese" },
   status: { sent: "Sent", accepted: "Accepted", declined: "Declined", done: "Done" },
   common: {
     verified: "Verified by Nonnina",
@@ -176,6 +176,8 @@ const en: MarketplaceStrings = {
     perHour: (eur) => `${eur} €/hour`,
     back: "Back to all helpers",
     demoNote: "Demo mode: notifications are shown here instead of being sent.",
+    demoProfile: "Demo profile",
+    demoProfileHint: "Fictional example profile to show how Nonnina works. This person does not exist.",
   },
   directory: {
     eyebrow: "Nonnina helpers",
@@ -343,7 +345,7 @@ const de: MarketplaceStrings = {
     tech_help: "Handy & Tablet",
   },
   kinds: { independent: "Selbstständige Hilfe", service: "Pflegedienst", volunteer: "Ehrenamtlich" },
-  languages: { de: "Deutsch", it: "Italienisch", en: "Englisch", tr: "Türkisch", pl: "Polnisch", ru: "Russisch", fr: "Französisch", es: "Spanisch" },
+  languages: { de: "Deutsch", it: "Italienisch", en: "Englisch", tr: "Türkisch", pl: "Polnisch", ru: "Russisch", fr: "Französisch", es: "Spanisch", uk: "Ukrainisch", el: "Griechisch", pt: "Portugiesisch" },
   status: { sent: "Gesendet", accepted: "Angenommen", declined: "Abgelehnt", done: "Erledigt" },
   common: {
     verified: "Von Nonnina geprüft",
@@ -353,6 +355,8 @@ const de: MarketplaceStrings = {
     perHour: (eur) => `${eur} €/Stunde`,
     back: "Zurück zu allen Helfern",
     demoNote: "Demo-Modus: Benachrichtigungen werden hier angezeigt statt verschickt.",
+    demoProfile: "Demo-Profil",
+    demoProfileHint: "Erfundenes Beispielprofil, um zu zeigen, wie Nonnina funktioniert. Diese Person gibt es nicht.",
   },
   directory: {
     eyebrow: "Nonnina Helfer",
@@ -520,7 +524,7 @@ const it: MarketplaceStrings = {
     tech_help: "Telefono e tablet",
   },
   kinds: { independent: "Aiutante indipendente", service: "Servizio di assistenza", volunteer: "Volontario" },
-  languages: { de: "Tedesco", it: "Italiano", en: "Inglese", tr: "Turco", pl: "Polacco", ru: "Russo", fr: "Francese", es: "Spagnolo" },
+  languages: { de: "Tedesco", it: "Italiano", en: "Inglese", tr: "Turco", pl: "Polacco", ru: "Russo", fr: "Francese", es: "Spagnolo", uk: "Ucraino", el: "Greco", pt: "Portoghese" },
   status: { sent: "Inviata", accepted: "Accettata", declined: "Rifiutata", done: "Completata" },
   common: {
     verified: "Verificato da Nonnina",
@@ -530,6 +534,8 @@ const it: MarketplaceStrings = {
     perHour: (eur) => `${eur} €/ora`,
     back: "Torna a tutti gli aiutanti",
     demoNote: "Modalità demo: le notifiche vengono mostrate qui invece di essere inviate.",
+    demoProfile: "Profilo demo",
+    demoProfileHint: "Profilo di esempio inventato per mostrare come funziona Nonnina. Questa persona non esiste.",
   },
   directory: {
     eyebrow: "Aiutanti Nonnina",

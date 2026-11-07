@@ -11,7 +11,7 @@ import { getMarketplaceT } from "@/lib/i18n/marketplace-locale";
 import { isHelperService, toPublicHelper } from "@/lib/marketplace";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/family/shell";
-import { languageList, RateLabel, ServiceChips, VerifiedBadge } from "@/components/marketplace/helper-card";
+import { DemoProfileBadge, HelperAvatar, languageList, RateLabel, ServiceChips, VerifiedBadge } from "@/components/marketplace/helper-card";
 import { HelperRequestForm } from "@/components/marketplace/helper-request-form";
 import { NotificationList } from "@/components/marketplace/notification-list";
 import { MarketplaceShell } from "@/components/marketplace/shell";
@@ -73,15 +73,20 @@ export default async function HelperDetailPage({ params, searchParams }: Props) 
         <ArrowLeft className="size-4" aria-hidden /> {t.common.back}
       </Link>
 
-      <div className="mb-6">
-        <p className="eyebrow mb-2">{t.kinds[helper.kind]}</p>
-        <h1 className="font-display text-[2.25rem] leading-[1.02] text-ink sm:text-5xl">{helper.name}</h1>
-        <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
-          <span className="inline-flex items-center gap-1">
-            <MapPin className="size-4" aria-hidden /> {helper.city}
-          </span>
-          <VerifiedBadge verified={helper.verified} locale={locale} />
-          <RateLabel helper={helper} locale={locale} />
+      <div className="mb-6 flex flex-col gap-5 sm:flex-row sm:items-center">
+        <HelperAvatar helper={helper} size={128} className="border-2" />
+        <div className="min-w-0">
+          <p className="eyebrow mb-2">{t.kinds[helper.kind]}</p>
+          <h1 className="font-display text-[2.25rem] leading-[1.02] text-ink sm:text-5xl">{helper.name}</h1>
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="size-4" aria-hidden /> {helper.city}
+            </span>
+            <VerifiedBadge verified={helper.verified} locale={locale} />
+            <DemoProfileBadge isDemo={helper.is_demo} locale={locale} />
+            <RateLabel helper={helper} locale={locale} />
+          </div>
+          {helper.is_demo ? <p className="mt-2 text-xs text-muted">{t.common.demoProfileHint}</p> : null}
         </div>
       </div>
 
