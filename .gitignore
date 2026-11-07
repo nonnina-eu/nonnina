@@ -44,3 +44,6 @@ next-env.d.ts
 # local supabase
 supabase/.temp
 graphify-out/
+
+# agent worktrees
+.claude/worktrees/
