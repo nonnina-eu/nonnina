@@ -12,7 +12,8 @@ export interface ReliefStrings {
   usedLabel: string;
   remaining: string;
   familyPays: string;
-  carryOver: (amount: string) => string;
+  carryOver: (allowance: string, amount: string) => string;
+  free: string;
   overBudget: string;
   jobsTitle: string;
   noJobs: string;
@@ -42,7 +43,8 @@ const en: ReliefStrings = {
   usedLabel: "Covered by the relief amount",
   remaining: "Remaining this month",
   familyPays: "Family pays extra",
-  carryOver: (amount) => `131 € this month + ${amount} unused from earlier months`,
+  carryOver: (allowance, amount) => `${allowance} this month + ${amount} unused from earlier months`,
+  free: "free",
   overBudget: "The recognised services this month cost more than the relief amount available. The family pays the difference.",
   jobsTitle: "Completed jobs this month",
   noJobs: "No completed jobs in this month yet. When a helper marks a job as done, it appears here.",
@@ -76,7 +78,8 @@ const de: ReliefStrings = {
   usedLabel: "Über den Entlastungsbetrag gedeckt",
   remaining: "Rest in diesem Monat",
   familyPays: "Familie zahlt zusätzlich",
-  carryOver: (amount) => `131 € in diesem Monat + ${amount} nicht genutzt aus Vormonaten`,
+  carryOver: (allowance, amount) => `${allowance} in diesem Monat + ${amount} nicht genutzt aus Vormonaten`,
+  free: "kostenlos",
   overBudget: "Die anerkannten Angebote kosten diesen Monat mehr als der verfügbare Entlastungsbetrag. Die Differenz zahlt die Familie.",
   jobsTitle: "Erledigte Einsätze in diesem Monat",
   noJobs: "In diesem Monat noch keine erledigten Einsätze. Sobald eine Hilfe einen Einsatz als erledigt markiert, erscheint er hier.",
@@ -110,7 +113,8 @@ const it: ReliefStrings = {
   usedLabel: "Coperto dall'importo di sgravio",
   remaining: "Restante questo mese",
   familyPays: "La famiglia paga in più",
-  carryOver: (amount) => `131 € questo mese + ${amount} non usati nei mesi precedenti`,
+  carryOver: (allowance, amount) => `${allowance} questo mese + ${amount} non usati nei mesi precedenti`,
+  free: "gratuito",
   overBudget: "Questo mese i servizi riconosciuti costano più dell'importo disponibile. La differenza la paga la famiglia.",
   jobsTitle: "Servizi completati questo mese",
   noJobs: "Ancora nessun servizio completato in questo mese. Quando un aiutante segna un servizio come completato, compare qui.",

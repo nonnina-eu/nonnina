@@ -153,7 +153,7 @@ async function Budget({
           <div className={cn("h-full rounded-full", b.overBudget ? "bg-allarme" : "bg-sole")} style={{ width: `${pct}%` }} />
         </div>
         <p className="mt-2 text-sm text-ink">{t.used(eur(b.coveredByRelief), eur(b.available))}</p>
-        {b.carryOver > 0 ? <p className="text-xs text-muted">{t.carryOver(eur(b.carryOver))}</p> : null}
+        {b.carryOver > 0 ? <p className="text-xs text-muted">{t.carryOver(eur(b.allowance), eur(b.carryOver))}</p> : null}
         {b.overBudget ? (
           <p role="status" className="mt-2 flex items-start gap-2 rounded-sm bg-allarme-soft px-3 py-2 text-sm font-bold text-allarme">
             <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden /> {t.overBudget}
@@ -193,7 +193,9 @@ function JobRow({ line, locale, t, service }: { line: ReliefJobLine<Job>; locale
   const { job } = line;
   const day = job.service_date ?? (job.completed_at ? job.completed_at.slice(0, 10) : null);
   const tag =
-    line.covered > 0 && line.familyPays === 0
+    line.amount === 0
+      ? { label: t.free, className: "bg-salvia text-bene" }
+      : line.covered > 0 && line.familyPays === 0
       ? { label: t.covered, className: "bg-salvia text-bene" }
       : line.covered > 0
         ? { label: `${t.partly(formatEur(line.covered, locale))} · ${t.familyPaysTag}`, className: "bg-camomilla text-sole-deep" }
