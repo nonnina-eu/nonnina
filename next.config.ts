@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Always render <title>/<meta> in <head> (no streamed metadata): better for SEO tools and link previews.
+  htmlLimitedBots: /.*/,
   async headers() {
     return [
       {

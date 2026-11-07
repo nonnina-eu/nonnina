@@ -48,7 +48,7 @@ export function Header({ t, locale }: { t: Dictionary["nav"]; locale: Locale }) 
   return (
     <header className={cn("sticky top-0 z-50 transition-colors", scrolled || open ? "border-b border-line bg-white/90 backdrop-blur-md" : "bg-white")}>
       <div className="wrap flex h-16 items-center justify-between gap-4 md:h-20">
-        <a href={localePath(locale)} aria-label={t.home} className="text-[1.75rem]">
+        <a href={localePath(locale)} title={t.home} className="text-[1.75rem]">
           <Logo />
         </a>
         <nav aria-label="Main" className="hidden items-center gap-7 text-[0.9375rem] font-bold lg:flex">
