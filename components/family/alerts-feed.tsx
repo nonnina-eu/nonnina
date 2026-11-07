@@ -2,9 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { AlertTriangle, Check, HandHelping, Loader2, MessageSquareText, Phone, PhoneOutgoing, RefreshCw, Siren, Undo2 } from "lucide-react";
+import Link from "next/link";
+import { AlertTriangle, Check, HandHelping, Loader2, MessageSquareText, Phone, PhoneOutgoing, RefreshCw, Search, Siren, Undo2 } from "lucide-react";
 import type { EmergencyEvent, FamilyFeed, HelpRequest, Relative, VoiceSession } from "@/lib/db/types";
 import { familyT } from "@/lib/i18n/family";
+import { findHelperHref } from "@/lib/marketplace";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -310,6 +312,15 @@ function HelpCard({
             {busy ? <Loader2 className="size-4 animate-spin" /> : resolved ? <Undo2 className="size-4" /> : <Check className="size-4" />}
             {resolved ? t.reopen : t.done}
           </button>
+          {!resolved ? (
+            <Link
+              href={findHelperHref(request)}
+              className="inline-flex h-10 items-center gap-2 rounded-sm border-[1.5px] border-ink bg-sole px-4 text-sm font-bold text-ink hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+            >
+              <Search className="size-4" />
+              {t.findHelper}
+            </Link>
+          ) : null}
         </div>
       ) : null}
     </article>

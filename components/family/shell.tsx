@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 interface ShellProps {
   children: React.ReactNode;
   /** Current nav item. */
-  active?: "alerts" | "settings" | "setup" | "none";
+  active?: "alerts" | "helpers" | "settings" | "setup" | "none";
   seniorName?: string | null;
   signedIn?: boolean;
   narrow?: boolean;
@@ -17,12 +17,13 @@ export function FamilyShell({ children, active = "none", seniorName, signedIn = 
   const t = familyT();
   const nav = [
     { key: "alerts" as const, href: "/app", label: t.nav.alerts },
+    { key: "helpers" as const, href: "/helpers", label: t.nav.findHelp },
     { key: "settings" as const, href: "/app/settings", label: t.nav.settings },
   ];
   return (
     <div className="flex min-h-dvh flex-col bg-latte">
       <header className="border-b border-line bg-white/85 backdrop-blur">
-        <div className="container flex h-16 items-center justify-between gap-4">
+        <div className="container flex min-h-16 flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
           <div className="flex items-center gap-4">
             <Link href={signedIn ? "/app" : "/login"} aria-label="Nonnina">
               <Logo />
@@ -34,7 +35,7 @@ export function FamilyShell({ children, active = "none", seniorName, signedIn = 
             ) : null}
           </div>
           {signedIn ? (
-            <nav className="flex items-center gap-1 text-sm font-bold" aria-label="Family area">
+            <nav className="flex flex-wrap items-center gap-1 text-sm font-bold" aria-label="Family area">
               {nav.map((item) => (
                 <Link
                   key={item.key}

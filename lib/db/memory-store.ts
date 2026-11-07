@@ -1,5 +1,7 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import type { EmergencyEventPatch, HelpRequestPatch, Store } from "./store";
+import type { HelperPatch, HelperRequestPatch } from "./store";
+import type { Helper, HelperFilter, HelperRequest, NewHelper, NewHelperRequest, PublicHelper } from "./types";
 import type {
   EmergencyEvent,
   Family,
@@ -18,6 +20,8 @@ import type {
   VoiceSession,
 } from "./types";
 import { demoFamily, demoRelatives, demoSeniors } from "./seed";
+import { demoHelpers } from "./seed";
+import { compareHelpers, matchesHelperFilter, toPublicHelper } from "@/lib/marketplace";
 
 interface MemoryState {
   families: Family[];
@@ -289,4 +293,74 @@ export class MemoryStore implements Store {
     relative.user_id = userId;
     return relative;
   }
+
+  // ---------- marketplace ----------
+  // Separate global from the family state, so tests that reset __careCopilotMemory keep working
+  // and the marketplace can be reset on its own (__nonninaMarketplace).
+
+  async listHelpers(filter: HelperFilter = {}): Promise<PublicHelper[]> {
+    return market()
+      .helpers.filter((h) => matchesHelperFilter(h, filter))
+      .sort(compareHelpers)
+      .map(toPublicHelper);
+  }
+
+  async getHelper(id: string): Promise<Helper | null> {
+    return market().helpers.find((h) => h.id === id) ?? null;
+  }
+
+  async getHelperByUserId(userId: string): Promise<Helper | null> {
+    return market().helpers.find((h) => h.user_id === userId) ?? null;
+  }
+
+  async createHelper(input: NewHelper): Promise<Helper> {
+    const helper: Helper = { id: randomUUID(), ...input, verified: input.verified ?? false, active: input.active ?? true, created_at: now() };
+    market().helpers.push(helper);
+    return helper;
+  }
+
+  async updateHelper(id: string, patch: HelperPatch): Promise<Helper | null> {
+    const helper = market().helpers.find((h) => h.id === id);
+    if (!helper) return null;
+    Object.assign(helper, patch);
+    return helper;
+  }
+
+  async createHelperRequest(input: NewHelperRequest): Promise<HelperRequest> {
+    const ts = now();
+    const req: HelperRequest = { id: randomUUID(), ...input, status: "sent", notified: [], created_at: ts, updated_at: ts };
+    market().helperRequests.unshift(req);
+    return req;
+  }
+
+  async getHelperRequest(id: string): Promise<HelperRequest | null> {
+    return market().helperRequests.find((r) => r.id === id) ?? null;
+  }
+
+  async updateHelperRequest(id: string, patch: HelperRequestPatch): Promise<HelperRequest | null> {
+    const req = market().helperRequests.find((r) => r.id === id);
+    if (!req) return null;
+    Object.assign(req, patch, { updated_at: now() });
+    return req;
+  }
+
+  async listHelperRequestsForHelper(helperId: string): Promise<HelperRequest[]> {
+    return market().helperRequests.filter((r) => r.helper_id === helperId);
+  }
+
+  async listHelperRequestsForFamily(familyId: string): Promise<HelperRequest[]> {
+    return market().helperRequests.filter((r) => r.family_id === familyId);
+  }
+}
+
+interface MarketplaceState {
+  helpers: Helper[];
+  helperRequests: HelperRequest[];
+}
+
+const gm = globalThis as unknown as { __nonninaMarketplace?: MarketplaceState };
+
+function market(): MarketplaceState {
+  gm.__nonninaMarketplace ??= { helpers: demoHelpers(), helperRequests: [] };
+  return gm.__nonninaMarketplace;
 }

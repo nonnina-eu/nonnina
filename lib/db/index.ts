@@ -18,4 +18,4 @@ export function getStore(): Store {
 
 export type { Store } from "./store";
 export * from "./types";
-export { DEMO_IDS, DEMO_TOKEN, DEMO_TOKEN_IT } from "./seed";
+export { DEMO_HELPER_IDS, DEMO_IDS, DEMO_TOKEN, DEMO_TOKEN_IT } from "./seed";
