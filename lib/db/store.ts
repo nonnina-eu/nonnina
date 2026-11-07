@@ -91,4 +91,4 @@ export interface Store {
 }
 
 export type HelperPatch = Partial<Omit<NewHelper, "user_id">>;
-export type HelperRequestPatch = Partial<Pick<HelperRequest, "status" | "notified">>;
+export type HelperRequestPatch = Partial<Pick<HelperRequest, "status" | "notified" | "hours" | "amount_eur" | "service_date" | "completed_at">>;

@@ -1,4 +1,5 @@
-import type { Family, Helper, Relative, Senior } from "./types";
+import { berlinDate } from "@/lib/relief-budget";
+import type { Family, Helper, HelperRequest, Relative, Senior } from "./types";
 
 /**
  * Deterministic demo ids. They are identical in supabase/seed.sql so that the
@@ -101,6 +102,8 @@ export function demoRelatives(): Relative[] {
  * Demo helpers (marketplace showcase): mostly Stuttgart, a few in Esslingen and Ludwigsburg.
  * Fictional people. Same ids and data in supabase/seed.sql. Phone numbers and emails are
  * placeholders. All rows are is_demo = true, so the directory labels them "Demo profile".
+ * relief_eligible = true for the two services and three verified independents that plausibly are
+ * recognised offers (payable via the relief amount).
  */
 export const DEMO_HELPER_IDS = {
   lucia: "a1000000-0000-4000-8000-000000000101",
@@ -128,12 +131,13 @@ export const DEMO_HELPER_IDS = {
 
 export function demoHelpers(): Helper[] {
   const at = new Date("2026-11-02T09:00:00Z").toISOString();
-  const base = { user_id: null, city: "Stuttgart", active: true, is_demo: true, photo_url: null, created_at: at };
+  const base = { user_id: null, city: "Stuttgart", active: true, is_demo: true, photo_url: null, relief_eligible: false, created_at: at };
   return [
     {
       ...base,
       id: DEMO_HELPER_IDS.lucia,
       name: "Lucia Romano",
+      relief_eligible: true,
       kind: "independent",
       bio: "Born in Naples, in Stuttgart for 20 years. I do the weekly shopping, cook a proper lunch and stay for a coffee and a chat – in Italian or German.",
       languages: ["it", "de"],
@@ -175,6 +179,7 @@ export function demoHelpers(): Helper[] {
       ...base,
       id: DEMO_HELPER_IDS.sonnenhof,
       name: "Pflegedienst Sonnenhof",
+      relief_eligible: true,
       kind: "service",
       bio: "Licensed home care service. Personal care, household help and accompaniment. Can be paid with the relief amount (131 €/month) from care level 1.",
       languages: ["de", "en"],
@@ -215,6 +220,7 @@ export function demoHelpers(): Helper[] {
       ...base,
       id: DEMO_HELPER_IDS.elena,
       name: "Elena Petrova",
+      relief_eligible: true,
       kind: "independent",
       bio: "Household help with 10 years of experience. Cleaning, laundry, cooking, and sorting letters from the health insurance.",
       languages: ["de", "en", "ru"],
@@ -327,6 +333,7 @@ export function demoHelpers(): Helper[] {
       ...base,
       id: DEMO_HELPER_IDS.rafael,
       name: "Rafael Souza",
+      relief_eligible: true,
       kind: "independent",
       bio: "Trained care assistant with six years in home care, living in Feuerbach. I help with washing, dressing and getting ready for the day – patiently and with respect.",
       languages: ["pt", "es", "de"],
@@ -414,6 +421,7 @@ export function demoHelpers(): Helper[] {
       city: "Esslingen",
       id: DEMO_HELPER_IDS.alltag,
       name: "Alltagsbegleitung Esslingen",
+      relief_eligible: true,
       kind: "service",
       bio: "Small team of everyday companions in Esslingen and Plochingen. Shopping, household help, walks and accompaniment to appointments, with fixed weekly visits.",
       languages: ["de", "tr", "it"],
@@ -424,4 +432,87 @@ export function demoHelpers(): Helper[] {
       verified: true,
     },
   ];
+}
+
+/** Fixed ids of the seeded completed jobs (same in supabase/seed.sql). */
+export const DEMO_JOB_IDS = {
+  elenaNow: "b2000000-0000-4000-8000-000000000201",
+  luciaNow: "b2000000-0000-4000-8000-000000000202",
+  mehmetNow: "b2000000-0000-4000-8000-000000000203",
+  nachbarschaftNow: "b2000000-0000-4000-8000-000000000204",
+  elenaPrev: "b2000000-0000-4000-8000-000000000205",
+  rafaelPrev: "b2000000-0000-4000-8000-000000000206",
+  /** Accepted, not yet done: shows the "record as done" form on /helpers/me (Lucia) and /app. */
+  luciaOpen: "b2000000-0000-4000-8000-000000000207",
+} as const;
+
+/**
+ * Day `day` (1-based) of the month `monthOffset` months from `now`, 10:00 UTC, but never in the
+ * future (early in the month the current-month jobs collapse to "now"). Mirrors
+ * least(now(), date_trunc('month', now()) + …) in supabase/seed.sql.
+ */
+function demoJobTime(now: Date, monthOffset: number, day: number): Date {
+  const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + monthOffset, day, 10, 0, 0));
+  return d.getTime() > now.getTime() ? now : d;
+}
+
+/**
+ * Completed jobs for Maria so the relief-amount card shows real numbers in demo mode:
+ * (plus one accepted request still open). This month 55 + 36 € eligible (91 € of 131 € used), 30 € transport by a helper who is not
+ * recognised (family pays) and a free volunteer visit; last month 120 € eligible (11 € carried over).
+ */
+export function demoHelperRequests(now: Date = new Date()): HelperRequest[] {
+  const jobs: Array<{ id: string; helper: string; service: HelperRequest["service"]; message: string; hours: number; amount: number; month: number; day: number }> = [
+    { id: DEMO_JOB_IDS.elenaNow, helper: DEMO_HELPER_IDS.elena, service: "household", message: "Cleaning and laundry", hours: 2.5, amount: 55, month: 0, day: 2 },
+    { id: DEMO_JOB_IDS.nachbarschaftNow, helper: DEMO_HELPER_IDS.nachbarschaft, service: "company", message: "Walk in the park and a coffee", hours: 2, amount: 0, month: 0, day: 3 },
+    { id: DEMO_JOB_IDS.luciaNow, helper: DEMO_HELPER_IDS.lucia, service: "shopping", message: "Weekly shopping", hours: 2, amount: 36, month: 0, day: 4 },
+    { id: DEMO_JOB_IDS.mehmetNow, helper: DEMO_HELPER_IDS.mehmet, service: "transport", message: "Drive to the eye doctor and back", hours: 1.5, amount: 30, month: 0, day: 5 },
+    { id: DEMO_JOB_IDS.elenaPrev, helper: DEMO_HELPER_IDS.elena, service: "household", message: "Cleaning and laundry", hours: 3, amount: 66, month: -1, day: 10 },
+    { id: DEMO_JOB_IDS.rafaelPrev, helper: DEMO_HELPER_IDS.rafael, service: "personal_care", message: "Help with showering and dressing", hours: 2, amount: 54, month: -1, day: 20 },
+  ];
+  const done = jobs.map((j): HelperRequest => {
+    const at = demoJobTime(now, j.month, j.day);
+    const sent = new Date(at.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString();
+    return {
+      id: j.id,
+      family_id: DEMO_IDS.family,
+      senior_id: DEMO_IDS.senior,
+      helper_id: j.helper,
+      relative_id: DEMO_IDS.anna,
+      help_request_id: null,
+      service: j.service,
+      message: j.message,
+      preferred_time: null,
+      status: "done",
+      notified: [],
+      hours: j.hours,
+      amount_eur: j.amount,
+      service_date: berlinDate(at),
+      completed_at: at.toISOString(),
+      created_at: sent,
+      updated_at: at.toISOString(),
+    };
+  });
+  const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+  const open: HelperRequest = {
+    id: DEMO_JOB_IDS.luciaOpen,
+    family_id: DEMO_IDS.family,
+    senior_id: DEMO_IDS.senior,
+    helper_id: DEMO_HELPER_IDS.lucia,
+    relative_id: DEMO_IDS.anna,
+    help_request_id: null,
+    service: "cooking",
+    message: "Could you cook lunch with Maria on Saturday?",
+    preferred_time: "Saturday, 11:00",
+    status: "accepted",
+    notified: [],
+    hours: null,
+    amount_eur: null,
+    service_date: null,
+    completed_at: null,
+    created_at: yesterday,
+    updated_at: yesterday,
+  };
+  // Newest first, like the store lists them.
+  return [open, ...done.sort((a, b) => b.created_at.localeCompare(a.created_at))];
 }

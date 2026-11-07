@@ -13,7 +13,7 @@ export const HELPER_LANGUAGES = ["de", "it", "en", "tr", "pl", "ru", "fr", "es"]
 export const DEFAULT_CITY = "Stuttgart";
 
 /** Columns the directory may expose. Used by the Supabase select and the memory projection. */
-export const PUBLIC_HELPER_COLUMNS = "id,name,kind,city,bio,languages,services,hourly_rate_eur,verified,active,photo_url,is_demo,created_at";
+export const PUBLIC_HELPER_COLUMNS = "id,name,kind,city,bio,languages,services,hourly_rate_eur,verified,relief_eligible,active,photo_url,is_demo,created_at";
 
 export function isHelperService(value: unknown): value is HelperService {
   return typeof value === "string" && (HELPER_SERVICES as readonly string[]).includes(value);
@@ -34,6 +34,7 @@ export function toPublicHelper(h: Helper | PublicHelper): PublicHelper {
     active: h.active,
     photo_url: h.photo_url ?? null,
     is_demo: h.is_demo ?? false,
+    relief_eligible: h.relief_eligible ?? false,
     created_at: h.created_at,
   };
 }

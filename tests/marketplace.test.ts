@@ -2,13 +2,17 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { beforeEach, describe, expect, it } from "vitest";
 import { MemoryStore } from "@/lib/db/memory-store";
-import { DEMO_HELPER_IDS, DEMO_IDS, demoHelpers } from "@/lib/db/seed";
+import { DEMO_HELPER_IDS, DEMO_IDS, DEMO_JOB_IDS, demoHelpers } from "@/lib/db/seed";
 import { HELPER_SERVICES } from "@/lib/db/types";
 import { findHelperHref, matchesHelperFilter, serviceForHelpRequest, toPublicHelper } from "@/lib/marketplace";
 import { helperProfileSchema, helperQuerySchema, helperRequestFormSchema } from "@/lib/validation";
 import { marketplaceStrings } from "@/lib/i18n/marketplace";
 
 const g = globalThis as unknown as { __careCopilotMemory?: unknown; __nonninaMarketplace?: unknown };
+
+/** Seeded relief-amount demo jobs (lib/db/seed.ts demoHelperRequests) are left out of the counts. */
+const seededJobs = new Set<string>(Object.values(DEMO_JOB_IDS));
+const own = (rows: Array<{ id: string }>) => rows.map((r) => r.id).filter((id) => !seededJobs.has(id));
 
 function fresh() {
   delete g.__careCopilotMemory;
@@ -162,14 +166,19 @@ describe("MemoryStore – marketplace", () => {
     });
     expect(req.status).toBe("sent");
     expect(req.notified).toEqual([]);
-    expect((await store.listHelperRequestsForHelper(DEMO_HELPER_IDS.lucia)).map((r) => r.id)).toEqual([req.id]);
-    expect((await store.listHelperRequestsForFamily(DEMO_IDS.family)).map((r) => r.id)).toEqual([req.id]);
-    expect(await store.listHelperRequestsForHelper(DEMO_HELPER_IDS.mehmet)).toEqual([]);
+    expect(own(await store.listHelperRequestsForHelper(DEMO_HELPER_IDS.lucia))).toEqual([req.id]);
+    expect(own(await store.listHelperRequestsForFamily(DEMO_IDS.family))).toEqual([req.id]);
+    expect(own(await store.listHelperRequestsForHelper(DEMO_HELPER_IDS.mehmet))).toEqual([]);
+    expect(req.hours).toBeNull();
+    expect(req.amount_eur).toBeNull();
 
     const accepted = await store.updateHelperRequest(req.id, { status: "accepted" });
     expect(accepted?.status).toBe("accepted");
     expect((await store.getHelperRequest(req.id))?.status).toBe("accepted");
     expect(await store.updateHelperRequest("00000000-0000-4000-8000-000000000000", { status: "done" })).toBeNull();
+
+    const done = await store.updateHelperRequest(req.id, { status: "done", service_date: "2026-11-06", hours: 2, amount_eur: 36, completed_at: "2026-11-06T12:00:00Z" });
+    expect(done).toMatchObject({ status: "done", service_date: "2026-11-06", hours: 2, amount_eur: 36 });
   });
 
   it("keeps helper requests when the family demo data (events, help requests) is reset", async () => {
@@ -184,7 +193,7 @@ describe("MemoryStore – marketplace", () => {
       preferred_time: null,
     });
     await store.resetDemoData(DEMO_IDS.family);
-    expect(await store.listHelperRequestsForFamily(DEMO_IDS.family)).toHaveLength(1);
+    expect(own(await store.listHelperRequestsForFamily(DEMO_IDS.family))).toHaveLength(1);
   });
 });
 

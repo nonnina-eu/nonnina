@@ -20,7 +20,7 @@ import type {
   VoiceSession,
 } from "./types";
 import { demoFamily, demoRelatives, demoSeniors } from "./seed";
-import { demoHelpers } from "./seed";
+import { demoHelperRequests, demoHelpers } from "./seed";
 import { compareHelpers, matchesHelperFilter, toPublicHelper } from "@/lib/marketplace";
 
 interface MemoryState {
@@ -321,6 +321,7 @@ export class MemoryStore implements Store {
       active: input.active ?? true,
       photo_url: input.photo_url ?? null,
       is_demo: input.is_demo ?? false,
+      relief_eligible: input.relief_eligible ?? false,
       created_at: now(),
     };
     market().helpers.push(helper);
@@ -336,7 +337,18 @@ export class MemoryStore implements Store {
 
   async createHelperRequest(input: NewHelperRequest): Promise<HelperRequest> {
     const ts = now();
-    const req: HelperRequest = { id: randomUUID(), ...input, status: "sent", notified: [], created_at: ts, updated_at: ts };
+    const req: HelperRequest = {
+      id: randomUUID(),
+      ...input,
+      status: "sent",
+      notified: [],
+      hours: null,
+      amount_eur: null,
+      service_date: null,
+      completed_at: null,
+      created_at: ts,
+      updated_at: ts,
+    };
     market().helperRequests.unshift(req);
     return req;
   }
@@ -369,6 +381,6 @@ interface MarketplaceState {
 const gm = globalThis as unknown as { __nonninaMarketplace?: MarketplaceState };
 
 function market(): MarketplaceState {
-  gm.__nonninaMarketplace ??= { helpers: demoHelpers(), helperRequests: [] };
+  gm.__nonninaMarketplace ??= { helpers: demoHelpers(), helperRequests: demoHelperRequests(new Date()) };
   return gm.__nonninaMarketplace;
 }
