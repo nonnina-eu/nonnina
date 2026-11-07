@@ -46,11 +46,11 @@ export async function POST(request: Request) {
   if (type && type !== "post_call_transcription") return NextResponse.json({ ok: true, ignored: type });
 
   const token = asString(data.conversation_initiation_client_data?.dynamic_variables?.senior_token);
-  if (!token) return NextResponse.json({ ok: true, ignored: "no senior_token" }, { status: 202 });
+  if (!token) return NextResponse.json({ ok: true, ignored: "no senior_token" }, { status: 200 });
 
   const store = getStore();
   const ctx = await store.getSeniorByToken(token);
-  if (!ctx) return NextResponse.json({ ok: true, ignored: "unknown senior" }, { status: 202 });
+  if (!ctx) return NextResponse.json({ ok: true, ignored: "unknown senior" }, { status: 200 });
 
   const results = data.analysis?.data_collection_results ?? {};
   const moodRaw = asString(results.mood?.value)?.toLowerCase();
